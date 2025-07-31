@@ -1,0 +1,91 @@
+﻿@model UpdateUserViewModel
+@{
+    ViewData["Title"] = "Editar Usuario";
+    string currentRole = Model.Role?.ToLower();
+    bool isClient = currentRole == "client";
+    bool isRestrictedRole = currentRole == "Admin" || currentRole == "Agent";
+}
+
+<div class="col-12 col-md-8 offset-md-2">
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h4 class="text-center"><i class="bi bi-pencil-square"></i> Editar Usuario - @Model.Name @Model.LastName</h4>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.HasError != null && ViewBag.HasError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @foreach (var error in ViewBag.Errors)
+                    {
+                        <p>@error</p>
+                    }
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <form asp-controller="User" asp-action="Edit" method="POST">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Role" />
+
+                <table class="table">
+                    <tr>
+                        <td><label asp-for="Name">Nombre</label></td>
+                        <td>
+                            <input class="form-control" asp-for="Name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="LastName">Apellido</label></td>
+                        <td>
+                            <input class="form-control" asp-for="LastName" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Email">Correo</label></td>
+                        <td>
+                            <input class="form-control" asp-for="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="UserName">Usuario</label></td>
+                        <td>
+                            <input class="form-control" asp-for="UserName" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Password">Contraseña (opcional)</label></td>
+                        <td>
+                            <input type="password" class="form-control" asp-for="Password" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="ConfirmPassword">Confirmar contraseña</label></td>
+                        <td>
+                            <input type="password" class="form-control" asp-for="ConfirmPassword" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Role">Tipo de Usuario</label></td>
+                        <td>
+                            <input class="form-control" value="@Model.Role" disabled />
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="text-end">
+                    <a asp-controller="User" asp-action="Index" class="btn btn-outline-warning me-2">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-save"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
