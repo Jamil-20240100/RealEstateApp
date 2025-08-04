@@ -12,7 +12,7 @@ using RealEstateApp.Infrastructure.Identity.Contexts;
 namespace RealEstateApp.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20250730222605_InitialMigration")]
+    [Migration("20250804213203_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -213,7 +213,6 @@ namespace RealEstateApp.Infrastructure.Identity.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfileImage")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
