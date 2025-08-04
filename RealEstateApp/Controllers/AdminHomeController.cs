@@ -3,11 +3,11 @@ using RealEstateApp.Core.Application.Interfaces;
 
 namespace RealEstateApp.Controllers
 {
-    public class HomeController : Controller
+    public class AdminHomeController : Controller
     {
         private readonly IAccountServiceForWebApp _accountServiceForWebApp;
 
-        public HomeController(IAccountServiceForWebApp accountServiceForWebApp)
+        public AdminHomeController(IAccountServiceForWebApp accountServiceForWebApp)
         {
             _accountServiceForWebApp = accountServiceForWebApp;
         }

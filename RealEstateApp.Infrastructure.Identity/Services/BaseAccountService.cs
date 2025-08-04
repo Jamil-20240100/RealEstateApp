@@ -148,6 +148,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             user.Name = saveDto.Name;
             user.LastName = saveDto.LastName;
             user.UserName = saveDto.UserName;
+            user.ProfileImage = string.IsNullOrWhiteSpace(saveDto.ProfileImage) ? user.ProfileImage : saveDto.ProfileImage;
             user.EmailConfirmed = user.EmailConfirmed && user.Email == saveDto.Email;
             user.Email = saveDto.Email;
             user.IsActive = saveDto.IsActive;

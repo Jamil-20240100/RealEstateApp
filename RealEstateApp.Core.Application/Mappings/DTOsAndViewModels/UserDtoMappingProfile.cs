@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RealEstateApp.Core.Application.DTOs.User;
+using RealEstateApp.Core.Application.ViewModels.Agent;
 using RealEstateApp.Core.Application.ViewModels.User;
 
 namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
@@ -8,6 +9,10 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
     {
         public UserDtoMappingProfile()
         {
+            CreateMap<UserDto, AgentViewModel>()
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ProfileImage))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name + " " + src.LastName));
+
             CreateMap<UserDto, UserViewModel>()
                 .ReverseMap();
 

@@ -1,0 +1,98 @@
+﻿@model List<AgentViewModel>
+
+@{
+    ViewData["Title"] = "Agents";
+    Layout = "_LayoutAnonymous";
+}
+
+<style>
+    .hero-image {
+        position: relative;
+        height: 300px;
+        background-image: url('URL_DE_TU_IMAGEN_DE_CABECERA.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+    }
+
+    .hero-image h1 {
+        margin: 0;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .search-container {
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    .search-input {
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        padding: 8px 15px;
+        width: 300px;
+    }
+
+    .search-icon {
+        margin-left: -30px;
+        cursor: pointer;
+    }
+
+    .agents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .agent-card {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .agent-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .agent-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 2px solid #ddd;
+    }
+
+    .agent-name {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+</style>
+
+<div class="hero-image">
+    <h1>Agents List</h1>
+</div>
+
+<div class="search-container">
+    <label for="agent-name">Agent's name</label>
+    <div style="display: flex; align-items: center;">
+        <input type="text" id="agent-name" class="search-input" placeholder="Agent...">
+        <span class="search-icon">🔍</span>
+    </div>
+</div>
+
+<div class="agents-grid">
+    @foreach (var agent in Model)
+    {
+        <div class="agent-card">
+            <img src="@agent.Image" alt="@agent.Name" class="agent-image">
+            <div class="agent-name">@agent.Name</div>
+        </div>
+    }
+</div>
