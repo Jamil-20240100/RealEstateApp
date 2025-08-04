@@ -1,4 +1,5 @@
-﻿using RealEstateApp.Core.Application.DTOs.User;
+﻿using RealEstateApp.Core.Application.DTOs.Agent;
+using RealEstateApp.Core.Application.DTOs.User;
 
 namespace RealEstateApp.Core.Application.Interfaces
 {

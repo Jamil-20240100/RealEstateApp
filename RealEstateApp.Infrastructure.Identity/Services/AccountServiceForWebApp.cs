@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RealEstateApp.Core.Application.DTOs.Agent;
 using RealEstateApp.Core.Application.DTOs.User;
 using RealEstateApp.Core.Application.Interfaces;
+using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Infrastructure.Identity.Entities;
 
 namespace RealEstateApp.Infrastructure.Identity.Services
@@ -132,6 +134,10 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         {
             var user = await _userManager.FindByIdAsync(userId);
             return user == null ? "" : $"{user.Name} {user.LastName}";
-        }       
+        }
+
+        //
+        //
+        //
     }
 }
