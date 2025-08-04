@@ -12,8 +12,8 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 namespace RealEstateApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    [Migration("20250803164714_MenuClienteTest")]
-    partial class MenuClienteTest
+    [Migration("20250804213129_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

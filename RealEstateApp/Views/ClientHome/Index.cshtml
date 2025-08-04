@@ -8,7 +8,6 @@
 
 <h2 class="mb-4">Propiedades Disponibles</h2>
 
-<!-- Formulario de filtros -->
 <form method="get" asp-action="Index" class="mb-4 row g-2">
     <div class="col-md-3">
         <input type="text" name="Code" placeholder="Código propiedad" value="@filter?.Code" class="form-control" />
@@ -16,7 +15,6 @@
     <div class="col-md-2">
         <select name="PropertyTypeId" class="form-control">
             <option value="">-- Tipo de propiedad --</option>
-            @* Cargar dinámicamente tipos si quieres *@
         </select>
     </div>
     <div class="col-md-2">
@@ -63,7 +61,6 @@ else
                             <strong>Tamaño:</strong> @property.Size m²
                         </p>
 
-                        <!-- Botón favorito -->
                         <form asp-action="ToggleFavorite" method="post" class="mb-2">
                             <input type="hidden" name="propertyId" value="@property.Id" />
                             @if (property.IsFavorite)
