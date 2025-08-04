@@ -1,0 +1,49 @@
+﻿@model List<RealEstateApp.Core.Application.ViewModels.Client.PropertyViewModel>
+
+@{
+    ViewData["Title"] = "Mis Propiedades";
+    Layout = "_LayoutClient";
+}
+
+<h2 class="mb-4">Mis Propiedades Favoritas</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No tienes propiedades marcadas como favoritas.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var property in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <img src="@Url.Content("~/" + (property.Images.FirstOrDefault() ?? "Images/no-image.png"))"
+                         class="card-img-top"
+                         style="height: 220px; object-fit: cover;"
+                         alt="Imagen propiedad" />
+                    <div class="card-body">
+                        <h5 class="card-title">@property.Type - @property.SaleType</h5>
+                        <p class="card-text">
+                            <strong>Código:</strong> @property.Code <br />
+                            <strong>Precio:</strong> @property.Price.ToString("C") <br />
+                            <strong>Habitaciones:</strong> @property.Bedrooms <br />
+                            <strong>Baños:</strong> @property.Bathrooms <br />
+                            <strong>Tamaño:</strong> @property.Size m²
+                        </p>
+
+                        <!-- Botón para quitar de favoritos -->
+                        <form asp-action="ToggleFavorite" asp-controller="ClientHome" method="post" class="mb-2">
+                            <input type="hidden" name="propertyId" value="@property.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm w-100">Quitar de Favoritos</button>
+                        </form>
+
+                        <a asp-action="Details" asp-controller="ClientHome" asp-route-id="@property.Id" class="btn btn-outline-info btn-sm w-100">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
