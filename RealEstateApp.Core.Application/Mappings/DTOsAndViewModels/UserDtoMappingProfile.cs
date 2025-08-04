@@ -7,7 +7,7 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
 {
     public class UserDtoMappingProfile : Profile
     {
-        public UserDtoMappingProfile() //probandooooo
+        public UserDtoMappingProfile()
         {
             CreateMap<UserDto, AgentViewModel>()
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ProfileImage))
