@@ -1,0 +1,83 @@
+﻿@model RealEstateApp.Core.Application.ViewModels.Client.PropertyViewModel
+
+@{
+    ViewData["Title"] = "Home";
+    Layout = "_LayoutAnonymous";
+}
+
+<h2 class="mb-4">Detalle de la Propiedad</h2>
+
+<!-- Slider de imágenes -->
+@if (Model.Images.Any())
+{
+    <div id="propertyImagesCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Images.Count; i++)
+            {
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <img src="@Url.Content("~/" + Model.Images[i])"
+                         class="d-block w-100"
+                         style="height:400px; object-fit:cover;"
+                         alt="Imagen propiedad" />
+                </div>
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#propertyImagesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#propertyImagesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+}
+else
+{
+    <p class="text-muted">Esta propiedad no tiene imágenes registradas.</p>
+}
+
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <p><strong>Código:</strong> @Model.Code</p>
+        <p><strong>Tipo:</strong> @Model.Type</p>
+        <p><strong>Tipo de Venta:</strong> @Model.SaleType</p>
+        <p><strong>Precio:</strong> @Model.Price.ToString("C")</p>
+        <p><strong>Habitaciones:</strong> @Model.Bedrooms</p>
+        <p><strong>Baños:</strong> @Model.Bathrooms</p>
+        <p><strong>Tamaño:</strong> @Model.Size m²</p>
+        <p><strong>Descripción:</strong> @Model.Description</p>
+
+        <h4 class="mt-4">Mejoras</h4>
+        @if (Model.Improvements.Any())
+        {
+            <ul>
+                @foreach (var improvement in Model.Improvements)
+                {
+                    <li>@improvement</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">Esta propiedad no tiene mejoras registradas.</p>
+        }
+    </div>
+
+    <div class="col-md-4">
+        <h4>Agente</h4>
+        <div class="card shadow-sm p-3">
+            <img src="@Url.Content("~/" + (Model.AgentPhoto ?? "Images/no-agent.png"))"
+                 alt="Foto agente"
+                 class="rounded-circle mb-3"
+                 width="120"
+                 height="120"
+                 style="object-fit:cover;" />
+            <p class="mb-1"><strong>@Model.AgentName</strong></p>
+            <p class="mb-1"><i class="bi bi-telephone"></i> @Model.AgentPhone</p>
+            <p class="mb-1"><i class="bi bi-envelope"></i> @Model.AgentEmail</p>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Volver al listado</a>

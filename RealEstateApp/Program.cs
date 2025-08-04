@@ -26,6 +26,7 @@ internal class Program
         var app = builder.Build();
 
         await app.Services.RunIdentitySeedAsync();
+        await app.Services.RunPersistenceSeedAsync();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

@@ -14,7 +14,4 @@
 	  <ProjectReference Include="..\RealEstateApp.Core.Domain\RealEstateApp.Core.Domain.csproj" />
 	  <ProjectReference Include="..\RealEstateApp.Infrastructure.Identity\RealEstateApp.Infrastructure.Identity.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="EntityConfigurations\" />
-	</ItemGroup>
 </Project>
