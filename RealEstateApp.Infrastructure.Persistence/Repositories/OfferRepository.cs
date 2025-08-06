@@ -14,6 +14,11 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
+        public async Task<List<Offer>> GetAllAsync()
+        {
+            return await _context.Offers.ToListAsync();
+        }
+
         public async Task<Offer?> GetByIdAsync(int id)
         {
             return await _context.Offers.FindAsync(id);
@@ -32,6 +37,14 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
         {
             return await _context.Offers
                 .Where(o => o.PropertyId == propertyId && o.Status == Core.Domain.Common.Enums.OfferStatus.Pendiente && o.Id != excludeOfferId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Offer>> GetOffersByPropertyAsync(int propertyId)
+        {
+            return await _context.Offers
+                .Where(o => o.PropertyId == propertyId)
+                .OrderByDescending(o => o.Date)
                 .ToListAsync();
         }
     }

@@ -12,9 +12,4 @@ namespace RealEstateApp.Core.Application.ViewModels.Client
         public OfferStatus Status { get; set; }
     }
 
-    public class CreateOfferViewModel
-    {
-        public int PropertyId { get; set; }
-        public decimal Amount { get; set; }
-    }
 }

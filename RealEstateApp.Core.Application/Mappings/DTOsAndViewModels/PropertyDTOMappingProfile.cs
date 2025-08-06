@@ -1,7 +1,17 @@
 ﻿using AutoMapper;
 using RealEstateApp.Core.Application.DTOs.Feature;
+using RealEstateApp.Core.Application.DTOs.Message;
 using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Application.DTOs.PropertyType;
+using RealEstateApp.Core.Application.DTOs.SalesType;
+using RealEstateApp.Core.Application.DTOs.Offer;
+using RealEstateApp.Core.Application.DTOs.Client;
+using RealEstateApp.Core.Application.ViewModels.Client;
+using RealEstateApp.Core.Application.ViewModels.Feature;
 using RealEstateApp.Core.Application.ViewModels.Property;
+using RealEstateApp.Core.Application.ViewModels.PropertyType;
+using RealEstateApp.Core.Application.ViewModels.SalesType;
+
 
 namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
 {
@@ -47,6 +57,29 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
                 .ForMember(dest => dest.NumberOfBathrooms, opt => opt.Ignore())
                 .ForMember(dest => dest.Features, opt => opt.Ignore())
                 .ForMember(dest => dest.Images, opt => opt.Ignore());
+
+            CreateMap<PropertyDTO, PropertyDetailsViewModel>()
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(i => i.ImageUrl).ToList()))
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
+            .ForMember(dest => dest.PropertyType, opt => opt.MapFrom(src => src.PropertyType))
+            .ForMember(dest => dest.SalesType, opt => opt.MapFrom(src => src.SalesType))
+            // Mapear colecciones de ofertas, mensajes y clientes con ofertas
+            .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))  // Asumiendo que PropertyDTO tiene Offers
+            .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages)) // Asumiendo que PropertyDTO tiene Messages
+            .ForMember(dest => dest.ClientsWithOffers, opt => opt.MapFrom(src => src.ClientsWithOffers)) // Similar con clientes que hicieron ofertas
+            .ForMember(dest => dest.ClientsWhoMessaged, opt => opt.Ignore()) // Si tienes esa propiedad, mapéala también aquí o ignórala si no existe
+            ;
+
+            // Aquí asumes que existen mapeos para las clases anidadas, por ejemplo:
+            CreateMap<PropertyTypeDTO, PropertyTypeViewModel>();
+            CreateMap<SalesTypeDTO, SalesTypeViewModel>();
+            CreateMap<FeatureDTO, FeatureViewModel>();
+
+            CreateMap<OfferDTO, OfferViewModel>();
+            CreateMap<MessageDTO, MessageViewModel>();
+
+            CreateMap<ClientDTO, ClientsWhoMadeOfferViewModel>(); // O el DTO que uses para clientes que hicieron oferta
+
         }
     }
 }

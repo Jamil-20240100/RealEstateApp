@@ -1,6 +1,5 @@
 ﻿using RealEstateApp.Core.Application.DTOs.Property;
-using RealEstateApp.Core.Domain.Entities;
-using RealEstateApp.Core.Domain.Interfaces;
+using RealEstateApp.Core.Application.ViewModels.Property;
 
 namespace RealEstateApp.Core.Application.Interfaces
 {
@@ -10,5 +9,11 @@ namespace RealEstateApp.Core.Application.Interfaces
         public Task<PropertyDTO?> GetByIdWithInclude(int id);
         Task<PropertyDTO?> AddAsync(PropertyDTO dto);
         Task<PropertyDTO?> UpdateAsync(PropertyDTO dto, int id);
+
+
+        //Para cuando agreguemos el filtro
+        Task<List<PropertyViewModel>> GetFilteredAvailableAsync(PropertyFilterViewModel? filters, string? userId);
+        Task<PropertyDetailsViewModel?> GetPropertyDetailsAsync(int id, string? userId);
+        Task<string?> GetAgentIdByPropertyIdAsync(int propertyId);
     }
 }

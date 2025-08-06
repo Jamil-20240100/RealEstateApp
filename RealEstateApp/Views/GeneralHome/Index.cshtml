@@ -1,73 +1,79 @@
-﻿@*
-@model List<RealEstateApp.Core.Application.ViewModels.Client.PropertyViewModel>
-*@
+﻿@model List<RealEstateApp.Core.Application.ViewModels.Property.PropertyViewModel>
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Propiedades Disponibles";
     Layout = "_LayoutAnonymous";
-    //var filter = ViewBag.Filter as RealEstateApp.Core.Application.ViewModels.Client.PropertyFilterViewModel;
+    // var filter = ViewBag.Filter as RealEstateApp.Core.Application.ViewModels.Property.PropertyFilterViewModel;
 }
-@*
+
 <h2 class="mb-4">Propiedades Disponibles</h2>
 
-<!-- Formulario de filtros -->
+@* 
+<!-- Placeholder de filtros: lo activamos despues -->
 <form method="get" asp-action="Index" class="mb-4 row g-2">
     <div class="col-md-3">
-        <input type="text" name="Code" placeholder="Código propiedad" value="@filter?.Code" class="form-control" />
+        <input type="text" name="CodeContains" placeholder="Código propiedad" class="form-control" />
     </div>
     <div class="col-md-2">
-        <select name="PropertyTypeId" class="form-control">
+        <!-- Cuando tengas PropertyType list en ViewBag -->
+        <select name="PropertyType.Id" class="form-control">
             <option value="">-- Tipo de propiedad --</option>
-
         </select>
     </div>
     <div class="col-md-2">
-        <input type="number" name="MinPrice" placeholder="Precio mínimo" value="@filter?.MinPrice" class="form-control" />
+        <input type="number" step="0.01" name="MinPrice" placeholder="Precio mínimo" class="form-control" />
     </div>
     <div class="col-md-2">
-        <input type="number" name="MaxPrice" placeholder="Precio máximo" value="@filter?.MaxPrice" class="form-control" />
+        <input type="number" step="0.01" name="MaxPrice" placeholder="Precio máximo" class="form-control" />
     </div>
     <div class="col-md-1">
-        <input type="number" name="Bedrooms" placeholder="Habit." value="@filter?.Bedrooms" class="form-control" />
+        <input type="number" name="MinNumberOfRooms" placeholder="Hab." class="form-control" />
     </div>
     <div class="col-md-1">
-        <input type="number" name="Bathrooms" placeholder="Baños" value="@filter?.Bathrooms" class="form-control" />
+        <input type="number" name="MinNumberOfBathrooms" placeholder="Baños" class="form-control" />
     </div>
     <div class="col-md-1">
         <button type="submit" class="btn btn-primary w-100">Filtrar</button>
     </div>
 </form>
+*@
 
-@if (!Model.Any())
+@if (Model == null || !Model.Any())
 {
     <div class="alert alert-info">
-        No se encontraron propiedades con los filtros aplicados.
+        No hay propiedades disponibles por el momento.
     </div>
 }
 else
 {
     <div class="row">
-        @foreach (var property in Model)
+        @foreach (var p in Model)
         {
             <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="@Url.Content("~/" + (property.Images.FirstOrDefault() ?? "Images/no-image.png"))"
+                <div class="card shadow-sm h-100">
+                    <img src="@Url.Content(p.Images != null && p.Images.Any() 
+                               ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First()) 
+                               : "~/Images/no-image.png")"
                          class="card-img-top"
                          style="height: 220px; object-fit: cover;"
                          alt="Imagen propiedad" />
                     <div class="card-body">
-                        <h5 class="card-title">@property.Type - @property.SaleType</h5>
+                        <h5 class="card-title">
+                            @p.PropertyType?.Name - @p.SalesType?.Name
+                        </h5>
                         <p class="card-text">
-                            <strong>Código:</strong> @property.Code <br />
-                            <strong>Precio:</strong> @property.Price.ToString("C") <br />
-                            <strong>Habitaciones:</strong> @property.Bedrooms <br />
-                            <strong>Baños:</strong> @property.Bathrooms <br />
-                            <strong>Tamaño:</strong> @property.Size m²
+                            <strong>Código:</strong> @p.Code <br />
+                            <strong>Precio:</strong> @p.Price.ToString("C") <br />
+                            <strong>Habitaciones:</strong> @p.NumberOfRooms <br />
+                            <strong>Baños:</strong> @p.NumberOfBathrooms <br />
+                            <strong>Tamaño:</strong> @p.SizeInMeters m²
                         </p>
-                        <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-outline-info btn-sm">Ver detalles</a>
+                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-outline-info btn-sm">
+                            Ver detalles
+                        </a>
                     </div>
                 </div>
             </div>
         }
     </div>
-}*@
+}
