@@ -22,7 +22,8 @@ namespace RealEstateApp.Infrastructure.Identity.Seeds
                     UserName = "JaneDoeAdmin",
                     IsActive = true,
                     ProfileImage = "",
-                    PhoneNumber = "222-222-2222"
+                    PhoneNumber = "222-222-2222",
+                    UserIdentification = "12345678"
                 };
 
                 await userManager.CreateAsync(admin, "123Pa$$word!");

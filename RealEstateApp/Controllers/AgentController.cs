@@ -55,7 +55,7 @@ namespace RealEstateApp.Controllers
 
         public async Task<IActionResult> ShowAgents()
         {
-            var agents = await _accountServiceForWebApp.GetAllUserByRole(Roles.Agent.ToString(), false);
+            var agents = await _accountServiceForWebApp.GetAllUserByRole(Roles.Agent.ToString());
             var mappedAgents = _mapper.Map<List<AgentViewModel>>(agents).OrderBy(a => a.Name).ToList();
             return View(mappedAgents);
         }

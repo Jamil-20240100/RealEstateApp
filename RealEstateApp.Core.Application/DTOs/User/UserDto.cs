@@ -12,5 +12,6 @@
         public required bool IsActive { get; set; }
         public required string? ProfileImage { get; set; }
         public required string PhoneNumber { get; set; }
+        public string? UserIdentification { get; set; }
     }
 }

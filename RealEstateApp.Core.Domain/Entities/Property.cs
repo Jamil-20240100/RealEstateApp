@@ -15,5 +15,6 @@
         public PropertyType? PropertyType { get; set; }
         public int SalesTypeId { get; set; }
         public SalesType? SalesType { get; set; }
+        public required string Code { get; set; }
     }
 }

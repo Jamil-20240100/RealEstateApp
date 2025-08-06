@@ -24,8 +24,8 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
                 .ForMember(dest => dest.UserName, opt => opt.Ignore())
                 .ForMember(dest => dest.Role, opt => opt.Ignore())
                 .ForMember(dest => dest.PhoneNumber, opt => opt.Ignore())
+                .ForMember(dest => dest.UserIdentification, opt => opt.Ignore())
                 .ForMember(dest => dest.ProfileImage, opt => opt.Ignore());
-
 
             CreateMap<UserDto, UpdateUserViewModel>()
                 .ForMember(dest => dest.Password, opt => opt.Ignore())

@@ -11,5 +11,6 @@
         public required bool IsActive { get; set; }
         public string FullName => $"{Name} {LastName}";
         public int? PropertiesQuantity { get; set; }
+        public string? UserIdentification { get; set; }
     }
 }
