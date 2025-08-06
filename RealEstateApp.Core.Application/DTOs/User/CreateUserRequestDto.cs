@@ -29,9 +29,6 @@ namespace RealEstateApp.Core.Application.DTOs.User
 
         [Required]
         public string TipoUsuario { get; set; } = null!;
-
-        public decimal? MontoInicial { get; set; }
-
-        public string? CommerceId { get; set; }
+        public string? UserIdentification { get; set; }
     }
 }

@@ -17,5 +17,6 @@ namespace RealEstateApp.Core.Application.DTOs.Property
         public required List<FeatureDTO> Features { get; set; }
         public List<PropertyImageDTO> Images { get; set; } = new List<PropertyImageDTO>();
         public string? AgentId { get; set; }
+        public required string Code { get; set; }
     }
 }

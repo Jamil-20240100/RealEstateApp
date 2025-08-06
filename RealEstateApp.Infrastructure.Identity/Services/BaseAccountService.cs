@@ -59,6 +59,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 IsActive = true,
                 ProfileImage = saveDto.ProfileImage ?? "",
                 PhoneNumber = saveDto.PhoneNumber,
+                UserIdentification = saveDto.UserIdentification,
             };
 
             var result = await _userManager.CreateAsync(user, saveDto.Password);
@@ -95,6 +96,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 response.LastName = user.LastName;
                 response.IsVerified = user.EmailConfirmed;
                 response.Roles = rolesList.ToList();
+                response.UserIdentification = user.UserIdentification;
 
                 return response;
             }
@@ -152,6 +154,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             user.EmailConfirmed = user.EmailConfirmed && user.Email == saveDto.Email;
             user.Email = saveDto.Email;
             user.IsActive = saveDto.IsActive;
+            user.UserIdentification = saveDto.UserIdentification;
 
             if (!string.IsNullOrWhiteSpace(saveDto.Password) && isNotcreated)
             {
@@ -208,6 +211,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 response.LastName = user.LastName;
                 response.IsVerified = user.EmailConfirmed;
                 response.Roles = updatedRolesList.ToList();
+                response.UserIdentification = user.UserIdentification;
 
                 return response;
             }
@@ -418,21 +422,19 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                     Role = roleList.FirstOrDefault() ?? "",
                     IsActive = item.IsActive,
                     ProfileImage = item.ProfileImage,
-                    PhoneNumber = item.PhoneNumber
+                    PhoneNumber = item.PhoneNumber,
+                    UserIdentification = item.UserIdentification
                 });
             }
 
             return listUsersDTOs;
         }
 
-        public virtual async Task<List<UserDto>> GetAllUserByRole(string role, bool? isActive = true)
+        public virtual async Task<List<UserDto>> GetAllUserByRole(string role)
         {
             List<UserDto> listUsersDTOs = [];
 
             var users = _userManager.Users;
-
-            if (isActive != null && isActive == true)
-                users = users.Where(w => w.EmailConfirmed);
 
             var listUser = await users.ToListAsync();
 
@@ -455,7 +457,8 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                         Role = actualRole ?? "",
                         IsActive = item.IsActive,
                         ProfileImage = item.ProfileImage,
-                        PhoneNumber = item.PhoneNumber
+                        PhoneNumber = item.PhoneNumber,
+                        UserIdentification = item.UserIdentification
                     });
                 }
             }

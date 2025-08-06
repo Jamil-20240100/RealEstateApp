@@ -8,6 +8,7 @@ namespace RealEstateApp.Core.Application.ViewModels.Agent
         public required string Id { get; set; }
         public required string Name { get; set; }
         public required string Image { get; set; }
+        public required string Email { get; set; }
         public List<PropertyViewModel>? Properties { get; set; }
     }
 }

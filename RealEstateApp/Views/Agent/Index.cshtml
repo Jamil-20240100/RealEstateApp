@@ -1,0 +1,54 @@
+﻿@model List<UserViewModel>
+
+@{
+    ViewData["Title"] = "Listado de Agentes";
+    Layout = "_LayoutAdmin";
+}
+
+<h1 class="text-2xl font-semibold mb-4">Listado de Agentes</h1>
+
+<table class="table-auto w-full border-collapse border border-gray-300">
+    <thead>
+        <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-4 py-2">Nombre</th>
+            <th class="border border-gray-300 px-4 py-2">Apellido</th>
+            <th class="border border-gray-300 px-4 py-2">Correo</th>
+            <th class="border border-gray-300 px-4 py-2">Propiedades</th>
+            <th class="border border-gray-300 px-4 py-2">Estado</th>
+            <th class="border border-gray-300 px-4 py-2">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var agent in Model)
+        {
+            <tr>
+                <td class="border px-4 py-2">@agent.Name</td>
+                <td class="border px-4 py-2">@agent.LastName</td>
+                <td class="border px-4 py-2">@agent.Email</td>
+                <td class="border px-4 py-2">@agent.PropertiesQuantity</td>
+                <td class="border px-4 py-2">
+                    @if (agent.IsActive)
+                    {
+                        <span class="text-green-600 font-bold">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="text-red-600 font-bold">Inactivo</span>
+                    }
+                </td>
+                <td class="border px-4 py-2 flex gap-2">
+                    <form asp-action="ToggleStatus" method="post" asp-route-id="@agent.Id">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            @(agent.IsActive ? "Inactivar" : "Activar")
+                        </button>
+                    </form>
+                    <form asp-action="DeleteConfirmation" asp-route-id="@agent.Id">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

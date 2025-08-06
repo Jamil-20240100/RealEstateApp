@@ -1,0 +1,106 @@
+﻿@model SaveAdminViewModel
+@{
+    ViewData["Title"] = Model.Id != null ? "Editar Administrador" : "Crear Administrador";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title h4 mb-0">
+                        @(Model.Id != null ? "Editar Administrador" : "Crear Administrador")
+                    </h2>
+                </div>
+                <div class="card-body">
+
+                    @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form method="post" asp-action="@(Model.Id != null ? "Edit" : "Create")">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Name" class="form-control" placeholder="Nombre" />
+                                    <label asp-for="Name">Nombre</label>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="LastName" class="form-control" placeholder="Apellido" />
+                                    <label asp-for="LastName">Apellido</label>
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="UserIdentification" class="form-control" placeholder="Cédula" />
+                                    <label asp-for="UserIdentification">Cédula</label>
+                                    <span asp-validation-for="UserIdentification" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Email" class="form-control" placeholder="Correo" />
+                                    <label asp-for="Email">Correo</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="UserName" class="form-control" placeholder="Usuario" />
+                                    <label asp-for="UserName">Usuario</label>
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            @if (Model.Id != null)
+                            {
+                                <p class="text-muted small">
+                                    <em>* Llena los siguientes campos solo si deseas cambiar la contraseña.</em>
+                                </p>
+                            }
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Password" class="form-control" placeholder="Contraseña" />
+                                    <label asp-for="Password">Contraseña</label>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirmar Contraseña" />
+                                    <label asp-for="ConfirmPassword">Confirmar Contraseña</label>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                Volver al listado
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                @(Model.Id != null ? "Guardar cambios" : "Crear")
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

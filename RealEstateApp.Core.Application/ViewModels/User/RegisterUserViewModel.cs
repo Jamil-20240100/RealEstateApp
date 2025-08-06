@@ -41,7 +41,6 @@ namespace RealEstateApp.Core.Application.ViewModels.User
 
         public required bool IsActive { get; set; }
         public required Roles Role { get; set; }
-
-
+        public string? UserIdentification { get; set; }
     }
 }

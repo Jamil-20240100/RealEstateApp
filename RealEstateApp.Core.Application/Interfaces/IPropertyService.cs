@@ -10,5 +10,6 @@ namespace RealEstateApp.Core.Application.Interfaces
         public Task<PropertyDTO?> GetByIdWithInclude(int id);
         Task<PropertyDTO?> AddAsync(PropertyDTO dto);
         Task<PropertyDTO?> UpdateAsync(PropertyDTO dto, int id);
+        public Task<string> GenerateUniquePropertyCodeAsync();
     }
 }
