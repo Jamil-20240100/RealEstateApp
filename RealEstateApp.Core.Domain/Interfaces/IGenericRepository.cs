@@ -19,5 +19,6 @@ namespace RealEstateApp.Core.Domain.Interfaces
         IQueryable<Entity> GetAllQueryWithInclude(List<string> properties);
         Task<bool> ExistsAsync(Expression<Func<Entity, bool>> predicate);
         Task<IEnumerable<Entity>> GetByConditionAsync(Expression<Func<Entity, bool>> expression);
+        Task<Entity?> GetByIdWithInclude(int id, List<string> includeProperties);
     }
 }

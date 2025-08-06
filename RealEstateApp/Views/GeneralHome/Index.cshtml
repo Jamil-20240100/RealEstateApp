@@ -1,11 +1,13 @@
-﻿@model List<RealEstateApp.Core.Application.ViewModels.Client.PropertyViewModel>
+﻿@*
+@model List<RealEstateApp.Core.Application.ViewModels.Client.PropertyViewModel>
+*@
 
 @{
     ViewData["Title"] = "Home";
     Layout = "_LayoutAnonymous";
-    var filter = ViewBag.Filter as RealEstateApp.Core.Application.ViewModels.Client.PropertyFilterViewModel;
+    //var filter = ViewBag.Filter as RealEstateApp.Core.Application.ViewModels.Client.PropertyFilterViewModel;
 }
-
+@*
 <h2 class="mb-4">Propiedades Disponibles</h2>
 
 <!-- Formulario de filtros -->
@@ -16,7 +18,7 @@
     <div class="col-md-2">
         <select name="PropertyTypeId" class="form-control">
             <option value="">-- Tipo de propiedad --</option>
-            @* Deberías pasar la lista de tipos desde el controlador si deseas *@
+
         </select>
     </div>
     <div class="col-md-2">
@@ -68,4 +70,4 @@ else
             </div>
         }
     </div>
-}
+}*@

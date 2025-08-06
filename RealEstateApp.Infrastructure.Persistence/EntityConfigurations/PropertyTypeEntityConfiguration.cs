@@ -1,21 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Domain.Entities;
 
-public class PropertyTypeConfiguration : IEntityTypeConfiguration<PropertyType>
+namespace RealEstateApp.Infrastructure.Persistence.EntityConfigurations
 {
-    public void Configure(EntityTypeBuilder<PropertyType> builder)
+    public class PropertyTypeEntityConfiguration : IEntityTypeConfiguration<PropertyType>
     {
-        builder.ToTable("PropertyTypes");
+        public void Configure(EntityTypeBuilder<PropertyType> builder)
+        {
+            builder.ToTable("PropertyTypes");
 
-        builder.HasKey(pt => pt.Id);
+            builder.HasKey(pt => pt.Id);
 
-        builder.Property(pt => pt.Name)
-            .IsRequired()
-            .HasMaxLength(100);
+            builder.Property(pt => pt.Name)
+                .IsRequired()
+                .HasMaxLength(100);
 
-        builder.HasMany(pt => pt.Properties)
-            .WithOne(p => p.PropertyType)
-            .HasForeignKey(p => p.PropertyTypeId);
+            builder.Property(pt => pt.Description)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            builder.HasMany(pt => pt.Properties)
+                   .WithOne(p => p.PropertyType)
+                   .HasForeignKey("PropertyTypeId");
+        }
     }
 }

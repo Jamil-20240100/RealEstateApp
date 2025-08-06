@@ -1,24 +1,26 @@
 ﻿using AutoMapper;
-using RealEstateApp.Core.Application.ViewModels.Client;
+using RealEstateApp.Core.Application.DTOs.Property;
 using RealEstateApp.Core.Domain.Entities;
 
 namespace RealEstateApp.Core.Application.Mappings.EntitiesAndDTOs
 {
-    public class PropertyProfile : Profile
+    public class PropertyMappingProfile : Profile
     {
-        public PropertyProfile()
+        public PropertyMappingProfile()
         {
-            CreateMap<Property, PropertyViewModel>()
-                .ForMember(dest => dest.IsFavorite, opt => opt.Ignore())
-                .ForMember(dest => dest.Images,
-                    opt => opt.MapFrom(src => src.Images.Select(i => i.ImageUrl).ToList()))
-                .ForMember(dest => dest.Type,
-                    opt => opt.MapFrom(src => src.PropertyType.Name))   // ✅ Mapeo del nombre del PropertyType
-                .ForMember(dest => dest.SaleType,
-                    opt => opt.MapFrom(src => src.SaleType.Name));     // ✅ Mapeo del nombre del SaleType
+            CreateMap<Property, PropertyDTO>()
+    .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
 
-            // Mapeo inverso si lo necesitas
-            CreateMap<PropertyViewModel, Property>();
+            CreateMap<PropertyDTO, Property>()
+                .ForMember(dest => dest.PropertyType, opt => opt.Ignore())
+                .ForMember(dest => dest.SalesType, opt => opt.Ignore())
+                .ForMember(dest => dest.Features, opt => opt.Ignore())
+                .ForMember(dest => dest.PropertyTypeId, opt => opt.MapFrom(src => src.PropertyType.Id))
+                .ForMember(dest => dest.SalesTypeId, opt => opt.MapFrom(src => src.SalesType.Id))
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
+
+            CreateMap<PropertyImage, PropertyImageDTO>().ReverseMap();
+
         }
     }
 }

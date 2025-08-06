@@ -1,56 +1,113 @@
 ﻿using AutoMapper;
-using RealEstateApp.Core.Application.ViewModels.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RealEstateApp.Core.Application.DTOs.Feature;
+using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Application.DTOs.PropertyType;
+using RealEstateApp.Core.Application.DTOs.SalesType;
+using RealEstateApp.Core.Application.Interfaces;
+using RealEstateApp.Core.Domain.Entities;
+using RealEstateApp.Core.Domain.Interfaces;
 
-public class PropertyService : IPropertyService
+namespace RealEstateApp.Core.Application.Services
 {
-    private readonly IPropertyRepository _propertyRepo;
-    private readonly IFavoritePropertyRepository _favoriteRepo;
-    private readonly IMapper _mapper;
-
-    public PropertyService(IPropertyRepository propertyRepo, IFavoritePropertyRepository favoriteRepo, IMapper mapper)
+    public class PropertyService : GenericService<Property, PropertyDTO>, IPropertyService
     {
-        _propertyRepo = propertyRepo;
-        _favoriteRepo = favoriteRepo;
-        _mapper = mapper;
-    }
+        private readonly IPropertyRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly IPropertyTypeRepository _propertyTypeRepository;
+        private readonly ISalesTypeRepository _salesTypeRepository;
+        private readonly IFeatureRepository _featureRepository;
 
-    public async Task<List<PropertyViewModel>> GetFilteredAvailableAsync(PropertyFilterViewModel filters, string? userId)
-    {
-        var properties = await _propertyRepo.GetAvailableWithFiltersAsync(
-            filters.PropertyTypeId, filters.MinPrice, filters.MaxPrice, filters.Bathrooms, filters.Bedrooms);
-
-        var result = _mapper.Map<List<PropertyViewModel>>(properties);
-
-        if (!string.IsNullOrEmpty(userId))
+        public PropertyService(
+            IPropertyRepository propertyRepository,
+            IPropertyTypeRepository propertyTypeRepository,
+            ISalesTypeRepository salesTypeRepository,
+            IFeatureRepository featureRepository,
+            IMapper mapper) : base(propertyRepository, mapper)
         {
-            var favorites = await _favoriteRepo.GetAllByUserIdAsync(userId);
-            var favoriteIds = favorites.Select(f => f.PropertyId).ToHashSet();
-
-            foreach (var item in result)
-                item.IsFavorite = favoriteIds.Contains(item.Id);
+            _propertyTypeRepository = propertyTypeRepository;
+            _salesTypeRepository = salesTypeRepository;
+            _featureRepository = featureRepository;
+            _repository = propertyRepository;
+            _mapper = mapper;
         }
 
-        return result;
-    }
-
-    public async Task<PropertyViewModel?> GetPropertyDetailsAsync(int id, string? userId)
-    {
-        var property = await _propertyRepo.GetByIdWithDetailsAsync(id);
-        if (property == null) return null;
-
-        var vm = _mapper.Map<PropertyViewModel>(property);
-
-        if (!string.IsNullOrEmpty(userId))
+        public async Task<List<PropertyDTO>> GetAllWithInclude()
         {
-            vm.IsFavorite = await _favoriteRepo.GetByUserAndPropertyAsync(userId, id) != null;
+            var properties = await _repository.GetAllWithInclude(["Images", "Features", "SalesType", "PropertyType"]);
+            var mappedProperties = _mapper.Map<List<PropertyDTO>>(properties);
+            return mappedProperties;
         }
 
-        return vm;
+        public async Task<PropertyDTO?> GetByIdWithInclude(int id)
+        {
+            var entity = await _repository.GetByIdWithInclude(id,["Images", "Features", "PropertyType", "SalesType"]);
+            return entity == null ? null : _mapper.Map<PropertyDTO>(entity);
+        }
+
+        public async Task<PropertyDTO?> AddAsync(PropertyDTO dto)
+        {
+            var entity = _mapper.Map<Property>(dto);
+
+            entity.Features = new List<Feature>();
+            if (dto.Features != null)
+            {
+                foreach (var featureDto in dto.Features)
+                {
+                    var feature = await _featureRepository.GetById(featureDto.Id);
+                    if (feature != null)
+                    {
+                        entity.Features.Add(feature);
+                    }
+                }
+            }
+
+            await _repository.AddAsync(entity);
+
+            return _mapper.Map<PropertyDTO>(entity);
+        }
+
+        public override async Task<PropertyDTO?> UpdateAsync(PropertyDTO dto, int id)
+        {
+            var entity = await _repository.GetByIdWithInclude(id, new List<string> { "Features", "Images" });
+            if (entity == null) return null;
+
+            entity.Price = dto.Price;
+            entity.Description = dto.Description;
+            entity.SizeInMeters = dto.SizeInMeters;
+            entity.NumberOfRooms = dto.NumberOfRooms;
+            entity.NumberOfBathrooms = dto.NumberOfBathrooms;
+            entity.PropertyTypeId = dto.PropertyType.Id;
+            entity.SalesTypeId = dto.SalesType.Id;
+
+            var newFeatureIds = dto.Features?.Select(f => f.Id).ToList() ?? new List<int>();
+            var featuresToRemove = entity.Features.Where(f => !newFeatureIds.Contains(f.Id)).ToList();
+            foreach (var feature in featuresToRemove)
+                entity.Features.Remove(feature);
+            foreach (var featureId in newFeatureIds)
+            {
+                if (!entity.Features.Any(f => f.Id == featureId))
+                {
+                    var feature = await _featureRepository.GetById(featureId);
+                    if (feature != null)
+                        entity.Features.Add(feature);
+                }
+            }
+
+            var newImageUrls = dto.Images?.Select(i => i.ImageUrl).ToList() ?? new List<string>();
+            var imagesToRemove = entity.Images.Where(img => !newImageUrls.Contains(img.ImageUrl)).ToList();
+            foreach (var img in imagesToRemove)
+                entity.Images.Remove(img);
+
+            foreach (var newImageDto in dto.Images)
+            {
+                if (!entity.Images.Any(img => img.ImageUrl == newImageDto.ImageUrl))
+                    entity.Images.Add(new PropertyImage { ImageUrl = newImageDto.ImageUrl });
+            }
+
+            await _repository.UpdateAsync(entity);
+
+            return _mapper.Map<PropertyDTO>(entity);
+        }
+
     }
 }
-
