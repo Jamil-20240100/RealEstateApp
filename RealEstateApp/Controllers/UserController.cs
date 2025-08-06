@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.User;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Application.ViewModels.User;
-using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Helpers;
 
 namespace RealEstateApp.Controllers

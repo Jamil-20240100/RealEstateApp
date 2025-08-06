@@ -22,38 +22,22 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.FavoriteProperty", b =>
+            modelBuilder.Entity("FeatureProperty", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("FeaturesId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PropertyId")
+                    b.Property<int>("PropertiesId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PropertyId1")
-                        .HasColumnType("int");
+                    b.HasKey("FeaturesId", "PropertiesId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("PropertiesId");
 
-                    b.HasIndex("PropertyId");
-
-                    b.HasIndex("PropertyId1");
-
-                    b.HasIndex("ClientId", "PropertyId")
-                        .IsUnique();
-
-                    b.ToTable("FavoriteProperties", (string)null);
+                    b.ToTable("PropertyFeatures", (string)null);
                 });
 
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Improvement", b =>
+            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Feature", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,11 +52,12 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Improvements", (string)null);
+                    b.ToTable("Features", (string)null);
                 });
 
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Message", b =>
@@ -134,15 +119,13 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Property", b =>
@@ -157,21 +140,16 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Bathrooms")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Bedrooms")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("NumberOfBathrooms")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfRooms")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -179,23 +157,17 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.Property<int>("PropertyTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SaleTypeId")
+                    b.Property<int>("SalesTypeId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Size")
+                    b.Property<decimal>("SizeInMeters")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Disponible");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyTypeId");
 
-                    b.HasIndex("SaleTypeId");
+                    b.HasIndex("SalesTypeId");
 
                     b.ToTable("Properties", (string)null);
                 });
@@ -223,21 +195,6 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.ToTable("PropertyImages", (string)null);
                 });
 
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.PropertyImprovement", b =>
-                {
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ImprovementId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PropertyId", "ImprovementId");
-
-                    b.HasIndex("ImprovementId");
-
-                    b.ToTable("PropertyImprovements", (string)null);
-                });
-
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.PropertyType", b =>
                 {
                     b.Property<int>("Id")
@@ -248,7 +205,8 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -260,7 +218,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.ToTable("PropertyTypes", (string)null);
                 });
 
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.SaleType", b =>
+            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.SalesType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -270,7 +228,8 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -279,7 +238,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SaleTypes", (string)null);
+                    b.ToTable("SalesTypes", (string)null);
                 });
 
             modelBuilder.Entity("RealEstateApp.Infrastructure.Identity.Entities.AppUser", b =>
@@ -348,25 +307,25 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.FavoriteProperty", b =>
+            modelBuilder.Entity("FeatureProperty", b =>
                 {
-                    b.HasOne("RealEstateApp.Core.Domain.Entities.Property", "Property")
+                    b.HasOne("RealEstateApp.Core.Domain.Entities.Feature", null)
                         .WithMany()
-                        .HasForeignKey("PropertyId")
+                        .HasForeignKey("FeaturesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RealEstateApp.Core.Domain.Entities.Property", null)
-                        .WithMany("Favorites")
-                        .HasForeignKey("PropertyId1");
-
-                    b.Navigation("Property");
+                        .WithMany()
+                        .HasForeignKey("PropertiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Message", b =>
                 {
                     b.HasOne("RealEstateApp.Core.Domain.Entities.Property", "Property")
-                        .WithMany("Messages")
+                        .WithMany()
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -377,7 +336,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Offer", b =>
                 {
                     b.HasOne("RealEstateApp.Core.Domain.Entities.Property", "Property")
-                        .WithMany("Offers")
+                        .WithMany()
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -390,18 +349,18 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.HasOne("RealEstateApp.Core.Domain.Entities.PropertyType", "PropertyType")
                         .WithMany("Properties")
                         .HasForeignKey("PropertyTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("RealEstateApp.Core.Domain.Entities.SaleType", "SaleType")
+                    b.HasOne("RealEstateApp.Core.Domain.Entities.SalesType", "SalesType")
                         .WithMany("Properties")
-                        .HasForeignKey("SaleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("SalesTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PropertyType");
 
-                    b.Navigation("SaleType");
+                    b.Navigation("SalesType");
                 });
 
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.PropertyImage", b =>
@@ -415,41 +374,9 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.PropertyImprovement", b =>
-                {
-                    b.HasOne("RealEstateApp.Core.Domain.Entities.Improvement", "Improvement")
-                        .WithMany("PropertyImprovements")
-                        .HasForeignKey("ImprovementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RealEstateApp.Core.Domain.Entities.Property", "Property")
-                        .WithMany("PropertyImprovements")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Improvement");
-
-                    b.Navigation("Property");
-                });
-
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Improvement", b =>
-                {
-                    b.Navigation("PropertyImprovements");
-                });
-
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.Property", b =>
                 {
-                    b.Navigation("Favorites");
-
                     b.Navigation("Images");
-
-                    b.Navigation("Messages");
-
-                    b.Navigation("Offers");
-
-                    b.Navigation("PropertyImprovements");
                 });
 
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.PropertyType", b =>
@@ -457,7 +384,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.Navigation("Properties");
                 });
 
-            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.SaleType", b =>
+            modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.SalesType", b =>
                 {
                     b.Navigation("Properties");
                 });

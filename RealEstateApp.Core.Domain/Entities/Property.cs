@@ -1,33 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RealEstateApp.Core.Domain.Entities
+﻿namespace RealEstateApp.Core.Domain.Entities
 {
     public class Property
     {
-        public int Id { get; set; }
-        public string Code { get; set; }
+        public required int Id { get; set; }
+        public required string AgentId { get; set; }
+        public required decimal Price { get; set; }
+        public required string Description { get; set; }
+        public required decimal SizeInMeters { get; set; }
+        public required int NumberOfRooms { get; set; }
+        public required int NumberOfBathrooms { get; set; }
+        public required ICollection<Feature> Features { get; set; }
+        public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
         public int PropertyTypeId { get; set; }
-        public int SaleTypeId { get; set; }
-        public decimal Price { get; set; }
-        public double Size { get; set; }
-        public int Bathrooms { get; set; }
-        public int Bedrooms { get; set; }
-        public string Description { get; set; }
-        public string AgentId { get; set; }
-        public string State { get; set; } = "Disponible"; // "Disponible", "Vendida"
-
-        public PropertyType PropertyType { get; set; }
-        public SaleType SaleType { get; set; }
-
-        public virtual ICollection<PropertyImage> Images { get; set; }
-        public virtual ICollection<PropertyImprovement> PropertyImprovements { get; set; }
-        public virtual ICollection<FavoriteProperty> Favorites { get; set; }
-        public virtual ICollection<Offer> Offers { get; set; }
-        public virtual ICollection<Message> Messages { get; set; }
+        public PropertyType? PropertyType { get; set; }
+        public int SalesTypeId { get; set; }
+        public SalesType? SalesType { get; set; }
     }
-
 }

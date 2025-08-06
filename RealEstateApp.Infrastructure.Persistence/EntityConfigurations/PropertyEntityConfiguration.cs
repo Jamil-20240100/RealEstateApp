@@ -1,56 +1,56 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Domain.Entities;
 
-public class PropertyConfiguration : IEntityTypeConfiguration<Property>
+namespace RealEstateApp.Infrastructure.Persistence.EntityConfigurations
 {
-    public void Configure(EntityTypeBuilder<Property> builder)
+    public class PropertyEntityConfiguration : IEntityTypeConfiguration<Property>
     {
-        builder.ToTable("Properties");
+        public void Configure(EntityTypeBuilder<Property> builder)
+        {
+            builder.ToTable("Properties");
 
-        builder.HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.Code)
-            .IsRequired()
-            .HasMaxLength(50);
+            builder.Property(p => p.AgentId).IsRequired();
 
-        builder.Property(p => p.Price)
-            .IsRequired()
-            .HasColumnType("decimal(18,2)");
+            builder.Property(p => p.Price)
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
 
-        builder.Property(p => p.Size)
-            .IsRequired()
-            .HasColumnType("decimal(18,2)");
+            builder.Property(p => p.Description)
+                .IsRequired()
+                .HasMaxLength(1000);
 
-        builder.Property(p => p.Description)
-            .HasMaxLength(1000);
+            builder.Property(p => p.SizeInMeters).IsRequired();
 
-        builder.Property(p => p.State)
-            .HasDefaultValue("Disponible");
+            builder.Property(p => p.NumberOfRooms).IsRequired();
 
-        // Relationships
-        builder.HasOne(p => p.PropertyType)
-            .WithMany(pt => pt.Properties)
-            .HasForeignKey(p => p.PropertyTypeId);
+            builder.Property(p => p.NumberOfBathrooms).IsRequired();
 
-        builder.HasOne(p => p.SaleType)
-            .WithMany(st => st.Properties)
-            .HasForeignKey(p => p.SaleTypeId);
+            builder
+    .HasMany(p => p.Images)
+    .WithOne(pi => pi.Property)
+    .HasForeignKey(pi => pi.PropertyId)
+    .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(p => p.Images)
-            .WithOne(pi => pi.Property)
-            .HasForeignKey(pi => pi.PropertyId);
 
-        builder.HasMany(p => p.PropertyImprovements)  // Relación muchos a muchos con la entidad intermedia
-            .WithOne(pi => pi.Property)
-            .HasForeignKey(pi => pi.PropertyId);
+            builder.HasOne(p => p.PropertyType)
+                   .WithMany(pt => pt.Properties)
+                   .HasForeignKey(p => p.PropertyTypeId)
+                   .OnDelete(DeleteBehavior.Restrict)
+                   .IsRequired();
 
-        builder.HasMany(p => p.Offers)
-            .WithOne(o => o.Property)
-            .HasForeignKey(o => o.PropertyId);
+            builder.HasOne(p => p.SalesType)
+                   .WithMany(st => st.Properties)
+                   .HasForeignKey(p => p.SalesTypeId)
+                   .OnDelete(DeleteBehavior.Restrict)
+                   .IsRequired();
 
-        builder.HasMany(p => p.Messages)
-            .WithOne(m => m.Property)
-            .HasForeignKey(m => m.PropertyId);
+            builder
+                .HasMany(p => p.Features)
+                .WithMany(f => f.Properties)
+                .UsingEntity(j => j.ToTable("PropertyFeatures"));
+        }
     }
 }

@@ -1,0 +1,17 @@
+﻿@model DeleteSalesTypeViewModel
+
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<h2>Confirmar eliminación</h2>
+
+<div class="alert alert-danger">
+    ¿Está seguro que desea eliminar este tipo de venta y las propiedades asociadas?
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+</form>

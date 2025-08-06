@@ -26,7 +26,6 @@ internal class Program
         var app = builder.Build();
 
         await app.Services.RunIdentitySeedAsync();
-        await app.Services.RunPersistenceSeedAsync();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -47,7 +46,7 @@ internal class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=GeneralHome}/{action=Index}/{id?}")
+            pattern: "{controller=Login}/{action=Index}/{id?}")
             .WithStaticAssets();
 
         await app.RunAsync();

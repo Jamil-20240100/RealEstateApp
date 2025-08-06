@@ -1,14 +1,14 @@
-﻿using RealEstateApp.Core.Application.ViewModels.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Domain.Entities;
+using RealEstateApp.Core.Domain.Interfaces;
 
-
-    public interface IPropertyService
+namespace RealEstateApp.Core.Application.Interfaces
+{
+    public interface IPropertyService : IGenericService<PropertyDTO>
     {
-        Task<List<PropertyViewModel>> GetFilteredAvailableAsync(PropertyFilterViewModel filters, string? userId);
-    Task<PropertyViewModel?> GetPropertyDetailsAsync(int id, string? userId);
+        public Task<List<PropertyDTO>> GetAllWithInclude();
+        public Task<PropertyDTO?> GetByIdWithInclude(int id);
+        Task<PropertyDTO?> AddAsync(PropertyDTO dto);
+        Task<PropertyDTO?> UpdateAsync(PropertyDTO dto, int id);
+    }
 }
-
