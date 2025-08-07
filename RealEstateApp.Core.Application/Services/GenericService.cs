@@ -99,7 +99,7 @@ namespace RealEstateApp.Core.Application.Services
                 return [];
             }
         }
-
+        
         public virtual async Task<List<DtoModel>> GetAllQuery()
         {
             try

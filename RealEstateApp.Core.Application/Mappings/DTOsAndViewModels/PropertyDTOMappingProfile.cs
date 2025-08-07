@@ -2,7 +2,6 @@
 using RealEstateApp.Core.Application.DTOs.Feature;
 using RealEstateApp.Core.Application.DTOs.Message;
 using RealEstateApp.Core.Application.DTOs.Property;
-using RealEstateApp.Core.Application.DTOs.PropertyType;
 using RealEstateApp.Core.Application.DTOs.SalesType;
 using RealEstateApp.Core.Application.DTOs.Offer;
 using RealEstateApp.Core.Application.DTOs.Client;
@@ -11,6 +10,7 @@ using RealEstateApp.Core.Application.ViewModels.Feature;
 using RealEstateApp.Core.Application.ViewModels.Property;
 using RealEstateApp.Core.Application.ViewModels.PropertyType;
 using RealEstateApp.Core.Application.ViewModels.SalesType;
+using RealEstateApp.Core.Application.DTOs.PropertyType;
 
 
 namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
