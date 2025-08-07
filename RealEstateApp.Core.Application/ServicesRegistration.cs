@@ -21,7 +21,8 @@ namespace RealEstateApp.Core.Application
             services.AddScoped<IPropertyTypeService, PropertyTypeService>();
             services.AddScoped<ISalesTypeService, SalesTypeService>();
             services.AddScoped<IFeatureService, FeatureService>();
-
+            services.AddScoped<IFavoriteService, FavoriteService>();
+            services.AddScoped<IOfferService, OfferService>();
             services.AddScoped<IMessageService, MessageService>();
             #endregion
         }
