@@ -15,11 +15,12 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
         
         public DbSet<AppUser> Users { get; set; }
         public DbSet<Property> Properties { get; set; }
-        public DbSet<FavoriteProperty> FavoriteProperties { get; set; }
+        public DbSet<PropertyType> PropertyTypes { get; set; }
+        public DbSet<SalesType> SalesTypes { get; set; }
+        public DbSet<Feature> Features { get; set; }
         public DbSet<Offer> Offers { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<PropertyType> PropertyTypes { get; set; }
-        public DbSet<SaleType> SaleTypes { get; set; }
+        public DbSet<FavoriteProperty> FavoriteProperties { get; set; }
 
         //
         // ENTITY CONFIGURATIONS APPLICATION

@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Application.ViewModels.Client;
+using RealEstateApp.Core.Application.ViewModels.Property;
 using RealEstateApp.Infrastructure.Identity.Entities;
+using System.Security.Claims;
 
 namespace RealEstateApp.Controllers
 {
@@ -15,12 +19,14 @@ namespace RealEstateApp.Controllers
         private readonly IMessageService _messageService;
         private readonly IOfferService _offerService;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IMapper _mapper;
 
         public ClientHomeController(
             IPropertyService propertyService,
             IFavoriteService favoriteService,
             IMessageService messageService,
             IOfferService offerService,
+            IMapper mapper,
             UserManager<AppUser> userManager)
         {
             _propertyService = propertyService;
@@ -28,38 +34,68 @@ namespace RealEstateApp.Controllers
             _messageService = messageService;
             _offerService = offerService;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         // ===============================
         // HOME DEL CLIENTE
         // ===============================
-        public async Task<IActionResult> Index(PropertyFilterViewModel filter)
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            string? userId = _userManager.GetUserId(User);
-            var properties = await _propertyService.GetFilteredAvailableAsync(filter, userId);
-            ViewBag.Filter = filter; // Para mantener los filtros en la vista
-            return View(properties);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Esto devuelve DTOs
+            var dtoList = await _propertyService.GetAllWithInclude();
+
+            // Mapear a ViewModels para la vista
+            var vmList = _mapper.Map<List<PropertyViewModel>>(dtoList);
+
+            // Cargar favoritos y pasarlos como HashSet<int>
+            HashSet<int> favoriteIds = new();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var favVms = await _favoriteService.GetFavoritePropertiesByUserAsync(userId);
+                favoriteIds = favVms.Select(f => f.Id).ToHashSet();
+            }
+
+            ViewBag.FavoriteIds = favoriteIds;
+
+            return View(vmList); // <- la vista espera List<PropertyViewModel>
         }
+
 
         // ===============================
         // DETALLE DE PROPIEDAD
         // ===============================
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            string? clientId = _userManager.GetUserId(User);
+            // Obtener la propiedad sin validar que el usuario sea agente dueño
+            var propertyDto = await _propertyService.GetByIdWithInclude(id);
+            if (propertyDto == null)
+                return NotFound();
 
-            var property = await _propertyService.GetPropertyDetailsAsync(id, clientId);
-            if (property == null) return NotFound();
+            // Mapear DTO a ViewModel (ajusta según tus modelos)
+            var property = _mapper.Map<PropertyDetailsViewModel>(propertyDto);
 
-            // Obtener ofertas y mensajes del cliente para esta propiedad
-            property.Offers = await _offerService.GetOffersByClientAsync(id, clientId);
+            // Opcional: si quieres cargar mensajes y ofertas para cliente
+            string clientId = _userManager.GetUserId(User);
+            string agentId = await _propertyService.GetAgentIdByPropertyIdAsync(id);
 
-            // Determinar el agente asociado (AgentId viene de PropertyViewModel)
-            string agentId = property.AgentId;
-            property.Messages = await _messageService.GetMessagesAsync(id, clientId, agentId);
+            // Mensajes donde el cliente es parte (ya sea remitente o receptor)
+            var messages = await _messageService.GetMessagesAsync(id, clientId, agentId);
+            property.Messages = messages;
+
+            // Ofertas hechas por el cliente para esa propiedad
+            var offers = await _offerService.GetOffersByClientAsync(id, clientId);
+            property.Offers = offers;
+
+            // No hay restricción estricta, clientes pueden ver cualquier propiedad
 
             return View(property);
         }
+            
 
         // ===============================
         // MIS PROPIEDADES (FAVORITOS)
@@ -77,9 +113,14 @@ namespace RealEstateApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ToggleFavorite(int propertyId)
         {
-            string clientId = _userManager.GetUserId(User);
-            await _favoriteService.ToggleFavoriteAsync(clientId, propertyId);
-            return RedirectToAction(nameof(Index));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
+
+            await _favoriteService.ToggleFavoriteAsync(userId, propertyId);
+
+            // Redirige a la lista de propiedades para que se recargue con datos actualizados
+            return RedirectToAction("Index");
         }
 
         // ===============================

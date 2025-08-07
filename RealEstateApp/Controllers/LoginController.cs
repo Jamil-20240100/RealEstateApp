@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +40,7 @@ namespace RealEstateApp.Controllers
 
                 if (user != null && user.Role == Roles.Admin.ToString())
                 {
-                    return RedirectToRoute(new { controller = "Home", action = "Index" });
+                    return RedirectToRoute(new { controller = "AdminHome", action = "Index" });
                 }
                 else if (user != null && user.Role == Roles.Client.ToString())
                 {
@@ -67,7 +66,7 @@ namespace RealEstateApp.Controllers
 
                 if (user != null && user.Role == Roles.Admin.ToString())
                 {
-                    return RedirectToRoute(new { controller = "Home", action = "Index" });
+                    return RedirectToRoute(new { controller = "AdminHome", action = "Index" });
                 }
                 else if (user != null && user.Role == Roles.Client.ToString())
                 {
@@ -95,7 +94,7 @@ namespace RealEstateApp.Controllers
             {
                 if (userDto.Roles != null && userDto.Roles.Any(r => r == Roles.Admin.ToString()))
                 {
-                    return RedirectToRoute(new { controller = "Home", action = "Index" });
+                    return RedirectToRoute(new { controller = "AdminHome", action = "Index" });
                 }
                 else if (userDto.Roles != null && userDto.Roles.Any(r => r == Roles.Agent.ToString()))
                 {

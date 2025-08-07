@@ -1,4 +1,4 @@
-﻿@model List<RealEstateApp.Core.Application.ViewModels.Client.PropertyViewModel>
+﻿@model List<RealEstateApp.Core.Application.ViewModels.Property.PropertyViewModel>
 
 @{
     ViewData["Title"] = "Mis Propiedades";
@@ -7,7 +7,7 @@
 
 <h2 class="mb-4">Mis Propiedades Favoritas</h2>
 
-@if (!Model.Any())
+@if (Model == null || !Model.Any())
 {
     <div class="alert alert-info">
         No tienes propiedades marcadas como favoritas.
@@ -16,31 +16,37 @@
 else
 {
     <div class="row">
-        @foreach (var property in Model)
+        @foreach (var p in Model)
         {
             <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="@Url.Content("~/" + (property.Images.FirstOrDefault() ?? "Images/no-image.png"))"
-                         class="card-img-top"
-                         style="height: 220px; object-fit: cover;"
-                         alt="Imagen propiedad" />
+                <div class="card shadow-sm h-100">
+                    <img src="@Url.Content(
+                                                           p.Images != null && p.Images.Any()
+                                                               ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
+                                                               : "~/Images/no-image.png"
+                                                       )"
+                 class="card-img-top"
+                 style="height: 220px; object-fit: cover;"
+                 alt="Imagen propiedad" />
+
                     <div class="card-body">
-                        <h5 class="card-title">@property.Type - @property.SaleType</h5>
+                        <h5 class="card-title">@p.PropertyType?.Name - @p.SalesType?.Name</h5>
                         <p class="card-text">
-                            <strong>Código:</strong> @property.Code <br />
-                            <strong>Precio:</strong> @property.Price.ToString("C") <br />
-                            <strong>Habitaciones:</strong> @property.Bedrooms <br />
-                            <strong>Baños:</strong> @property.Bathrooms <br />
-                            <strong>Tamaño:</strong> @property.Size m²
+                            <strong>Código:</strong> @p.Code <br />
+                            <strong>Precio:</strong> @p.Price.ToString("C") <br />
+                            <strong>Habitaciones:</strong> @p.NumberOfRooms <br />
+                            <strong>Baños:</strong> @p.NumberOfBathrooms <br />
+                            <strong>Tamaño:</strong> @p.SizeInMeters m²
                         </p>
 
-                        <!-- Botón para quitar de favoritos -->
                         <form asp-action="ToggleFavorite" asp-controller="ClientHome" method="post" class="mb-2">
-                            <input type="hidden" name="propertyId" value="@property.Id" />
+                            <input type="hidden" name="propertyId" value="@p.Id" />
                             <button type="submit" class="btn btn-danger btn-sm w-100">Quitar de Favoritos</button>
                         </form>
 
-                        <a asp-action="Details" asp-controller="ClientHome" asp-route-id="@property.Id" class="btn btn-outline-info btn-sm w-100">Ver detalles</a>
+                        <a asp-action="Details" asp-controller="ClientHome" asp-route-id="@p.Id" class="btn btn-outline-info btn-sm w-100">
+                            Ver detalles
+                        </a>
                     </div>
                 </div>
             </div>

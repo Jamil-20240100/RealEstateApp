@@ -47,7 +47,7 @@ internal class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=GeneralHome}/{action=Index}/{id?}")
+            pattern: "{controller=Login}/{action=Index}/{id?}")
             .WithStaticAssets();
 
         await app.RunAsync();
