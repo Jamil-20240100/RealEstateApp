@@ -10,8 +10,7 @@ namespace RealEstateApp.Core.Application.DTOs.User
         public required string UserName { get; set; }
         public required string Password { get; set; }
         public required Roles Role { get; set; }
-        public required string UserId { get; set; }
-        public double? InitialAmount { get; set; }
+        public string? UserIdentification { get; set; }
         public required bool IsActive { get; set; }
     }
 }

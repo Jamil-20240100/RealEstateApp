@@ -29,6 +29,7 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
                 .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.SelectedFeatures.Select(id => new FeatureDTO { Id = id }).ToList()))
                 .ForMember(dest => dest.PropertyType, opt => opt.Ignore())
                 .ForMember(dest => dest.SalesType, opt => opt.Ignore())
+                .ForMember(dest => dest.Code, opt => opt.Ignore())
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(url => new PropertyImageDTO { ImageUrl = url }).ToList()))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
@@ -56,6 +57,7 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
                 .ForMember(dest => dest.NumberOfRooms, opt => opt.Ignore())
                 .ForMember(dest => dest.NumberOfBathrooms, opt => opt.Ignore())
                 .ForMember(dest => dest.Features, opt => opt.Ignore())
+                .ForMember(dest => dest.Code, opt => opt.Ignore())
                 .ForMember(dest => dest.Images, opt => opt.Ignore());
 
             CreateMap<PropertyDTO, PropertyDetailsViewModel>()

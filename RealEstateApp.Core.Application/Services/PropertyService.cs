@@ -113,6 +113,24 @@ namespace RealEstateApp.Core.Application.Services
             return _mapper.Map<PropertyDTO>(entity);
         }
 
+
+        public async Task<string> GenerateUniquePropertyCodeAsync()
+        {
+            const int maxAttempts = 9999;
+            var random = new Random();
+
+            for (int attempt = 0; attempt < maxAttempts; attempt++)
+            {
+                string candidate = random.Next(000000, 999999).ToString();
+
+                var existingProperty = await _repository.GetByPropertyCodeAsync(candidate);
+                if (existingProperty == null)
+                    return candidate;
+            }
+
+            throw new Exception("No se pudo generar un codigo de propiedad único luego de varios intentos.");
+        }
+
         //Este es el fr pero hasta que hagamos los filtros usaremos el otro de base
 
         //public async Task<List<PropertyViewModel>> GetFilteredAvailableAsync(PropertyFilterViewModel filters, string? userId)
@@ -242,7 +260,6 @@ namespace RealEstateApp.Core.Application.Services
             return property.AgentId;
 
         }
-
 
     }
 }

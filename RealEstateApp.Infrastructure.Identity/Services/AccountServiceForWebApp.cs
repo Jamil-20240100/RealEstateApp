@@ -112,7 +112,8 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 IsActive = user.IsActive,
                 isVerified = user.EmailConfirmed,
                 ProfileImage = user.ProfileImage,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                UserIdentification = user.UserIdentification,
             };
         }
 
@@ -135,9 +136,5 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             var user = await _userManager.FindByIdAsync(userId);
             return user == null ? "" : $"{user.Name} {user.LastName}";
         }
-
-        //
-        //
-        //
     }
 }

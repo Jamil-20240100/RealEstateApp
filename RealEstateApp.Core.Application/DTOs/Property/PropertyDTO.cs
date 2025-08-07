@@ -20,10 +20,13 @@ namespace RealEstateApp.Core.Application.DTOs.Property
         public required List<FeatureDTO> Features { get; set; }
         public List<PropertyImageDTO> Images { get; set; } = new List<PropertyImageDTO>();
         public string? AgentId { get; set; }
+
+        public required string Code { get; set; }
         public bool IsFavorite { get; set; }
 
         public List<MessageDTO> Messages { get; set; } = new List<MessageDTO>();
         public List<OfferDTO> Offers { get; set; } = new List<OfferDTO>();
         public List<ClientDTO> ClientsWithOffers { get; set; } = new List<ClientDTO>();
+
     }
 }

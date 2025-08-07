@@ -1,4 +1,4 @@
-﻿using RealEstateApp.Core.Domain.Common.Enums;
+using RealEstateApp.Core.Domain.Common.Enums;
 
 namespace RealEstateApp.Core.Domain.Entities
 {
@@ -17,8 +17,11 @@ namespace RealEstateApp.Core.Domain.Entities
         public PropertyType? PropertyType { get; set; }
         public int SalesTypeId { get; set; }
         public SalesType? SalesType { get; set; }
+      
+        public required string Code { get; set; }
         public PropertyState State { get; set; } = PropertyState.Disponible;
         public ICollection<Offer> Offers { get; set; } = new List<Offer>();
         public ICollection<Message> Messages { get; set; } = new List<Message>(); 
+
     }
 }

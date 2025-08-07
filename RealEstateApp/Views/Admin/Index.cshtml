@@ -1,0 +1,69 @@
+﻿@model List<UserViewModel>
+
+@{
+    ViewData["Title"] = "Listado de Administradores";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-semibold">Listado de Administradores</h1>
+    <a asp-action="Create" class="btn btn-success">Crear Administrador</a>
+</div>
+
+<table class="table-auto w-full border-collapse border border-gray-300">
+    <thead>
+        <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-4 py-2">Nombre</th>
+            <th class="border border-gray-300 px-4 py-2">Apellido</th>
+            <th class="border border-gray-300 px-4 py-2">Usuario</th>
+            <th class="border border-gray-300 px-4 py-2">Cédula</th>
+            <th class="border border-gray-300 px-4 py-2">Correo</th>
+            <th class="border border-gray-300 px-4 py-2">Estado</th>
+            <th class="border border-gray-300 px-4 py-2">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var admin in Model)
+        {
+            <tr>
+                <td class="border px-4 py-2">@admin.Name</td>
+                <td class="border px-4 py-2">@admin.LastName</td>
+                <td class="border px-4 py-2">@admin.UserName</td>
+                <td class="border px-4 py-2">@admin.UserIdentification</td>
+                <td class="border px-4 py-2">@admin.Email</td>
+                <td class="border px-4 py-2">
+                    @if (admin.IsActive)
+                    {
+                        <span class="text-green-600 font-bold">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="text-red-600 font-bold">Inactivo</span>
+                    }
+                </td>
+                <td class="border px-4 py-2 flex gap-2">
+                    @if (admin.Id != ViewBag.LoggedInAdminId)
+                    {
+                        <form asp-action="ToggleStatus" method="post" asp-route-id="@admin.Id">
+                            <button type="submit" class="btn btn-outline-primary">
+                                @(admin.IsActive ? "Inactivar" : "Activar")
+                            </button>
+                        </form>
+
+                        <a asp-action="Edit" asp-route-id="@admin.Id" class="btn btn-outline-secondary">
+                            Editar
+                        </a>
+
+                        <a asp-action="DeleteConfirmation" asp-route-id="@admin.Id" class="btn btn-outline-danger">
+                            Eliminar
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-gray-500 italic">No disponible</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

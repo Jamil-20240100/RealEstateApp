@@ -13,7 +13,7 @@ using RealEstateApp.Core.Application.ViewModels.User;
 using RealEstateApp.Helpers;
 using RealEstateApp.Infrastructure.Identity.Entities;
 
-namespace WebApp.RealEstateApp.Controllers
+namespace RealEstateApp.Controllers
 {
     public class PropertyController : Controller
     {
@@ -76,7 +76,7 @@ namespace WebApp.RealEstateApp.Controllers
             if (user is null || user.Role != "Agent")
                 return RedirectToRoute(new { controller = "Login", action = "Index" });
 
-            var vm = new SavePropertyViewModel() { Description = ""};
+            var vm = new SavePropertyViewModel() { Description = "" };
 
             await LoadDropdowns(vm);
 
@@ -106,7 +106,6 @@ namespace WebApp.RealEstateApp.Controllers
                 return View("Save", vm);
             }
 
-            // Subir las imágenes y obtener sus rutas
             List<string> uploadedImages = new();
             if (vm.ImagesFile != null && vm.ImagesFile.Any())
             {
@@ -129,11 +128,11 @@ namespace WebApp.RealEstateApp.Controllers
 
             dto.PropertyType = await _propertyTypeService.GetById(vm.PropertyTypeId);
             dto.SalesType = await _saleTypeService.GetById(vm.SalesTypeId);
+            dto.Code = await _propertyService.GenerateUniquePropertyCodeAsync();
 
             await _propertyService.AddAsync(dto);
 
             return RedirectToAction("Index");
-
         }
         
         [HttpGet]
@@ -203,7 +202,8 @@ namespace WebApp.RealEstateApp.Controllers
             if (property is null || property.AgentId != user.Id)
                 return RedirectToAction("Index");
 
-            return View(property);
+            var vm = _mapper.Map<DeletePropertyViewModel>(property);
+            return View(vm);
         }
 
         [HttpPost, ActionName("Delete")]

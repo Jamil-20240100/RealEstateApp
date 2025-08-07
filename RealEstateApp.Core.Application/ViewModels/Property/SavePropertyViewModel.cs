@@ -41,9 +41,7 @@ namespace RealEstateApp.Core.Application.ViewModels.Property
 
         [Required(ErrorMessage = "Debe agregar al menos una imagen.")]
         public List<string> Images { get; set; } = new();
-
         public string? AgentId { get; set; }
-
         public List<PropertyTypeViewModel> PropertyTypes { get; set; } = new();
         public List<SalesTypeViewModel> SalesTypes { get; set; } = new();
         public List<FeatureViewModel> AvailableFeatures { get; set; } = new();

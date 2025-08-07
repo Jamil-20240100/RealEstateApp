@@ -12,7 +12,15 @@ public class PropertyRepository : GenericRepository<Property>, IPropertyReposito
     public PropertyRepository(RealEstateContext context) : base(context)
     {
         _context = context;
+
     }
+    
+    public async Task<Property?> GetByPropertyCodeAsync(string propertyCode)
+    {
+        return await _context.Properties
+                    .FirstOrDefaultAsync(p => p.Code == propertyCode);
+    }
+
 
     public async Task<List<Property>> GetAvailableWithFiltersAsync(
         int? propertyTypeId, decimal? minPrice, decimal? maxPrice, int? bathrooms, int? bedrooms)
