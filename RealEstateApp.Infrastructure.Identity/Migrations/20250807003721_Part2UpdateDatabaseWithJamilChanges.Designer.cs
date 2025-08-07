@@ -12,8 +12,8 @@ using RealEstateApp.Infrastructure.Identity.Contexts;
 namespace RealEstateApp.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20250806172834_UpdateDatabaseWithJamilChanges")]
-    partial class UpdateDatabaseWithJamilChanges
+    [Migration("20250807003721_Part2UpdateDatabaseWithJamilChanges")]
+    partial class Part2UpdateDatabaseWithJamilChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,6 +220,9 @@ namespace RealEstateApp.Infrastructure.Identity.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<string>("UserIdentification")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)

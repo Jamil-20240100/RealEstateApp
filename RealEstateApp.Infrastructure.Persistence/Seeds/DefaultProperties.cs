@@ -71,6 +71,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Seeders
                     NumberOfBathrooms = random.Next(1, 3),
                     NumberOfRooms = random.Next(1, 5),
                     PropertyTypeId = propertyTypeId,
+                    Code = $"PROP-{i:0000}",
                     SalesTypeId = salesTypeId,
                     Features = new List<Feature>(),
                     Images = new List<PropertyImage>
