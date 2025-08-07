@@ -14,14 +14,16 @@ namespace RealEstateApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IAccountServiceForWebApp _accountService;
         private readonly IFeatureService _featureService;
+        private readonly IPropertyService _propertyService;
         private readonly IMapper _mapper;
 
         public FeatureController(
             IFeatureService featureService,
             IMapper mapper,
             UserManager<AppUser> userManager,
-            IAccountServiceForWebApp accountService)
+            IAccountServiceForWebApp accountService, IPropertyService propertyService)
         {
+            _propertyService = propertyService;
             _featureService = featureService;
             _mapper = mapper;
             _userManager = userManager;
@@ -46,6 +48,13 @@ namespace RealEstateApp.Controllers
 
             var dtos = await _featureService.GetAll();
             var features = _mapper.Map<List<FeatureViewModel>>(dtos);
+            var allProperties = await _propertyService.GetAllWithInclude();
+
+            foreach (var feature in features)
+            {
+                feature.NumberOfProperties = allProperties.Count(p => p.Features.FirstOrDefault(f => f.Id == feature.Id) != null);
+            }
+
             return View(features);
         }
 
