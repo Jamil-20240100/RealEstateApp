@@ -9,7 +9,7 @@ namespace RealEstateApp.Core.Application.Interfaces
         Task<EditResponseDto> EditUser(SaveUserDto saveDto, string? origin, bool? isCreated = false, bool? isApi = false);
         Task<UserResponseDto> ForgotPasswordAsync(ForgotPasswordRequestDto request, bool? isApi = false);
         Task<List<UserDto>> GetAllUser(bool? isActive = true);
-        Task<List<UserDto>> GetAllUserByRole(string role, bool? isActive = true);
+        Task<List<UserDto>> GetAllUserByRole(string role);
         Task<List<UserDto>> GetAllActiveUserByRole(string role, bool? isActive = true);
         Task<UserDto?> GetUserByEmail(string email);
         Task<UserDto?> GetUserById(string Id);

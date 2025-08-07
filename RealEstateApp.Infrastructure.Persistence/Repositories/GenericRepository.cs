@@ -132,5 +132,18 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
 
             return await _context.Set<Entity>().Where(expression).ToListAsync();
         }
+
+        public virtual async Task<Entity?> GetByIdWithInclude(int id, List<string> includeProperties)
+        {
+            IQueryable<Entity> query = _context.Set<Entity>().AsQueryable();
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+        }
+
     }
 }

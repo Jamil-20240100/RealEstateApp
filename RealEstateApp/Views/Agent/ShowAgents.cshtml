@@ -87,12 +87,26 @@
     </div>
 </div>
 
-<div class="agents-grid">
+<div class="agents-grid" id="agents-container">
     @foreach (var agent in Model)
     {
-        <div class="agent-card">
-            <img src="@agent.Image" alt="@agent.Name" class="agent-image">
+        <div class="agent-card" data-name="@agent.Name.ToLower()">
+            <img src="@Url.Content("/" + agent.Image)" alt="@agent.Name" class="agent-image">
             <div class="agent-name">@agent.Name</div>
         </div>
     }
 </div>
+
+<script>
+    const searchInput = document.getElementById("agent-name");
+    const agentCards = document.querySelectorAll(".agent-card");
+
+    searchInput.addEventListener("input", function () {
+        const filter = this.value.toLowerCase();
+
+        agentCards.forEach(card => {
+            const name = card.dataset.name;
+            card.style.display = name.includes(filter) ? "block" : "none";
+        });
+    });
+</script>

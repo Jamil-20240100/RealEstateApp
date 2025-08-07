@@ -1,7 +1,9 @@
-﻿using RealEstateApp.Core.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using RealEstateApp.Core.Domain.Common.Enums;
+using RealEstateApp.Core.Domain.Entities;
+using RealEstateApp.Core.Domain.Interfaces;
 using RealEstateApp.Infrastructure.Persistence.Contexts;
 using RealEstateApp.Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 public class PropertyRepository : GenericRepository<Property>, IPropertyRepository
 {
@@ -10,16 +12,24 @@ public class PropertyRepository : GenericRepository<Property>, IPropertyReposito
     public PropertyRepository(RealEstateContext context) : base(context)
     {
         _context = context;
+
     }
+    
+    public async Task<Property?> GetByPropertyCodeAsync(string propertyCode)
+    {
+        return await _context.Properties
+                    .FirstOrDefaultAsync(p => p.Code == propertyCode);
+    }
+
 
     public async Task<List<Property>> GetAvailableWithFiltersAsync(
         int? propertyTypeId, decimal? minPrice, decimal? maxPrice, int? bathrooms, int? bedrooms)
     {
         var query = _context.Properties
-            .Where(p => p.State == "Disponible")
+            .Where(p => p.State == PropertyState.Disponible)
             .Include(p => p.Images)
             .Include(p => p.PropertyType)
-            .Include(p => p.SaleType)
+            .Include(p => p.SalesType)
             .AsQueryable();
 
         if (propertyTypeId.HasValue)
@@ -32,10 +42,10 @@ public class PropertyRepository : GenericRepository<Property>, IPropertyReposito
             query = query.Where(p => p.Price <= maxPrice.Value);
 
         if (bathrooms.HasValue)
-            query = query.Where(p => p.Bathrooms == bathrooms.Value);
+            query = query.Where(p => p.NumberOfBathrooms == bathrooms.Value);
 
         if (bedrooms.HasValue)
-            query = query.Where(p => p.Bedrooms == bedrooms.Value);
+            query = query.Where(p => p.NumberOfRooms == bedrooms.Value);
 
         return await query.OrderByDescending(p => p.Id).ToListAsync();
     }
@@ -50,14 +60,11 @@ public class PropertyRepository : GenericRepository<Property>, IPropertyReposito
         return await _context.Properties
             .Include(p => p.Images)
             .Include(p => p.PropertyType)
-            .Include(p => p.SaleType)
-            .Include(p => p.PropertyImprovements)
-                .ThenInclude(pi => pi.Improvement)
+            .Include(p => p.SalesType)
+            .Include(p => p.Features)
             .Include(p => p.Offers)
             .Include(p => p.Messages)
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
 }
-
-

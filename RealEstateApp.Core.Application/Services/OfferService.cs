@@ -76,9 +76,138 @@ public class OfferService : IOfferService
             var property = await _propertyRepo.GetByIdAsync(offer.PropertyId);
             if (property != null)
             {
-                property.State = "Vendida";
+                property.State = PropertyState.Vendida;
                 await _propertyRepo.UpdateAsync(property);
             }
         }
+    }
+
+    public async Task<List<string>> GetClientsWithOffersAsync(int propertyId)
+    {
+        var offers = await _offerRepo.GetAllAsync();
+
+        var clientIds = offers
+            .Where(o => o.PropertyId == propertyId)
+            .Select(o => o.ClientId)
+            .Distinct()
+            .ToList();
+
+        return clientIds;
+    }
+
+    public async Task<List<OfferViewModel>> GetOffersByClientAndPropertyAsync(string clientId, int propertyId)
+    {
+        var offers = await _offerRepo.GetAllAsync();
+
+        var filtered = offers
+            .Where(o => o.ClientId == clientId && o.PropertyId == propertyId)
+            .OrderByDescending(o => o.Date)
+            .ToList();
+
+        return _mapper.Map<List<OfferViewModel>>(filtered);
+    }
+
+    public async Task RespondToOfferAsync(int offerId, bool isAccepted)
+    {
+        var offer = await _offerRepo.GetByIdAsync(offerId);
+        if (offer == null)
+            throw new Exception("Oferta no encontrada.");
+
+        var property = await _propertyRepo.GetByIdAsync(offer.PropertyId);
+        if (property == null)
+            throw new Exception("Propiedad no encontrada.");
+
+        if (isAccepted)
+        {
+            offer.Status = OfferStatus.Aceptada; // Asume que tienes enum OfferStatus
+            // Rechazar todas las ofertas pendientes para esa propiedad
+            var pendingOffers = await _offerRepo.GetAllAsync();
+            var toReject = pendingOffers
+                .Where(o => o.PropertyId == property.Id && o.Status == OfferStatus.Pendiente && o.Id != offerId);
+
+            foreach (var o in toReject)
+            {
+                o.Status = OfferStatus.Rechazada;
+                await _offerRepo.UpdateAsync(o);
+            }
+
+            // Cambiar estado propiedad a Vendida
+            property.State = PropertyState.Vendida; // Asume enum PropertyState
+            await _propertyRepo.UpdateAsync(property);
+        }
+        else
+        {
+            offer.Status = OfferStatus.Rechazada;
+        }
+
+        await _offerRepo.UpdateAsync(offer);
+    }
+
+    public async Task<List<string>> GetClientsWithOffersForPropertyAsync(int propertyId)
+    {
+        var offers = await _offerRepo.GetAllAsync(); // Este método deberías implementarlo o traer ofertas por propiedad
+
+        var clientIds = offers
+            .Where(o => o.PropertyId == propertyId)
+            .Select(o => o.ClientId)
+            .Distinct()
+            .ToList();
+
+        return clientIds;
+    }
+
+
+    public async Task AcceptOfferAsync(int offerId)
+    {
+        var offer = await _offerRepo.GetByIdAsync(offerId);
+        if (offer == null)
+            throw new Exception("Oferta no encontrada.");
+
+        offer.Status = OfferStatus.Aceptada;
+        await _offerRepo.UpdateAsync(offer);
+
+        var otherOffers = await _offerRepo.GetAllPendingByPropertyAsync(offer.PropertyId, offer.Id);
+        foreach (var o in otherOffers)
+        {
+            o.Status = OfferStatus.Rechazada;
+            await _offerRepo.UpdateAsync(o);
+        }
+
+        var property = await _propertyRepo.GetByIdAsync(offer.PropertyId);
+        if (property != null)
+        {
+            property.State = PropertyState.Vendida;
+            await _propertyRepo.UpdateAsync(property);
+        }
+    }
+
+    public async Task RejectOfferAsync(int offerId)
+    {
+        var offer = await _offerRepo.GetByIdAsync(offerId);
+        if (offer == null)
+            throw new Exception("Oferta no encontrada.");
+
+        offer.Status = OfferStatus.Rechazada;
+        await _offerRepo.UpdateAsync(offer);
+    }
+
+    public async Task<int> GetPropertyIdByOfferAsync(int offerId)
+    {
+        var offer = await _offerRepo.GetByIdAsync(offerId);
+        if (offer == null)
+            throw new Exception("Oferta no encontrada.");
+
+        return offer.PropertyId;
+    }
+
+    public async Task<List<OfferViewModel>> GetOffersForPropertyAsync(int propertyId)
+    {
+        var offers = await _offerRepo.GetOffersByPropertyAsync(propertyId);
+
+        var orderedOffers = offers
+            .OrderByDescending(o => o.Date)
+            .ToList();
+
+        return _mapper.Map<List<OfferViewModel>>(orderedOffers);
     }
 }
