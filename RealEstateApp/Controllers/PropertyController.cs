@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RealEstateApp.Core.Application.ViewModels.Property;
-using AutoMapper;
-using RealEstateApp.Core.Application.Interfaces;
-using RealEstateApp.Core.Application.ViewModels.Feature;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using RealEstateApp.Core.Application.ViewModels.User;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.Property;
-using RealEstateApp.Infrastructure.Identity.Entities;
+using RealEstateApp.Core.Application.Interfaces;
+using RealEstateApp.Core.Application.ViewModels.Client;
+using RealEstateApp.Core.Application.ViewModels.Feature;
+using RealEstateApp.Core.Application.ViewModels.Property;
 using RealEstateApp.Core.Application.ViewModels.PropertyType;
 using RealEstateApp.Core.Application.ViewModels.SalesType;
+using RealEstateApp.Core.Application.ViewModels.User;
 using RealEstateApp.Helpers;
+using RealEstateApp.Infrastructure.Identity.Entities;
 
 namespace RealEstateApp.Controllers
 {
@@ -22,6 +24,8 @@ namespace RealEstateApp.Controllers
         private readonly IAccountServiceForWebApp _userService;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IMessageService _messageService;
+        private readonly IOfferService _offerService;
 
         public PropertyController(
             IPropertyService propertyService,
@@ -29,7 +33,9 @@ namespace RealEstateApp.Controllers
             ISalesTypeService saleTypeService,
             IFeatureService featureService,
             IAccountServiceForWebApp userService,
-            IMapper mapper, UserManager<AppUser> userManager
+            IMapper mapper, UserManager<AppUser> userManager,
+            IMessageService messageService,
+            IOfferService offerService
         )
         {
             _propertyService = propertyService;
@@ -39,6 +45,8 @@ namespace RealEstateApp.Controllers
             _userService = userService;
             _mapper = mapper;
             _userManager = userManager;
+            _messageService = messageService;
+            _offerService = offerService;
         }
 
         private async Task<UserViewModel?> ValidateUserAsync()
@@ -126,7 +134,8 @@ namespace RealEstateApp.Controllers
 
             return RedirectToAction("Index");
         }
-
+        
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var user = await ValidateUserAsync();
@@ -213,6 +222,90 @@ namespace RealEstateApp.Controllers
             vm.PropertyTypes = _mapper.Map<List<PropertyTypeViewModel>>(propertyTypes);
             vm.SalesTypes = _mapper.Map<List<SalesTypeViewModel>>(salesTypes);
             vm.AvailableFeatures = _mapper.Map<List<FeatureViewModel>>(features);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id, string? selectedClientId = null)
+        {
+            string agentId = _userManager.GetUserId(User);
+
+            // Validación: solo el agente dueño de la propiedad puede verla
+            var agentCheck = await _propertyService.GetAgentIdByPropertyIdAsync(id);
+            if (agentCheck != agentId)
+                return Forbid();
+
+            // Obtener datos base de la propiedad
+            var property = await _propertyService.GetPropertyDetailsAsync(id, agentId);
+            if (property == null) return NotFound();
+
+            // Obtener todos los clientes que enviaron mensajes al agente sobre esta propiedad
+            var clientsWhoMessagedIds = await _messageService.GetClientsWhoMessagedAgentForPropertyAsync(agentId, id);
+
+            var clientsInfo = await _userManager.Users
+            .Where(u => clientsWhoMessagedIds.Contains(u.Id))
+            .Select(u => new ClientsWhoMadeOfferViewModel
+            {
+                Id = u.Id,
+                FullName = u.UserName, // <-- Usamos UserName
+                ProfileImageUrl = "~/Images/default-user.png", // <-- Imagen por defecto
+                OfferAmount = 0
+            })
+            .ToListAsync();
+
+            property.ClientsWhoMessaged = clientsInfo;
+
+            // Obtener todos los mensajes de la propiedad
+            var messages = await _messageService.GetMessagesAsync(id, null, agentId);
+
+            // Si hay un cliente seleccionado (vía querystring o click), filtra su chat
+            if (!string.IsNullOrEmpty(selectedClientId))
+            {
+                property.SelectedClientId = selectedClientId;
+                property.Messages = messages
+                    .Where(m => m.SenderId == selectedClientId || m.ReceiverId == selectedClientId)
+                    .OrderBy(m => m.SentAt)
+                    .ToList();
+            }
+            else
+            {
+                // Si no hay cliente seleccionado, no cargamos mensajes
+                property.Messages = new List<MessageViewModel>();
+            }
+
+            // Obtener todas las ofertas
+            property.Offers = await _offerService.GetOffersForPropertyAsync(id);
+
+            return View(property);
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(CreateMessageViewModel vm)
+        {
+            string senderId = _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(vm.Content))
+                return RedirectToAction(nameof(Details), new { id = vm.PropertyId });
+
+            await _messageService.SendMessageAsync(senderId, vm.ReceiverId, vm.PropertyId, vm.Content, isFromClient: false);
+
+            return RedirectToAction(nameof(Details), new { id = vm.PropertyId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AcceptOffer(int offerId)
+        {
+            await _offerService.AcceptOfferAsync(offerId);
+            return RedirectToAction(nameof(Details), new { id = await _offerService.GetPropertyIdByOfferAsync(offerId) });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectOffer(int offerId)
+        {
+            await _offerService.RejectOfferAsync(offerId);
+            return RedirectToAction(nameof(Details), new { id = await _offerService.GetPropertyIdByOfferAsync(offerId) });
         }
 
     }

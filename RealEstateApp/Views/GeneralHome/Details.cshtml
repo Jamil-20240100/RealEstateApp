@@ -1,22 +1,21 @@
-﻿@*
-@model RealEstateApp.Core.Application.ViewModels.Client.PropertyViewModel
+﻿@model RealEstateApp.Core.Application.ViewModels.Property.PropertyViewModel
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Detalle de la Propiedad";
     Layout = "_LayoutAnonymous";
 }
 
 <h2 class="mb-4">Detalle de la Propiedad</h2>
 
 <!-- Slider de imágenes -->
-@if (Model.Images.Any())
+@if (Model.Images != null && Model.Images.Any())
 {
     <div id="propertyImagesCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
         <div class="carousel-inner">
             @for (int i = 0; i < Model.Images.Count; i++)
             {
                 <div class="carousel-item @(i == 0 ? "active" : "")">
-                    <img src="@Url.Content("~/" + Model.Images[i])"
+                    <img src="@Url.Content(Model.Images[i].StartsWith("~") ? Model.Images[i] : "~/" + Model.Images[i])"
                          class="d-block w-100"
                          style="height:400px; object-fit:cover;"
                          alt="Imagen propiedad" />
@@ -41,45 +40,38 @@ else
 <div class="row mb-4">
     <div class="col-md-8">
         <p><strong>Código:</strong> @Model.Code</p>
-        <p><strong>Tipo:</strong> @Model.Type</p>
-        <p><strong>Tipo de Venta:</strong> @Model.SaleType</p>
+        <p><strong>Tipo:</strong> @Model.PropertyType?.Name</p>
+        <p><strong>Tipo de Venta:</strong> @Model.SalesType?.Name</p>
         <p><strong>Precio:</strong> @Model.Price.ToString("C")</p>
-        <p><strong>Habitaciones:</strong> @Model.Bedrooms</p>
-        <p><strong>Baños:</strong> @Model.Bathrooms</p>
-        <p><strong>Tamaño:</strong> @Model.Size m²</p>
+        <p><strong>Habitaciones:</strong> @Model.NumberOfRooms</p>
+        <p><strong>Baños:</strong> @Model.NumberOfBathrooms</p>
+        <p><strong>Tamaño:</strong> @Model.SizeInMeters m²</p>
         <p><strong>Descripción:</strong> @Model.Description</p>
 
-        <h4 class="mt-4">Mejoras</h4>
-        @if (Model.Improvements.Any())
+        <h4 class="mt-4">Características</h4>
+        @if (Model.Features != null && Model.Features.Any())
         {
             <ul>
-                @foreach (var improvement in Model.Improvements)
+                @foreach (var f in Model.Features)
                 {
-                    <li>@improvement</li>
+                    <li>@f.Name</li>
                 }
             </ul>
         }
         else
         {
-            <p class="text-muted">Esta propiedad no tiene mejoras registradas.</p>
+            <p class="text-muted">Esta propiedad no tiene características registradas.</p>
         }
     </div>
 
     <div class="col-md-4">
-        <h4>Agente</h4>
         <div class="card shadow-sm p-3">
-            <img src="@Url.Content("~/" + (Model.AgentPhoto ?? "Images/no-agent.png"))"
-                 alt="Foto agente"
-                 class="rounded-circle mb-3"
-                 width="120"
-                 height="120"
-                 style="object-fit:cover;" />
-            <p class="mb-1"><strong>@Model.AgentName</strong></p>
-            <p class="mb-1"><i class="bi bi-telephone"></i> @Model.AgentPhone</p>
-            <p class="mb-1"><i class="bi bi-envelope"></i> @Model.AgentEmail</p>
+            <h5 class="mb-3">Información</h5>
+            <p class="mb-1"><strong>Tipo:</strong> @Model.PropertyType?.Name</p>
+            <p class="mb-1"><strong>Operación:</strong> @Model.SalesType?.Name</p>
+            <p class="mb-1"><strong>Código:</strong> @Model.Code</p>
         </div>
     </div>
 </div>
 
 <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
-*@

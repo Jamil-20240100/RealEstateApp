@@ -10,11 +10,4 @@
         public DateTime SentAt { get; set; }
         public bool IsFromClient { get; set; }
     }
-
-    public class CreateMessageViewModel
-    {
-        public string ReceiverId { get; set; }
-        public int PropertyId { get; set; }
-        public string Content { get; set; }
-    }
 }

@@ -20,6 +20,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
         public DbSet<Feature> Features { get; set; }
         public DbSet<Offer> Offers { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<FavoriteProperty> FavoriteProperties { get; set; }
 
         //
         // ENTITY CONFIGURATIONS APPLICATION
