@@ -12,8 +12,8 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 namespace RealEstateApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    [Migration("20250807193831_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250809222027_buyerIdIntegration")]
+    partial class buyerIdIntegration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,6 +174,9 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("AgentId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuyerClientId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")

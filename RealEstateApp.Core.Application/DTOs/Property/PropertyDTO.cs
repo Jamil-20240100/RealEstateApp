@@ -4,6 +4,7 @@ using RealEstateApp.Core.Application.DTOs.Message;
 using RealEstateApp.Core.Application.DTOs.Offer;
 using RealEstateApp.Core.Application.DTOs.PropertyType;
 using RealEstateApp.Core.Application.DTOs.SalesType;
+using RealEstateApp.Core.Domain.Common.Enums;
 
 namespace RealEstateApp.Core.Application.DTOs.Property
 {
@@ -19,12 +20,15 @@ namespace RealEstateApp.Core.Application.DTOs.Property
         public required int NumberOfBathrooms { get; set; }
         public required List<FeatureDTO> Features { get; set; }
         public List<PropertyImageDTO> Images { get; set; } = new List<PropertyImageDTO>();
+
         public required string AgentId { get; set; }
         public required string AgentName { get; set; }
+        public string? BuyerClientId { get; set; }
 
         public required string Code { get; set; }
         public bool IsFavorite { get; set; }
-
+        public PropertyState State { get; set; }
+        public bool IsSold { get; set; }
         public List<MessageDTO> Messages { get; set; } = new List<MessageDTO>();
         public List<OfferDTO> Offers { get; set; } = new List<OfferDTO>();
         public List<ClientDTO> ClientsWithOffers { get; set; } = new List<ClientDTO>();

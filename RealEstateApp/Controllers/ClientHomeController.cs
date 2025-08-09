@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Application.ViewModels.Client;
 using RealEstateApp.Core.Application.ViewModels.Property;
+using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Infrastructure.Identity.Entities;
 using System.Security.Claims;
 
@@ -45,24 +46,28 @@ namespace RealEstateApp.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Esto devuelve DTOs
-            var dtoList = await _propertyService.GetAllWithInclude();
+            var allPropertiesDto = await _propertyService.GetAllWithInclude();
 
-            // Mapear a ViewModels para la vista
-            var vmList = _mapper.Map<List<PropertyViewModel>>(dtoList);
+            // Filtrar propiedades: mostrar disponibles y vendidas solo si el usuario es comprador
+            var filteredPropertiesDto = allPropertiesDto
+                .Where(p => p.State != PropertyState.Vendida || p.BuyerClientId == userId)
+                .ToList();
 
-            // Cargar favoritos y pasarlos como HashSet<int>
-            HashSet<int> favoriteIds = new();
-            if (!string.IsNullOrEmpty(userId))
-            {
-                var favVms = await _favoriteService.GetFavoritePropertiesByUserAsync(userId);
-                favoriteIds = favVms.Select(f => f.Id).ToHashSet();
-            }
+            var vmList = _mapper.Map<List<PropertyViewModel>>(filteredPropertiesDto);
+
+            // Obtener favoritos y filtrar las propiedades vendidas que no son del usuario
+            var favVms = await _favoriteService.GetFavoritePropertiesByUserAsync(userId);
+            favVms = favVms
+                .Where(p => p.State != PropertyState.Vendida || p.BuyerClientId == userId)
+                .ToList();
+
+            HashSet<int> favoriteIds = favVms.Select(f => f.Id).ToHashSet();
 
             ViewBag.FavoriteIds = favoriteIds;
 
-            return View(vmList); // <- la vista espera List<PropertyViewModel>
+            return View(vmList);
         }
+
 
 
         // ===============================
@@ -95,16 +100,23 @@ namespace RealEstateApp.Controllers
 
             return View(property);
         }
-            
+
 
         // ===============================
         // MIS PROPIEDADES (FAVORITOS)
         // ===============================
         public async Task<IActionResult> MyProperties()
         {
-            string clientId = _userManager.GetUserId(User);
-            var favorites = await _favoriteService.GetFavoritePropertiesByUserAsync(clientId);
-            return View(favorites);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var favorites = await _favoriteService.GetFavoritePropertiesByUserAsync(userId);
+
+            // Filtrar para que no aparezcan propiedades vendidas que no son del cliente
+            var filteredFavorites = favorites
+                .Where(p => p.State != PropertyState.Vendida || p.BuyerClientId == userId)
+                .ToList();
+
+            return View(filteredFavorites);
         }
 
         // ===============================

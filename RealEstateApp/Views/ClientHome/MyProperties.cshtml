@@ -1,8 +1,11 @@
-﻿@model List<RealEstateApp.Core.Application.ViewModels.Property.PropertyViewModel>
+﻿@using System.Security.Claims
+@model List<RealEstateApp.Core.Application.ViewModels.Property.PropertyViewModel>
 
 @{
     ViewData["Title"] = "Mis Propiedades";
     Layout = "_LayoutClient";
+
+    var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 }
 
 <h2 class="mb-4">Mis Propiedades Favoritas</h2>
@@ -18,19 +21,31 @@ else
     <div class="row">
         @foreach (var p in Model)
         {
+            // No mostrar propiedades vendidas a otro comprador
+            if (p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida && p.BuyerClientId != userId)
+            {
+                continue;
+            }
+
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
                     <img src="@Url.Content(
-                                                           p.Images != null && p.Images.Any()
-                                                               ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
-                                                               : "~/Images/no-image.png"
-                                                       )"
+                                                 p.Images != null && p.Images.Any()
+                                                     ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
+                                                     : "~/Images/no-image.png"
+                                             )"
                  class="card-img-top"
                  style="height: 220px; object-fit: cover;"
                  alt="Imagen propiedad" />
 
                     <div class="card-body">
-                        <h5 class="card-title">@p.PropertyType?.Name - @p.SalesType?.Name</h5>
+                        <h5 class="card-title">
+                            @p.PropertyType?.Name - @p.SalesType?.Name
+                    @if (p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida && p.BuyerClientId == userId)
+                            {
+                                <span class="badge bg-success ms-2">VENDIDA</span>
+                            }
+                        </h5>
                         <p class="card-text">
                             <strong>Código:</strong> @p.Code <br />
                             <strong>Precio:</strong> @p.Price.ToString("C") <br />

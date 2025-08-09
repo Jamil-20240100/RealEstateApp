@@ -1,0 +1,19 @@
+﻿@model RealEstateApp.Core.Application.ViewModels.User.UserViewModel
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Confirmar cambio de estado";
+}
+
+<h3>
+    ¿Estás seguro que deseas @(Model.IsActive ? "inactivar" : "activar") al usuario
+    <strong>@Model.UserName</strong>?
+</h3>
+
+<form asp-action="ToggleStatus" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <a asp-action="Index" class="btn btn-secondary">No</a>
+    <button type="submit" class="btn @(Model.IsActive ? "btn-danger" : "btn-success")">
+        Sí
+    </button>
+</form>

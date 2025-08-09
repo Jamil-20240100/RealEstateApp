@@ -25,7 +25,7 @@ namespace RealEstateApp.Infrastructure.Identity.Seeds
                     PhoneNumber = "111-111-1111"
                 };
 
-                await userManager.CreateAsync(admin, "123Pa$$word!");
+                await userManager.CreateAsync(admin, "      ");
                 await userManager.AddToRoleAsync(admin, Roles.Agent.ToString());
             }
         }

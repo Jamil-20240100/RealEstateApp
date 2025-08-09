@@ -1,6 +1,7 @@
 ﻿using RealEstateApp.Core.Application.ViewModels.Feature;
 using RealEstateApp.Core.Application.ViewModels.PropertyType;
 using RealEstateApp.Core.Application.ViewModels.SalesType;
+using RealEstateApp.Core.Domain.Common.Enums;
 
 namespace RealEstateApp.Core.Application.ViewModels.Property
 {
@@ -17,5 +18,9 @@ namespace RealEstateApp.Core.Application.ViewModels.Property
         public required int NumberOfBathrooms { get; set; }
         public required List<FeatureViewModel> Features { get; set; }
         public List<string>? Images { get; set; }
+        public bool IsBoughtByCurrentClient { get; set; }
+        public string? BuyerClientId { get; set; }
+        public PropertyState State { get; set; }
+        public bool IsSold { get; set; }
     }
 }

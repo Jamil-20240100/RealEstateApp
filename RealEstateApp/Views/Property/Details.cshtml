@@ -63,7 +63,9 @@ else
                     <a class="list-group-item list-group-item-action @active"
                        href="@Url.Action("Details", new { id = Model.Id, selectedClientId = client.Id })">
                         <div class="d-flex align-items-center">
-                            <img src="@client.ProfileImageUrl" class="rounded-circle me-2" style="width:35px; height:35px; object-fit:cover;" />
+                            <img src="@Url.Content(client.ProfileImageUrl)" 
+                                 class="rounded-circle me-2" 
+                                 style="width:35px; height:35px; object-fit:cover;" />
                             <span>@client.FullName</span>
                         </div>
                     </a>
@@ -121,33 +123,33 @@ else
 <h4>Ofertas Recibidas</h4>
 @if (Model.Offers?.Any() == true)
 {
-    <ul class="list-group mb-3">
-        @foreach (var offer in Model.Offers.OrderByDescending(o => o.Date))
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>Cliente:</strong> @offer.ClientId <br />
-                    <strong>Monto:</strong> @offer.Amount.ToString("C") <br />
-                    <strong>Estado:</strong> @offer.Status
-                </div>
-                <div>
-                    @if (offer.Status == OfferStatus.Pendiente)
-                    {
-                        <form asp-action="RespondToOffer" asp-controller="AgentHome" method="post" class="d-inline">
-                            <input type="hidden" name="offerId" value="@offer.Id" />
-                            <input type="hidden" name="isAccepted" value="true" />
-                            <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
-                        </form>
-                        <form asp-action="RespondToOffer" asp-controller="AgentHome" method="post" class="d-inline">
-                            <input type="hidden" name="offerId" value="@offer.Id" />
-                            <input type="hidden" name="isAccepted" value="false" />
-                            <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
-                        </form>
-                    }
-                </div>
-            </li>
-        }
-    </ul>
+   <ul class="list-group mb-3">
+    @foreach (var offer in Model.Offers.OrderByDescending(o => o.Date))
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Cliente:</strong> @offer.ClientUsername <br />
+                <strong>Monto:</strong> @offer.Amount.ToString("C") <br />
+                <strong>Estado:</strong> @offer.Status
+            </div>
+            <div>
+                @if (offer.Status == OfferStatus.Pendiente)
+                {
+                    <form asp-action="RespondToOffer" asp-controller="AgentHome" method="post" class="d-inline">
+                        <input type="hidden" name="offerId" value="@offer.Id" />
+                        <input type="hidden" name="isAccepted" value="true" />
+                        <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                    </form>
+                    <form asp-action="RespondToOffer" asp-controller="AgentHome" method="post" class="d-inline">
+                        <input type="hidden" name="offerId" value="@offer.Id" />
+                        <input type="hidden" name="isAccepted" value="false" />
+                        <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
+                    </form>
+                }
+            </div>
+        </li>
+    }
+</ul>
 }
 else
 {

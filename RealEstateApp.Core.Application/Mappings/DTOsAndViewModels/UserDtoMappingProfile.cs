@@ -46,6 +46,12 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
 
             CreateMap<LoginDto, LoginViewModel>()
                 .ReverseMap();
+
+            CreateMap<SaveUserViewModel, SaveUserDto>()
+                .ReverseMap();
+
+            CreateMap<UserDto, SaveUserViewModel>()
+                .ReverseMap();
         }
     }
 }

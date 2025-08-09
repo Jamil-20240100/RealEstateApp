@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RealEstateApp.Infrastructure.Persistence.Contexts;
 
@@ -11,9 +12,11 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 namespace RealEstateApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    partial class RealEstateContextModelSnapshot : ModelSnapshot
+    [Migration("20250809161558_LongWayToGo")]
+    partial class LongWayToGo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,14 +174,6 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("AgentId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-
-                    b.Property<string>("AgentName")
-                        .IsRequired()
-
-                    b.Property<string>("BuyerClientId")
-
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")

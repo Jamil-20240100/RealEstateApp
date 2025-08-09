@@ -18,7 +18,7 @@ namespace RealEstateApp.Core.Domain.Entities
         public PropertyType? PropertyType { get; set; }
         public int SalesTypeId { get; set; }
         public SalesType? SalesType { get; set; }
-      
+        public string? BuyerClientId { get; set; }
         public required string Code { get; set; }
         public PropertyState State { get; set; } = PropertyState.Disponible;
         public ICollection<Offer> Offers { get; set; } = new List<Offer>();
