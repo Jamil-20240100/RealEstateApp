@@ -16,4 +16,5 @@ public interface IOfferService
         Task AcceptOfferAsync(int offerId);
         Task<List<string>> GetClientsWithOffersForPropertyAsync(int propertyId);
         Task<List<OfferViewModel>> GetOffersForPropertyAsync(int propertyId);
+        Task RespondToOfferAsync(int offerId, bool isAccepted);
 }

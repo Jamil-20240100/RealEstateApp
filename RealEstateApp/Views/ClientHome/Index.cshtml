@@ -1,11 +1,12 @@
-﻿@model List<RealEstateApp.Core.Application.ViewModels.Property.PropertyViewModel>
+﻿@using System.Security.Claims
+@model List<RealEstateApp.Core.Application.ViewModels.Property.PropertyViewModel>
 
 @{
     ViewData["Title"] = "Home";
     Layout = "_LayoutClient";
 
-    // Puedes recibir los favoritos desde el ViewBag, por ejemplo:
     var favoriteIds = ViewBag.FavoriteIds as HashSet<int>;
+    var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 }
 
 <h2 class="mb-4">Propiedades Disponibles</h2>
@@ -21,33 +22,44 @@ else
     <div class="row">
         @foreach (var p in Model)
         {
+            // Mostrar solo si no está vendida o si está vendida y el comprador es el usuario actual
+            if (p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida && p.BuyerClientId != userId)
+            {
+                continue;
+            }
+
             var isFavorite = favoriteIds?.Contains(p.Id) ?? false;
 
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
                     <img src="@Url.Content(
-                                                             p.Images != null && p.Images.Any()
-                                                                 ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
-                                                                 : "~/Images/no-image.png"
-                                                         )"
+                                                 p.Images != null && p.Images.Any()
+                                                     ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
+                                                     : "~/Images/no-image.png"
+                                             )"
                  class="card-img-top"
                  style="height: 220px; object-fit: cover;"
                  alt="Imagen propiedad" />
-            <div class="card-body">
-                <h5 class="card-title">
-                    @p.PropertyType?.Name - @p.SalesType?.Name
-                </h5>
-                <p class="card-text">
-                    <strong>Código:</strong> @p.Code <br />
-                    <strong>Precio:</strong> @p.Price.ToString("C") <br />
-                    <strong>Habitaciones:</strong> @p.NumberOfRooms <br />
-                    <strong>Baños:</strong> @p.NumberOfBathrooms <br />
-                    <strong>Tamaño:</strong> @p.SizeInMeters m²
-                </p>
+
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            @p.PropertyType?.Name - @p.SalesType?.Name
+                    @if (p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida && p.BuyerClientId == userId)
+                            {
+                                <span class="badge bg-success ms-2">VENDIDA</span>
+                            }
+                        </h5>
+                        <p class="card-text">
+                            <strong>Código:</strong> @p.Code <br />
+                            <strong>Precio:</strong> @p.Price.ToString("C") <br />
+                            <strong>Habitaciones:</strong> @p.NumberOfRooms <br />
+                            <strong>Baños:</strong> @p.NumberOfBathrooms <br />
+                            <strong>Tamaño:</strong> @p.SizeInMeters m²
+                        </p>
 
                         <form asp-action="ToggleFavorite" asp-controller="ClientHome" method="post" class="mb-2">
                             <input type="hidden" name="propertyId" value="@p.Id" />
-                    @if (isFavorite)
+                            @if (isFavorite)
                             {
                                 <button type="submit" class="btn btn-danger btn-sm w-100">
                                     ★ Quitar de favoritos

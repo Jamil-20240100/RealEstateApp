@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.DTOs.Client;
 using RealEstateApp.Core.Application.DTOs.Feature;
 using RealEstateApp.Core.Application.DTOs.Message;
-using RealEstateApp.Core.Application.DTOs.Property;
-using RealEstateApp.Core.Application.DTOs.SalesType;
 using RealEstateApp.Core.Application.DTOs.Offer;
-using RealEstateApp.Core.Application.DTOs.Client;
+using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Application.DTOs.PropertyType;
+using RealEstateApp.Core.Application.DTOs.SalesType;
 using RealEstateApp.Core.Application.ViewModels.Client;
 using RealEstateApp.Core.Application.ViewModels.Feature;
 using RealEstateApp.Core.Application.ViewModels.Property;
 using RealEstateApp.Core.Application.ViewModels.PropertyType;
 using RealEstateApp.Core.Application.ViewModels.SalesType;
-using RealEstateApp.Core.Application.DTOs.PropertyType;
+using RealEstateApp.Core.Domain.Common.Enums;
 
 
 namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
@@ -81,6 +82,16 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
             CreateMap<MessageDTO, MessageViewModel>();
 
             CreateMap<ClientDTO, ClientsWhoMadeOfferViewModel>(); // O el DTO que uses para clientes que hicieron oferta
+
+            CreateMap<PropertyDTO, PropertyViewModel>()
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(img => img.ImageUrl).ToList()))
+            .ForMember(dest => dest.IsSold, opt => opt.MapFrom(src => src.State == PropertyState.Vendida));
+
+            CreateMap<PropertyDTO, PropertyViewModel>()
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(img => img.ImageUrl).ToList()))
+            .ForMember(dest => dest.IsSold, opt => opt.MapFrom(src => src.State == PropertyState.Vendida))
+            .ForMember(dest => dest.BuyerClientId, opt => opt.MapFrom(src => src.BuyerClientId));  // <-- nuevo
+
 
         }
     }

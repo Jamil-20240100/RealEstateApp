@@ -1,20 +1,24 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.DTOs.Offer;
+using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Application.ViewModels.Client;
+using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
-using RealEstateApp.Core.Domain.Common.Enums;
 
 public class OfferService : IOfferService
 {
     private readonly IOfferRepository _offerRepo;
     private readonly IPropertyRepository _propertyRepo;
     private readonly IMapper _mapper;
+    private readonly IAccountServiceForWebApp _accountService;
 
-    public OfferService(IOfferRepository offerRepo, IPropertyRepository propertyRepo, IMapper mapper)
+    public OfferService(IOfferRepository offerRepo, IAccountServiceForWebApp accountService, IPropertyRepository propertyRepo, IMapper mapper)
     {
         _offerRepo = offerRepo;
         _propertyRepo = propertyRepo;
         _mapper = mapper;
+        _accountService = accountService;
     }
 
     /// <summary>
@@ -23,10 +27,14 @@ public class OfferService : IOfferService
     public async Task<List<OfferViewModel>> GetOffersByClientAsync(int propertyId, string clientId)
     {
         var offers = await _offerRepo.GetByPropertyAndClientAsync(propertyId, clientId);
-        return offers
-            .OrderByDescending(o => o.Date)
-            .Select(o => _mapper.Map<OfferViewModel>(o))
-            .ToList();
+
+        // Mapeo de entidad Offer a OfferDTO
+        var offersDto = _mapper.Map<List<OfferDTO>>(offers.OrderByDescending(o => o.Date).ToList());
+
+        // Mapeo de OfferDTO a OfferViewModel
+        var offersVm = _mapper.Map<List<OfferViewModel>>(offersDto);
+
+        return offersVm;
     }
 
     /// <summary>
@@ -133,6 +141,7 @@ public class OfferService : IOfferService
 
             // Cambiar estado propiedad a Vendida
             property.State = PropertyState.Vendida; // Asume enum PropertyState
+            property.BuyerClientId = offer.ClientId;
             await _propertyRepo.UpdateAsync(property);
         }
         else
@@ -177,6 +186,7 @@ public class OfferService : IOfferService
         if (property != null)
         {
             property.State = PropertyState.Vendida;
+            property.BuyerClientId = offer.ClientId;
             await _propertyRepo.UpdateAsync(property);
         }
     }
@@ -203,11 +213,18 @@ public class OfferService : IOfferService
     public async Task<List<OfferViewModel>> GetOffersForPropertyAsync(int propertyId)
     {
         var offers = await _offerRepo.GetOffersByPropertyAsync(propertyId);
+        var orderedOffers = offers.OrderByDescending(o => o.Date).ToList();
 
-        var orderedOffers = offers
-            .OrderByDescending(o => o.Date)
-            .ToList();
+        var offersDto = _mapper.Map<List<OfferDTO>>(orderedOffers);
 
-        return _mapper.Map<List<OfferViewModel>>(orderedOffers);
+        var offerViewModels = _mapper.Map<List<OfferViewModel>>(offersDto);
+
+        foreach (var offerVm in offerViewModels)
+        {
+            var user = await _accountService.GetUserById(offerVm.ClientId);
+            offerVm.ClientUsername = user?.UserName ?? "Desconocido";
+        }
+
+        return offerViewModels;
     }
 }

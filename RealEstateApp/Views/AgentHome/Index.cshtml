@@ -1,4 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home";
+﻿@model List<PropertyViewModel>
+
+@{
     Layout = "_LayoutAgent";
+    ViewData["Title"] = "Home del Agente";
 }
+
+<h2 class="mb-4">Mis Propiedades</h2>
+
+<div class="row">
+    @foreach (var property in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                @if (property.Images != null && property.Images.Any() && !string.IsNullOrWhiteSpace(property.Images.First()))
+                {
+                    <img src="@Url.Content("/" + property.Images.First())" class="card-img-top" alt="Imagen de la propiedad">
+                }
+                else
+                {
+                    <img src="https://via.placeholder.com/300x200?text=Sin+imagen" class="card-img-top" alt="Sin imagen disponible">
+                }
+
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Código: @property.Code
+                        @if (property.IsSold) // o el campo que uses para saber si está vendida
+                        {
+                            <span class="badge bg-danger ms-2">VENDIDA</span>
+                        }
+                    </h5>
+                    <p class="card-text"><strong>Tipo de Propiedad:</strong> @property.PropertyType?.Name</p>
+                    <p class="card-text"><strong>Tipo de Venta:</strong> @property.SalesType?.Name</p>
+                    <p class="card-text"><strong>Precio:</strong> @property.Price.ToString("C")</p>
+                </div>
+
+                <div class="card-footer">
+                    <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-info btn-sm w-100">Detalles</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

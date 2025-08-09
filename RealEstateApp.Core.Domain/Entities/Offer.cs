@@ -12,6 +12,6 @@ namespace RealEstateApp.Core.Domain.Entities
         public OfferStatus Status { get; set; } = OfferStatus.Pendiente;
 
         public Property Property { get; set; }
-
+        
     }
 }

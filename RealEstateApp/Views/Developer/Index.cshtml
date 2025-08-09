@@ -1,0 +1,41 @@
+﻿@model List<RealEstateApp.Core.Application.ViewModels.User.UserViewModel>
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Mantenimiento de desarrolladores";
+}
+
+<h2>Desarrolladores</h2>
+<a asp-action="Create" class="btn btn-primary mb-3">Crear desarrollador</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Usuario</th>
+            <th>Cédula</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dev in Model)
+        {
+            <tr>
+                <td>@dev.Name</td>
+                <td>@dev.LastName</td>
+                <td>@dev.UserName</td>
+                <td>@dev.UserIdentification</td>
+                <td>@dev.Email</td>
+                <td>@(dev.IsActive ? "Activo" : "Inactivo")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@dev.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="ConfirmToggleStatus" asp-route-id="@dev.Id" class="btn btn-sm @(dev.IsActive ? "btn-danger" : "btn-success")">
+                        @(dev.IsActive ? "Inactivar" : "Activar")
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
