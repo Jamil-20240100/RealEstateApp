@@ -59,27 +59,28 @@
 //                                   .Select(i => $"Images/property{i}.jpg")
 //                                   .ToList();
 
-//            for (int i = 1; i <= 30; i++)
-//            {
-//                var property = new Property
-//                {
-//                    Id = 0,
-//                    AgentId = agent.Id,
-//                    Price = 50000 + (i * 1000),
-//                    Description = $"Propiedad {i}: Casa familiar con excelente ubicación.",
-//                    SizeInMeters = random.Next(50, 200),
-//                    NumberOfBathrooms = random.Next(1, 3),
-//                    NumberOfRooms = random.Next(1, 5),
-//                    PropertyTypeId = propertyTypeId,
-//                    Code = $"PROP-{i:0000}",
-//                    SalesTypeId = salesTypeId,
-//                    Features = new List<Feature>(),
-//                    Images = new List<PropertyImage>
-//    {
-//        new PropertyImage { ImageUrl = images[i - 1] }
-//    },
-//                    State = PropertyState.Disponible
-//                };
+
+            for (int i = 1; i <= 30; i++)
+            {
+                var property = new Property
+                {
+                    Id = 0,
+                    AgentId = agent.Id,
+                    Price = 50000 + (i * 1000),
+                    Description = $"Propiedad {i}: Casa familiar con excelente ubicación.",
+                    SizeInMeters = random.Next(50, 200),
+                    NumberOfBathrooms = random.Next(1, 3),
+                    NumberOfRooms = random.Next(1, 5),
+                    PropertyTypeId = propertyTypeId,
+                    Code = $"PROP-{i:0000}",
+                    SalesTypeId = salesTypeId,
+                    Features = new List<Feature>(),
+                    Images = new List<PropertyImage>
+                    {
+                        new PropertyImage { ImageUrl = images[i - 1] }
+                    },
+                    State = PropertyState.Disponible
+                };
 
 //                properties.Add(property);
 //            }
