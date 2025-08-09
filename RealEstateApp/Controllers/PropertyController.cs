@@ -129,6 +129,7 @@ namespace RealEstateApp.Controllers
             dto.PropertyType = await _propertyTypeService.GetById(vm.PropertyTypeId);
             dto.SalesType = await _saleTypeService.GetById(vm.SalesTypeId);
             dto.Code = await _propertyService.GenerateUniquePropertyCodeAsync();
+            dto.AgentName = $"{user.Name} {user.LastName}";
 
             await _propertyService.AddAsync(dto);
 
