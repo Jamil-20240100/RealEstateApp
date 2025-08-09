@@ -19,7 +19,8 @@ namespace RealEstateApp.Core.Application.DTOs.Property
         public required int NumberOfBathrooms { get; set; }
         public required List<FeatureDTO> Features { get; set; }
         public List<PropertyImageDTO> Images { get; set; } = new List<PropertyImageDTO>();
-        public string? AgentId { get; set; }
+        public required string AgentId { get; set; }
+        public required string AgentName { get; set; }
 
         public required string Code { get; set; }
         public bool IsFavorite { get; set; }

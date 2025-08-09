@@ -6,6 +6,7 @@ namespace RealEstateApp.Core.Domain.Entities
     {
         public required int Id { get; set; }
         public required string AgentId { get; set; }
+        public required string AgentName { get; set; }
         public required decimal Price { get; set; }
         public required string Description { get; set; }
         public required decimal SizeInMeters { get; set; }
