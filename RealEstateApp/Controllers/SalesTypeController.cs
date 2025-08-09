@@ -14,6 +14,7 @@ namespace RealEstateApp.Controllers
     public class SalesTypeController : Controller
     {
         private readonly ISalesTypeService _salesTypeService;
+        IPropertyService _propertyService;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
         private readonly IAccountServiceForWebApp _accountServiceForWebApp;
@@ -22,8 +23,9 @@ namespace RealEstateApp.Controllers
             ISalesTypeService salesTypeService,
             IMapper mapper,
             UserManager<AppUser> userManager,
-            IAccountServiceForWebApp accountServiceForWebApp)
+            IAccountServiceForWebApp accountServiceForWebApp, IPropertyService propertyService)
         {
+            _propertyService = propertyService;
             _salesTypeService = salesTypeService;
             _mapper = mapper;
             _userManager = userManager;
@@ -48,6 +50,13 @@ namespace RealEstateApp.Controllers
 
             var dtos = await _salesTypeService.GetAll();
             var types = _mapper.Map<List<SalesTypeViewModel>>(dtos);
+            var allProperties = await _propertyService.GetAll();
+
+            foreach (var type in types)
+            {
+                type.NumberOfProperties = allProperties.Count(p => p.SalesType.Id == type.Id);
+            }
+
             return View(types);
         }
 

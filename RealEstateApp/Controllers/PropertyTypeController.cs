@@ -17,14 +17,16 @@ namespace RealEstateApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IAccountServiceForWebApp _accountServiceForWebApp;
         private readonly IPropertyTypeService _propertyTypeService;
+        private readonly IPropertyService _propertyService;
         private readonly IMapper _mapper;
 
         public PropertyTypeController(
             IPropertyTypeService propertyTypeService, 
             IMapper mapper, UserManager<AppUser> userManager, 
-            IAccountServiceForWebApp accountServiceForWebApp)
+            IAccountServiceForWebApp accountServiceForWebApp, IPropertyService propertyService)
         {
             _propertyTypeService = propertyTypeService;
+            _propertyService = propertyService;
             _mapper = mapper;
             _userManager = userManager;
             _accountServiceForWebApp = accountServiceForWebApp;
@@ -48,6 +50,14 @@ namespace RealEstateApp.Controllers
 
             var dtos = await _propertyTypeService.GetAll();
             var types = _mapper.Map<List<PropertyTypeViewModel>>(dtos);
+
+            var allProperties = await _propertyService.GetAll();
+
+            foreach (var type in types)
+            {
+                type.NumberOfProperties = allProperties.Count(p => p.PropertyType.Id == type.Id);
+            }
+
             return View(types);
         }
 

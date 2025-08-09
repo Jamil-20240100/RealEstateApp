@@ -135,7 +135,6 @@ namespace RealEstateApp.Controllers
             return RedirectToAction("Index");
         }
         
-        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var user = await ValidateUserAsync();
@@ -277,9 +276,6 @@ namespace RealEstateApp.Controllers
 
             return View(property);
         }
-
-
-
 
         [HttpPost]
         public async Task<IActionResult> SendMessage(CreateMessageViewModel vm)
