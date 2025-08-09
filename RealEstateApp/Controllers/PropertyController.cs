@@ -246,7 +246,9 @@ namespace RealEstateApp.Controllers
             {
                 Id = u.Id,
                 FullName = u.UserName, // <-- Usamos UserName
-                ProfileImageUrl = "~/Images/default-user.png", // <-- Imagen por defecto
+                ProfileImageUrl = string.IsNullOrEmpty(u.ProfileImage)
+                ? "~/Images/default-user.png"
+                : "~/" + u.ProfileImage,
                 OfferAmount = 0
             })
             .ToListAsync();

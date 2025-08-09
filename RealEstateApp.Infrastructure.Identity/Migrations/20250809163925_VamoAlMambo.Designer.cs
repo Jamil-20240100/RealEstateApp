@@ -12,8 +12,8 @@ using RealEstateApp.Infrastructure.Identity.Contexts;
 namespace RealEstateApp.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20250807003721_Part2UpdateDatabaseWithJamilChanges")]
-    partial class Part2UpdateDatabaseWithJamilChanges
+    [Migration("20250809163925_VamoAlMambo")]
+    partial class VamoAlMambo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

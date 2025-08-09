@@ -12,8 +12,8 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 namespace RealEstateApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    [Migration("20250807003614_Part2UpdateDatabaseWithJamilChanges")]
-    partial class Part2UpdateDatabaseWithJamilChanges
+    [Migration("20250809161558_LongWayToGo")]
+    partial class LongWayToGo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
