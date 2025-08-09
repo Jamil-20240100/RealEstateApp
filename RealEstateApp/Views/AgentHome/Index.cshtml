@@ -7,10 +7,49 @@
 
 <h2 class="mb-4">Mis Propiedades</h2>
 
-<div class="row">
+<div class="row mb-4">
+    <div class="col-md-3">
+        <label for="filterCodigo" class="form-label">Filtrar por Código</label>
+        <input type="text" id="filterCodigo" class="form-control" placeholder="Ej: P-123">
+    </div>
+    <div class="col-md-3">
+        <label for="filterTipoPropiedad" class="form-label">Tipo de Propiedad</label>
+        <select id="filterTipoPropiedad" class="form-select">
+            <option value="">Todos</option>
+            @foreach (var type in Model.Select(p => p.PropertyType).DistinctBy(t => t.Id))
+            {
+                <option value="@type.Name">@type.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="filterTipoVenta" class="form-label">Tipo de Venta</label>
+        <select id="filterTipoVenta" class="form-select">
+            <option value="">Todos</option>
+            @foreach (var salesType in Model.Select(p => p.SalesType).DistinctBy(st => st.Id))
+            {
+                <option value="@salesType.Name">@salesType.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="filterEstado" class="form-label">Estado</label>
+        <select id="filterEstado" class="form-select">
+            <option value="">Todos</option>
+            <option value="Disponible">Disponible</option>
+            <option value="Vendida">Vendida</option>
+        </select>
+    </div>
+</div>
+
+<div id="property-list" class="row">
     @foreach (var property in Model)
     {
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-4 property-card"
+             data-code="@property.Code"
+             data-property-type="@property.PropertyType?.Name"
+             data-sales-type="@property.SalesType?.Name"
+             data-is-sold="@property.IsSold.ToString().ToLower()">
             <div class="card h-100">
                 @if (property.Images != null && property.Images.Any() && !string.IsNullOrWhiteSpace(property.Images.First()))
                 {
@@ -24,7 +63,7 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         Código: @property.Code
-                        @if (property.IsSold) // o el campo que uses para saber si está vendida
+                        @if (property.IsSold)
                         {
                             <span class="badge bg-danger ms-2">VENDIDA</span>
                         }
@@ -41,3 +80,52 @@
         </div>
     }
 </div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterCodigo = document.getElementById('filterCodigo');
+            const filterTipoPropiedad = document.getElementById('filterTipoPropiedad');
+            const filterTipoVenta = document.getElementById('filterTipoVenta');
+            const filterEstado = document.getElementById('filterEstado');
+            const propertyCards = document.querySelectorAll('.property-card');
+
+            function applyFilters() {
+                const codigoValue = filterCodigo.value.toLowerCase().trim();
+                const tipoPropiedadValue = filterTipoPropiedad.value.trim();
+                const tipoVentaValue = filterTipoVenta.value.trim();
+                const estadoValue = filterEstado.value.trim();
+
+                propertyCards.forEach(card => {
+                    const cardCodigo = card.dataset.code.toLowerCase();
+                    const cardTipoPropiedad = card.dataset.propertyType;
+                    const cardTipoVenta = card.dataset.salesType;
+                    const cardIsSold = card.dataset.isSold === 'true';
+
+                    const matchCodigo = cardCodigo.includes(codigoValue);
+                    const matchTipoPropiedad = tipoPropiedadValue === '' || cardTipoPropiedad === tipoPropiedadValue;
+                    const matchTipoVenta = tipoVentaValue === '' || cardTipoVenta === tipoVentaValue;
+
+                    let matchEstado = false;
+                    if (estadoValue === '') {
+                        matchEstado = true;
+                    } else if (estadoValue === 'Vendida' && cardIsSold) {
+                        matchEstado = true;
+                    } else if (estadoValue === 'Disponible' && !cardIsSold) {
+                        matchEstado = true;
+                    }
+
+                    if (matchCodigo && matchTipoPropiedad && matchTipoVenta && matchEstado) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            filterCodigo.addEventListener('input', applyFilters);
+            filterTipoPropiedad.addEventListener('change', applyFilters);
+            filterTipoVenta.addEventListener('change', applyFilters);
+            filterEstado.addEventListener('change', applyFilters);
+        });
+    </script>
+}

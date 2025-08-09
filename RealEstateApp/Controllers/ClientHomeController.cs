@@ -111,7 +111,6 @@ namespace RealEstateApp.Controllers
 
             var favorites = await _favoriteService.GetFavoritePropertiesByUserAsync(userId);
 
-            // Filtrar para que no aparezcan propiedades vendidas que no son del cliente
             var filteredFavorites = favorites
                 .Where(p => p.State != PropertyState.Vendida || p.BuyerClientId == userId)
                 .ToList();
