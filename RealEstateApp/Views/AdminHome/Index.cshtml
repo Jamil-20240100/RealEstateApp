@@ -1,4 +1,74 @@
-﻿@{
-    ViewData["Title"] = "Home";
+﻿@model AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard de Administrador";
     Layout = "_LayoutAdmin";
+
+    int availableProperties = Model.Properties.Count(p => p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Disponible);
+    int soldProperties = Model.Properties.Count(p => p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida);
+    int totalProperties = Model.Properties.Count;
+
+    int activeAgents = Model.Agents.Count(a => a.IsActive);
+    int inactiveAgents = Model.Agents.Count(a => !a.IsActive);
+    int totalAgents = Model.Agents.Count;
+
+    int activeClients = Model.Clients.Count(c => c.IsActive);
+    int inactiveClients = Model.Clients.Count(c => !c.IsActive);
+    int totalClients = Model.Clients.Count;
+
+    int activeDevelopers = Model.Developers.Count(d => d.IsActive);
+    int inactiveDevelopers = Model.Developers.Count(d => !d.IsActive);
+    int totalDevelopers = Model.Developers.Count;
 }
+
+<h2 class="mb-4">Dashboard de Administración</h2>
+
+<div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-white bg-info h-100">
+            <div class="card-body">
+                <h5 class="card-title">Propiedades</h5>
+                <p class="card-text fs-4">Total: @totalProperties</p>
+                <hr class="my-2 text-white-50" />
+                <p class="card-text mb-0">Disponibles: @availableProperties</p>
+                <p class="card-text mb-0">Vendidas: @soldProperties</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+                <h5 class="card-title">Agentes</h5>
+                <p class="card-text fs-4">Total: @totalAgents</p>
+                <hr class="my-2 text-white-50" />
+                <p class="card-text mb-0">Activos: @activeAgents</p>
+                <p class="card-text mb-0">Inactivos: @inactiveAgents</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body">
+                <h5 class="card-title">Clientes</h5>
+                <p class="card-text fs-4">Total: @totalClients</p>
+                <hr class="my-2 text-white-50" />
+                <p class="card-text mb-0">Activos: @activeClients</p>
+                <p class="card-text mb-0">Inactivos: @inactiveClients</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-white bg-secondary h-100">
+            <div class="card-body">
+                <h5 class="card-title">Desarrolladores</h5>
+                <p class="card-text fs-4">Total: @totalDevelopers</p>
+                <hr class="my-2 text-white-50" />
+                <p class="card-text mb-0">Activos: @activeDevelopers</p>
+                <p class="card-text mb-0">Inactivos: @inactiveDevelopers</p>
+            </div>
+        </div>
+    </div>
+</div>
