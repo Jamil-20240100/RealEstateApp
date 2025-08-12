@@ -12,8 +12,8 @@ using RealEstateApp.Infrastructure.Identity.Contexts;
 namespace RealEstateApp.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20250809231101_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250812194137_initialCrate")]
+    partial class initialCrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
