@@ -10,7 +10,7 @@ using RealEstateAPI.Controllers;
 namespace RealEstateApi.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Developer")]
     public class PropertyController : BaseApiController
     {
         [HttpGet]
@@ -21,7 +21,7 @@ namespace RealEstateApi.Controllers.v1
         {
             try
             {
-                var properties = await Mediator.Send(new ListPropertiesQuery());
+                var properties = await Mediator.Send(new ListAgentQuery());
 
                 if (properties == null || properties.Count == 0)
                     return NoContent();
@@ -55,7 +55,7 @@ namespace RealEstateApi.Controllers.v1
             }
         }
 
-        [HttpGet("ByCode/{code}")]
+        [HttpGet("by-code/{code}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyForApiDTO))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
