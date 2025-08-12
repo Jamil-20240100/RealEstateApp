@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Application.ViewModels.Client;
 using RealEstateApp.Core.Application.ViewModels.Property;
+using RealEstateApp.Core.Application.ViewModels.User;
 using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Infrastructure.Identity.Entities;
 using System.Security.Claims;
@@ -21,12 +22,14 @@ namespace RealEstateApp.Controllers
         private readonly IOfferService _offerService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IAccountServiceForWebApp _accountServiceForWebApp;
 
         public ClientHomeController(
             IPropertyService propertyService,
             IFavoriteService favoriteService,
             IMessageService messageService,
             IOfferService offerService,
+            IAccountServiceForWebApp accountServiceForWebApp,
             IMapper mapper,
             UserManager<AppUser> userManager)
         {
@@ -36,6 +39,18 @@ namespace RealEstateApp.Controllers
             _offerService = offerService;
             _userManager = userManager;
             _mapper = mapper;
+            _accountServiceForWebApp = accountServiceForWebApp;
+        }
+
+        private async Task<UserViewModel?> ValidateUserAsync()
+        {
+            var userSession = await _userManager.GetUserAsync(User);
+            if (userSession == null) return null;
+
+            var user = await _accountServiceForWebApp.GetUserByUserName(userSession.UserName ?? "");
+            if (user == null || user.Role != Roles.Client.ToString()) return null;
+
+            return _mapper.Map<UserViewModel>(user);
         }
 
         // ===============================
@@ -44,7 +59,10 @@ namespace RealEstateApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var user = await ValidateUserAsync();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (user == null)
+                return RedirectToRoute(new { controller = "Login", action = "Index" });
 
             var allPropertiesDto = await _propertyService.GetAllWithInclude();
 

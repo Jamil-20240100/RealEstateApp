@@ -23,7 +23,8 @@ namespace RealEstateApp.Infrastructure.Persistence.Seeders
 
                 // Obtener usuarios con rol "Agent"
                 var agents = await userManager.GetUsersInRoleAsync(agentRoleName);
-                var agent = agents.FirstOrDefault();
+                var agentEmail = "agent@mail.com"; // el mismo que en DefaultAgentUser
+                var agent = await userManager.FindByEmailAsync(agentEmail);
 
                 if (agent == null)
                     throw new Exception($"No se encontró ningún usuario con rol '{agentRoleName}'.");
