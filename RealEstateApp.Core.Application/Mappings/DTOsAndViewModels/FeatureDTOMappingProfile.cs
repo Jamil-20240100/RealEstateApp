@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using RealEstateApp.Core.Application.DTOs.Feature;
-using RealEstateApp.Core.Application.DTOs.PropertyType;
 using RealEstateApp.Core.Application.ViewModels.Feature;
-using RealEstateApp.Core.Application.ViewModels.PropertyType;
 
 namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
 {
