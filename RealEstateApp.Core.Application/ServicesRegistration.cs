@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Application.Services;
-using RealEstateApp.Core.Domain.Interfaces;
 using System.Reflection;
 
 namespace RealEstateApp.Core.Application
@@ -13,6 +12,7 @@ namespace RealEstateApp.Core.Application
         {
             #region Configurations
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddMediatR(opt => opt.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
             #endregion
 
             #region Services IOC
