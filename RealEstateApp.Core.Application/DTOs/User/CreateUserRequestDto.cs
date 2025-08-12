@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RealEstateApp.Core.Domain.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.Application.DTOs.User
 {
@@ -26,9 +27,5 @@ namespace RealEstateApp.Core.Application.DTOs.User
         [Required]
         [Compare(nameof(Contrasena), ErrorMessage = "Las contraseñas no coinciden.")]
         public string ConfirmarContrasena { get; set; } = null!;
-
-        [Required]
-        public string TipoUsuario { get; set; } = null!;
-        public string? UserIdentification { get; set; }
     }
 }

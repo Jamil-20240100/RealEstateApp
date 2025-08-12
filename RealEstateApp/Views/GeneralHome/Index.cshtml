@@ -3,41 +3,59 @@
 @{
     ViewData["Title"] = "Propiedades Disponibles";
     Layout = "_LayoutAnonymous";
-    // var filter = ViewBag.Filter as RealEstateApp.Core.Application.ViewModels.Property.PropertyFilterViewModel;
+
+    // Obtener listas únicas para los selects
+    var propertyTypes = Model.Select(p => p.PropertyType).DistinctBy(t => t.Id).ToList();
+    var uniqueRooms = Model.Select(p => p.NumberOfRooms).Distinct().OrderBy(r => r).ToList();
+    var uniqueBathrooms = Model.Select(p => p.NumberOfBathrooms).Distinct().OrderBy(b => b).ToList();
 }
 
 <h2 class="mb-4">Propiedades Disponibles</h2>
 
-@* 
-<!-- Placeholder de filtros: lo activamos despues -->
-<form method="get" asp-action="Index" class="mb-4 row g-2">
-    <div class="col-md-3">
-        <input type="text" name="CodeContains" placeholder="Código propiedad" class="form-control" />
+<div class="row mb-4 g-3">
+    <div class="col-md-2">
+        <label for="filterCodigo" class="form-label">Código</label>
+        <input type="text" id="filterCodigo" class="form-control" placeholder="Ej: P-123">
     </div>
     <div class="col-md-2">
-        <!-- Cuando tengas PropertyType list en ViewBag -->
-        <select name="PropertyType.Id" class="form-control">
-            <option value="">-- Tipo de propiedad --</option>
+        <label for="filterPropertyType" class="form-label">Tipo Propiedad</label>
+        <select id="filterPropertyType" class="form-select">
+            <option value="">Todos</option>
+            @foreach (var type in propertyTypes)
+            {
+                <option value="@type.Name">@type.Name</option>
+            }
         </select>
     </div>
     <div class="col-md-2">
-        <input type="number" step="0.01" name="MinPrice" placeholder="Precio mínimo" class="form-control" />
+        <label for="filterMinPrice" class="form-label">Precio Mín.</label>
+        <input type="number" id="filterMinPrice" class="form-control" placeholder="Mínimo" />
     </div>
     <div class="col-md-2">
-        <input type="number" step="0.01" name="MaxPrice" placeholder="Precio máximo" class="form-control" />
+        <label for="filterMaxPrice" class="form-label">Precio Máx.</label>
+        <input type="number" id="filterMaxPrice" class="form-control" placeholder="Máximo" />
     </div>
-    <div class="col-md-1">
-        <input type="number" name="MinNumberOfRooms" placeholder="Hab." class="form-control" />
+    <div class="col-md-2">
+        <label for="filterRooms" class="form-label">Habitaciones</label>
+        <select id="filterRooms" class="form-select">
+            <option value="">Todos</option>
+            @foreach (var rooms in uniqueRooms)
+            {
+                <option value="@rooms">@rooms</option>
+            }
+        </select>
     </div>
-    <div class="col-md-1">
-        <input type="number" name="MinNumberOfBathrooms" placeholder="Baños" class="form-control" />
+    <div class="col-md-2">
+        <label for="filterBathrooms" class="form-label">Baños</label>
+        <select id="filterBathrooms" class="form-select">
+            <option value="">Todos</option>
+            @foreach (var bathrooms in uniqueBathrooms)
+            {
+                <option value="@bathrooms">@bathrooms</option>
+            }
+        </select>
     </div>
-    <div class="col-md-1">
-        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-    </div>
-</form>
-*@
-
+</div>
 @if (Model == null || !Model.Any())
 {
     <div class="alert alert-info">
@@ -46,14 +64,19 @@
 }
 else
 {
-    <div class="row">
+    <div id="property-list" class="row">
         @foreach (var p in Model)
         {
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 property-card"
+                 data-code="@p.Code"
+                 data-property-type="@p.PropertyType?.Name"
+                 data-price="@p.Price"
+                 data-rooms="@p.NumberOfRooms"
+                 data-bathrooms="@p.NumberOfBathrooms">
                 <div class="card shadow-sm h-100">
-                    <img src="@Url.Content(p.Images != null && p.Images.Any() 
-                               ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First()) 
-                               : "~/Images/no-image.png")"
+                    <img src="@Url.Content(p.Images != null && p.Images.Any()
+                                            ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
+                                            : "~/Images/no-image.png")"
                          class="card-img-top"
                          style="height: 220px; object-fit: cover;"
                          alt="Imagen propiedad" />
@@ -76,4 +99,53 @@ else
             </div>
         }
     </div>
+}
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterCodigo = document.getElementById('filterCodigo');
+            const filterPropertyType = document.getElementById('filterPropertyType');
+            const filterMinPrice = document.getElementById('filterMinPrice');
+            const filterMaxPrice = document.getElementById('filterMaxPrice');
+            const filterRooms = document.getElementById('filterRooms');
+            const filterBathrooms = document.getElementById('filterBathrooms');
+            const propertyCards = document.querySelectorAll('.property-card');
+
+            function applyFilters() {
+                const codigoValue = filterCodigo.value.toLowerCase().trim();
+                const propertyTypeValue = filterPropertyType.value.trim();
+                const minPriceValue = parseFloat(filterMinPrice.value) || 0;
+                const maxPriceValue = parseFloat(filterMaxPrice.value) || Infinity;
+                const roomsValue = filterRooms.value.trim();
+                const bathroomsValue = filterBathrooms.value.trim();
+
+                propertyCards.forEach(card => {
+                    const cardCodigo = card.dataset.code.toLowerCase();
+                    const cardPropertyType = card.dataset.propertyType;
+                    const cardPrice = parseFloat(card.dataset.price);
+                    const cardRooms = card.dataset.rooms;
+                    const cardBathrooms = card.dataset.bathrooms;
+
+                    const matchCodigo = cardCodigo.includes(codigoValue);
+                    const matchPropertyType = propertyTypeValue === '' || cardPropertyType === propertyTypeValue;
+                    const matchPrice = cardPrice >= minPriceValue && cardPrice <= maxPriceValue;
+                    const matchRooms = roomsValue === '' || cardRooms === roomsValue;
+                    const matchBathrooms = bathroomsValue === '' || cardBathrooms === bathroomsValue;
+
+                    if (matchCodigo && matchPropertyType && matchPrice && matchRooms && matchBathrooms) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            filterCodigo.addEventListener('input', applyFilters);
+            filterPropertyType.addEventListener('change', applyFilters);
+            filterMinPrice.addEventListener('input', applyFilters);
+            filterMaxPrice.addEventListener('input', applyFilters);
+            filterRooms.addEventListener('change', applyFilters);
+            filterBathrooms.addEventListener('change', applyFilters);
+        });
+    </script>
 }

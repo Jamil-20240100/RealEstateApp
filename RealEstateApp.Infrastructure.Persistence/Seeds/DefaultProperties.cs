@@ -79,7 +79,8 @@ namespace RealEstateApp.Infrastructure.Persistence.Seeders
                     {
                         new PropertyImage { ImageUrl = images[i - 1] }
                     },
-                    State = PropertyState.Disponible
+                    State = PropertyState.Disponible,
+                    AgentName = $"{agent.Name} {agent.LastName}"
                 };
 
                 properties.Add(property);

@@ -156,7 +156,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return response;
         }
 
-        public async Task<(bool Success, string? ErrorMessage)> CreateUserAsync(CreateUserRequestDto request)
+        public async Task<(bool Success, string? ErrorMessage)> CreateUserAsync(CreateUserRequestDto request, Roles rol)
         {
             if (await _userManager.FindByNameAsync(request.Usuario) != null)
                 return (false, "El usuario ya está registrado.");
@@ -170,10 +170,11 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 LastName = request.Apellido,
                 UserName = request.Usuario,
                 Email = request.Correo,
-                EmailConfirmed = false,
+                EmailConfirmed = true,
                 IsActive = true,
-                ProfileImage = "", //ENVIAR IMG VIA API
-                PhoneNumber = "111-111-1111"
+                ProfileImage = "",
+                PhoneNumber = "",
+                UserIdentification = request.Cedula,
             };
 
             var createResult = await _userManager.CreateAsync(user, request.Contrasena);
@@ -184,17 +185,11 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return (false, errors);
             }
 
-            await _userManager.AddToRoleAsync(user, request.TipoUsuario.ToLower());
+            await _userManager.AddToRoleAsync(user, rol.ToString().ToLower());
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            await _emailService.SendAsync(new EmailRequestDto
-            {
-                To = user.Email,
-                Subject = "Confirmación de cuenta",
-                HtmlBody = $"Por favor confirma tu cuenta usando este token: {encodedToken}"
-            });
             return (true, null);
         }
 

@@ -21,9 +21,13 @@ public class FavoritePropertyRepository : GenericRepository<FavoriteProperty>, I
     public async Task<List<FavoriteProperty>> GetAllByUserIdAsync(string userId)
     {
         return await _context.FavoriteProperties
-            .Where(fp => fp.ClientId == userId)
-            .Include(fp => fp.Property)
-            .ThenInclude(p => p.Images) // si tienes relación con imágenes
+            .Include(f => f.Property)
+                .ThenInclude(p => p.PropertyType)
+            .Include(f => f.Property)
+                .ThenInclude(p => p.SalesType)
+            .Include(f => f.Property)
+                .ThenInclude(p => p.Images)
+            .Where(f => f.ClientId == userId)
             .ToListAsync();
     }
 }

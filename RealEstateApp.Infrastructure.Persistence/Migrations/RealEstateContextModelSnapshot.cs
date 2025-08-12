@@ -173,12 +173,11 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-
                     b.Property<string>("AgentName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BuyerClientId")
-
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")

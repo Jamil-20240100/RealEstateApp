@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RealEstateApp.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class LongWayToGo : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -90,6 +90,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AgentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AgentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     SizeInMeters = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -97,6 +98,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     NumberOfBathrooms = table.Column<int>(type: "int", nullable: false),
                     PropertyTypeId = table.Column<int>(type: "int", nullable: false),
                     SalesTypeId = table.Column<int>(type: "int", nullable: false),
+                    BuyerClientId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<int>(type: "int", nullable: false)
                 },

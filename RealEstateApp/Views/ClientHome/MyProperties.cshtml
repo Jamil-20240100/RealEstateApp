@@ -6,6 +6,11 @@
     Layout = "_LayoutClient";
 
     var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+    var propertyTypes = Model.Select(p => p.PropertyType).DistinctBy(t => t.Id).ToList();
+    var salesTypes = Model.Select(p => p.SalesType).DistinctBy(st => st.Id).ToList();
+    var uniqueRooms = Model.Select(p => p.NumberOfRooms).Distinct().OrderBy(r => r).ToList();
+    var uniqueBathrooms = Model.Select(p => p.NumberOfBathrooms).Distinct().OrderBy(b => b).ToList();
 }
 
 <h2 class="mb-4">Mis Propiedades Favoritas</h2>
@@ -18,30 +23,80 @@
 }
 else
 {
-    <div class="row">
+    <div class="row mb-4 g-3">
+        <div class="col-md-3">
+            <label for="filterCodigo" class="form-label">Código</label>
+            <input type="text" id="filterCodigo" class="form-control" placeholder="Ej: P-123">
+        </div>
+        <div class="col-md-3">
+            <label for="filterPropertyType" class="form-label">Tipo de Propiedad</label>
+            <select id="filterPropertyType" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var type in propertyTypes)
+                {
+                    <option value="@type.Name">@type.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="filterSalesType" class="form-label">Tipo de Venta</label>
+            <select id="filterSalesType" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var salesType in salesTypes)
+                {
+                    <option value="@salesType.Name">@salesType.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="filterRooms" class="form-label">Habitaciones</label>
+            <select id="filterRooms" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var rooms in uniqueRooms)
+                {
+                    <option value="@rooms">@rooms</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="filterBathrooms" class="form-label">Baños</label>
+            <select id="filterBathrooms" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var bathrooms in uniqueBathrooms)
+                {
+                    <option value="@bathrooms">@bathrooms</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div id="property-list" class="row">
         @foreach (var p in Model)
         {
-            // No mostrar propiedades vendidas a otro comprador
             if (p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida && p.BuyerClientId != userId)
             {
                 continue;
             }
 
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 property-card"
+                 data-code="@p.Code"
+                 data-property-type="@p.PropertyType?.Name"
+                 data-sales-type="@p.SalesType?.Name"
+                 data-rooms="@p.NumberOfRooms"
+                 data-bathrooms="@p.NumberOfBathrooms">
                 <div class="card shadow-sm h-100">
                     <img src="@Url.Content(
-                                                 p.Images != null && p.Images.Any()
-                                                     ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
-                                                     : "~/Images/no-image.png"
-                                             )"
-                 class="card-img-top"
-                 style="height: 220px; object-fit: cover;"
-                 alt="Imagen propiedad" />
+                                                p.Images != null && p.Images.Any()
+                                                    ? (p.Images.First().StartsWith("~") ? p.Images.First() : "~/" + p.Images.First())
+                                                    : "~/Images/no-image.png"
+                                                )"
+                         class="card-img-top"
+                         style="height: 220px; object-fit: cover;"
+                         alt="Imagen propiedad" />
 
                     <div class="card-body">
                         <h5 class="card-title">
                             @p.PropertyType?.Name - @p.SalesType?.Name
-                    @if (p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida && p.BuyerClientId == userId)
+                            @if (p.State == RealEstateApp.Core.Domain.Common.Enums.PropertyState.Vendida && p.BuyerClientId == userId)
                             {
                                 <span class="badge bg-success ms-2">VENDIDA</span>
                             }
@@ -67,4 +122,50 @@ else
             </div>
         }
     </div>
+}
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterCodigo = document.getElementById('filterCodigo');
+            const filterPropertyType = document.getElementById('filterPropertyType');
+            const filterSalesType = document.getElementById('filterSalesType');
+            const filterRooms = document.getElementById('filterRooms');
+            const filterBathrooms = document.getElementById('filterBathrooms');
+            const propertyCards = document.querySelectorAll('.property-card');
+
+            function applyFilters() {
+                const codigoValue = filterCodigo.value.toLowerCase().trim();
+                const propertyTypeValue = filterPropertyType.value.trim();
+                const salesTypeValue = filterSalesType.value.trim();
+                const roomsValue = filterRooms.value.trim();
+                const bathroomsValue = filterBathrooms.value.trim();
+
+                propertyCards.forEach(card => {
+                    const cardCodigo = card.dataset.code.toLowerCase();
+                    const cardPropertyType = card.dataset.propertyType;
+                    const cardSalesType = card.dataset.salesType;
+                    const cardRooms = card.dataset.rooms;
+                    const cardBathrooms = card.dataset.bathrooms;
+
+                    const matchCodigo = cardCodigo.includes(codigoValue);
+                    const matchPropertyType = propertyTypeValue === '' || cardPropertyType === propertyTypeValue;
+                    const matchSalesType = salesTypeValue === '' || cardSalesType === salesTypeValue;
+                    const matchRooms = roomsValue === '' || cardRooms === roomsValue;
+                    const matchBathrooms = bathroomsValue === '' || cardBathrooms === bathroomsValue;
+
+                    if (matchCodigo && matchPropertyType && matchSalesType && matchRooms && matchBathrooms) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            filterCodigo.addEventListener('input', applyFilters);
+            filterPropertyType.addEventListener('change', applyFilters);
+            filterSalesType.addEventListener('change', applyFilters);
+            filterRooms.addEventListener('change', applyFilters);
+            filterBathrooms.addEventListener('change', applyFilters);
+        });
+    </script>
 }
