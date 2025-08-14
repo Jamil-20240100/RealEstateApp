@@ -4,24 +4,30 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.DTOs.Property;
 using RealEstateApp.Core.Application.Features.Properties.Queries.GetById;
 using RealEstateApp.Core.Application.Features.Properties.Queries.GetByCode;
-using InvestmentApp.Core.Application.Features.Assets.Queries.GetAll;
+using Swashbuckle.AspNetCore.Annotations;
 using RealEstateAPI.Controllers;
+using RealEstateApp.Core.Application.Features.Properties.Queries.List;
 
 namespace RealEstateApi.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Authorize(Roles = "Admin, Developer")]
+    [SwaggerTag("Endpoints to manage properties and retrieve property information")]
     public class PropertyController : BaseApiController
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<PropertyForApiDTO>))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerOperation(
+            Summary = "List all properties",
+            Description = "Retrieves a list of all properties registered in the system"
+        )]
         public async Task<IActionResult> List()
         {
             try
             {
-                var properties = await Mediator.Send(new ListAgentQuery());
+                var properties = await Mediator.Send(new ListPropertiesQuery());
 
                 if (properties == null || properties.Count == 0)
                     return NoContent();
@@ -38,6 +44,10 @@ namespace RealEstateApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyForApiDTO))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerOperation(
+            Summary = "Get property by ID",
+            Description = "Retrieves the details of a property using its integer ID"
+        )]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -59,6 +69,10 @@ namespace RealEstateApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyForApiDTO))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerOperation(
+            Summary = "Get property by code",
+            Description = "Retrieves the details of a property using its unique code"
+        )]
         public async Task<IActionResult> GetByCode(string code)
         {
             try
