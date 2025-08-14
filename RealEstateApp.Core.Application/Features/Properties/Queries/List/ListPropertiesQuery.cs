@@ -7,13 +7,16 @@ using RealEstateApp.Core.Application.DTOs.PropertyType;
 using RealEstateApp.Core.Application.DTOs.SalesType;
 using RealEstateApp.Core.Domain.Interfaces;
 
-namespace InvestmentApp.Core.Application.Features.Assets.Queries.GetAll
+namespace RealEstateApp.Core.Application.Features.Properties.Queries.List
 {
-    public class ListAgentQuery : IRequest<IList<PropertyForApiDTO>>
+    /// <summary>
+    /// Query parameters for retrieving all properties
+    /// </summary>
+    public class ListPropertiesQuery : IRequest<IList<PropertyForApiDTO>>
     {
     }
 
-    public class ListPropertiesQueryHandler : IRequestHandler<ListAgentQuery, IList<PropertyForApiDTO>>
+    public class ListPropertiesQueryHandler : IRequestHandler<ListPropertiesQuery, IList<PropertyForApiDTO>>
     {
         private readonly IPropertyRepository _propertyRepository;
         private readonly IMapper _mapper;
@@ -24,7 +27,7 @@ namespace InvestmentApp.Core.Application.Features.Assets.Queries.GetAll
             _mapper = mapper;
         }
 
-        public async Task<IList<PropertyForApiDTO>> Handle(ListAgentQuery query, CancellationToken cancellationToken)
+        public async Task<IList<PropertyForApiDTO>> Handle(ListPropertiesQuery query, CancellationToken cancellationToken)
         {
             var listEntitiesQuery = _propertyRepository.GetAllQueryWithInclude(["PropertyType", "SalesType", "Features"]);
 

@@ -12,6 +12,9 @@ using RealEstateApp.Core.Domain.Interfaces;
 
 namespace RealEstateApp.Core.Application.Features.Agents.Queries.List
 {
+    /// <summary>
+    /// Query parameters for retrieving all agents
+    /// </summary>
     public class ListAgentQuery : IRequest<IList<AgentForApiDTO>>
     {
     }

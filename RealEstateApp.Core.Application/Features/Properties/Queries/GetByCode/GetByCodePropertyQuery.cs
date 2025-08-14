@@ -3,11 +3,20 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.Property;
 using RealEstateApp.Core.Domain.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Properties.Queries.GetByCode
 {
+    /// <summary>
+    /// Query to retrieve a property by its unique code
+    /// </summary>
     public class GetByCodePropertyQuery : IRequest<PropertyForApiDTO>
     {
+        /// <summary>
+        /// The unique code of the property
+        /// </summary>
+        /// <example>PROP-2025-001</example>
+        [SwaggerParameter(Description = "The unique code of the property to retrieve")]
         public required string Code { get; set; }
     }
 
@@ -27,7 +36,8 @@ namespace RealEstateApp.Core.Application.Features.Properties.Queries.GetByCode
             var listEntitiesQuery = _propertyRepository.GetAllQueryWithInclude(["PropertyType", "SalesType", "Features"]);
             Domain.Entities.Property? entity = await listEntitiesQuery.FirstOrDefaultAsync(fd => fd.Code == query.Code, cancellationToken: cancellationToken);
 
-            if (entity == null) throw new ArgumentException("Property not found with this code");
+            if (entity == null)
+                throw new ArgumentException("Property not found with this code");
 
             var dto = _mapper.Map<PropertyForApiDTO>(entity);
 

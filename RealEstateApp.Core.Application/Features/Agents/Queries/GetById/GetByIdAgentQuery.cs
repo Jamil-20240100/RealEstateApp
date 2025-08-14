@@ -6,11 +6,20 @@ using RealEstateApp.Core.Application.DTOs.Property;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Core.Domain.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetById
 {
+    /// <summary>
+    /// Query to retrieve an agent by their unique ID
+    /// </summary>
     public class GetByIdAgentQuery : IRequest<AgentForApiDTO>
     {
+        /// <summary>
+        /// The unique identifier of the agent
+        /// </summary>
+        /// <example>5ac0dfee-9c1c-4f9e-bdd3-5a2d864faea2</example>
+        [SwaggerParameter(Description = "The ID of the agent to retrieve")]
         public required string Id { get; set; }
     }
 

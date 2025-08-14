@@ -33,6 +33,7 @@ namespace RealEstateApp.Core.Application.ViewModels.Property
 
             public string? AgentId { get; set; }
             public string? SelectedClientId { get; set; }
+        public IAsyncEnumerable<char>? AgentName { get; set; }
     }
     
 }
