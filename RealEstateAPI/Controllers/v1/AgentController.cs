@@ -8,11 +8,13 @@ using RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentProperty;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateAPI.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Authorize(Roles = "Admin, Developer")]
+    [SwaggerTag("Endpoints to manage agents, their properties, and status updates")]
     public class AgentController : BaseApiController
     {
         private readonly IMediator _mediator;
@@ -24,6 +26,10 @@ namespace RealEstateAPI.Controllers.v1
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<AgentForApiDTO>))]
+        [SwaggerOperation(
+            Summary = "List all agents",
+            Description = "Retrieves a list of all agents registered in the system"
+        )]
         public async Task<IActionResult> List()
         {
             var result = await _mediator.Send(new ListAgentQuery());
@@ -33,6 +39,10 @@ namespace RealEstateAPI.Controllers.v1
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AgentForApiDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerOperation(
+            Summary = "Get agent by ID",
+            Description = "Retrieves the details of a single agent by their unique identifier"
+        )]
         public async Task<IActionResult> GetById(string id)
         {
             var result = await _mediator.Send(new GetByIdAgentQuery { Id = id });
@@ -46,6 +56,10 @@ namespace RealEstateAPI.Controllers.v1
         [HttpGet("{id}/agent-properties")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<PropertyForApiDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerOperation(
+            Summary = "Get properties of an agent",
+            Description = "Retrieves all properties associated with a specific agent"
+        )]
         public async Task<IActionResult> GetAgentProperties(string id)
         {
             var result = await _mediator.Send(new GetAgentPropertyQuery { Id = id });
@@ -57,6 +71,12 @@ namespace RealEstateAPI.Controllers.v1
         }
 
         [HttpPut("{userId}/change-status")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(
+            Summary = "Change agent status",
+            Description = "Updates the active status (enabled/disabled) of an agent"
+        )]
         public async Task<IActionResult> ChangeUserStatus(string userId, [FromBody] bool newStatus)
         {
             try
@@ -66,12 +86,13 @@ namespace RealEstateAPI.Controllers.v1
                     UserId = userId,
                     NewStatus = newStatus
                 });
-            }catch(Exception)
+            }
+            catch (Exception)
             {
                 return BadRequest("Failed to update user status");
             }
+
             return NoContent();
         }
-
     }
 }

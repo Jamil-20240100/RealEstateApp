@@ -3,11 +3,20 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.Property;
 using RealEstateApp.Core.Domain.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Properties.Queries.GetById
 {
+    /// <summary>
+    /// Query to retrieve a property by its unique ID
+    /// </summary>
     public class GetByIdPropertyQuery : IRequest<PropertyForApiDTO>
     {
+        /// <summary>
+        /// The unique identifier of the property
+        /// </summary>
+        /// <example>30</example>
+        [SwaggerParameter(Description = "The ID of the agent to retrieve")]
         public required int Id { get; set; }
     }
 

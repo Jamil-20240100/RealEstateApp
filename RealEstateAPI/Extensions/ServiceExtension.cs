@@ -26,6 +26,7 @@ namespace RealEstateAPI.Extensions
                 });
 
                 options.DescribeAllParametersInCamelCase();
+                options.EnableAnnotations();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
