@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.SalesType;
 using RealEstateApp.Core.Domain.Interfaces;
 
 namespace RealEstateApp.Core.Application.Features.SalesTypes.Queries.List
 {
-
-    public class ListSalesTypesQuery : IRequest<IList<SalesTypeDTO>>
-    {
-    }
+    /// <summary>
+    /// Query para listar todos los tipos de ventas.
+    /// </summary>
+    public class ListSalesTypesQuery : IRequest<IList<SalesTypeDTO>> { }
 
     public class ListSalesTypesQueryHandler : IRequestHandler<ListSalesTypesQuery, IList<SalesTypeDTO>>
     {
@@ -23,8 +24,8 @@ namespace RealEstateApp.Core.Application.Features.SalesTypes.Queries.List
 
         public async Task<IList<SalesTypeDTO>> Handle(ListSalesTypesQuery request, CancellationToken cancellationToken)
         {
-            var list = await _repository.GetAllAsync();
-            return _mapper.Map<IList<SalesTypeDTO>>(list);
+            var list = await _repository.GetAllQuery().ToListAsync(cancellationToken);
+            return _mapper.Map<List<SalesTypeDTO>>(list);
         }
     }
 }

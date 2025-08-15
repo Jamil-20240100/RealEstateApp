@@ -2,12 +2,25 @@
 using MediatR;
 using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Features.Commands
 {
+    /// <summary>
+    /// Comando para crear una nueva mejora.
+    /// </summary>
     public class CreateFeatureCommand : IRequest<int>
     {
+        /// <summary>
+        /// Nombre de la mejora.
+        /// </summary>
+        [SwaggerSchema(Description = "Nombre de la mejora", Nullable = false)]
         public required string Name { get; set; }
+
+        /// <summary>
+        /// Descripción de la mejora.
+        /// </summary>
+        [SwaggerSchema(Description = "Descripción de la mejora", Nullable = false)]
         public required string Description { get; set; }
     }
 

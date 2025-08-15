@@ -6,6 +6,9 @@ using RealEstateApp.Core.Domain.Interfaces;
 
 namespace RealEstateApp.Core.Application.Features.Features.Queries.List
 {
+    /// <summary>
+    /// Query para listar todas las mejoras registradas.
+    /// </summary>
     public class ListFeaturesQuery : IRequest<IList<FeatureDTO>> { }
 
     public class ListFeaturesQueryHandler : IRequestHandler<ListFeaturesQuery, IList<FeatureDTO>>
@@ -21,8 +24,9 @@ namespace RealEstateApp.Core.Application.Features.Features.Queries.List
 
         public async Task<IList<FeatureDTO>> Handle(ListFeaturesQuery request, CancellationToken cancellationToken)
         {
-            var list = await _repository.GetAllQuery().ToListAsync(cancellationToken);
-            return _mapper.Map<List<FeatureDTO>>(list);
+            // Asegúrate de que la consulta esté configurada correctamente para ser asíncrona
+            var features = await _repository.GetAllFeaturesAsync(cancellationToken);
+            return _mapper.Map<List<FeatureDTO>>(features);
         }
     }
 }

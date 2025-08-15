@@ -3,13 +3,26 @@ using MediatR;
 using RealEstateApp.Core.Application.DTOs.PropertyType;
 using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.PropertyTypes.Commands.Create
 {
+    /// <summary>
+    /// Comando para crear un nuevo tipo de propiedad.
+    /// </summary>
     public class CreatePropertyTypeCommand : IRequest<int>
     {
-        public string Name { get; set; } = default!;
-        public string Description { get; set; } = default!;
+        /// <summary>
+        /// Nombre del tipo de propiedad.
+        /// </summary>
+        [SwaggerSchema(Description = "Nombre del tipo de propiedad", Nullable = false)]
+        public required string Name { get; set; }
+
+        /// <summary>
+        /// Descripción del tipo de propiedad.
+        /// </summary>
+        [SwaggerSchema(Description = "Descripción del tipo de propiedad", Nullable = false)]
+        public required string Description { get; set; }
     }
 
     public class CreatePropertyTypeCommandHandler : IRequestHandler<CreatePropertyTypeCommand, int>
