@@ -19,5 +19,11 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
             return await _dbContext.Set<Feature>()
                 .FirstOrDefaultAsync(f => f.Id == id);
         }
+
+        public async Task<List<Feature>> GetAllFeaturesAsync(CancellationToken cancellationToken)
+        {
+            return await _dbContext.Set<Feature>()
+                .ToListAsync(cancellationToken);
+        }
     }
 }
