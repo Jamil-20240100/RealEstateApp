@@ -6,6 +6,9 @@ using RealEstateApp.Core.Domain.Interfaces;
 
 namespace RealEstateApp.Core.Application.Features.PropertyTypes.Queries.List
 {
+    /// <summary>
+    /// Query para listar todos los tipos de propiedades.
+    /// </summary>
     public class ListPropertyTypesQuery : IRequest<IList<PropertyTypeDTO>> { }
 
     public class ListPropertyTypesQueryHandler : IRequestHandler<ListPropertyTypesQuery, IList<PropertyTypeDTO>>

@@ -6,6 +6,9 @@ using RealEstateApp.Core.Domain.Interfaces;
 
 namespace RealEstateApp.Core.Application.Features.Features.Queries.List
 {
+    /// <summary>
+    /// Query para listar todas las mejoras registradas.
+    /// </summary>
     public class ListFeaturesQuery : IRequest<IList<FeatureDTO>> { }
 
     public class ListFeaturesQueryHandler : IRequestHandler<ListFeaturesQuery, IList<FeatureDTO>>

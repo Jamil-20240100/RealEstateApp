@@ -1,10 +1,18 @@
 ﻿using MediatR;
 using RealEstateApp.Core.Domain.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Features.Commands.Delete
 {
+    /// <summary>
+    /// Comando para eliminar una mejora existente.
+    /// </summary>
     public class DeleteFeatureCommand : IRequest<bool>
     {
+        /// <summary>
+        /// Identificador único de la mejora.
+        /// </summary>
+        [SwaggerSchema(Description = "Id de la mejora a eliminar", Nullable = false)]
         public int Id { get; set; }
     }
 
