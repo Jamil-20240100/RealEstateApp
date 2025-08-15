@@ -26,7 +26,7 @@ namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Update
 
         public async Task<bool> Handle(UpdateSalesTypeCommand request, CancellationToken cancellationToken)
         {
-            var salesType = await _repository.GetByIdAsync(request.Id);
+            var salesType = await _repository.GetById(request.Id);
             if (salesType == null) return false;
 
             salesType.Name = request.Name;

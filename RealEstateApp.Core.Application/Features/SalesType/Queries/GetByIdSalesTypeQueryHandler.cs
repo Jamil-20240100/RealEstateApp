@@ -22,7 +22,7 @@ namespace RealEstateApp.Core.Application.Features.SalesTypes.Queries.GetById
 
         public async Task<SalesTypeDTO> Handle(GetByIdSalesTypeQuery request, CancellationToken cancellationToken)
         {
-            var salesType = await _repository.GetByIdAsync(request.Id);
+            var salesType = await _repository.GetById(request.Id);
             return _mapper.Map<SalesTypeDTO>(salesType);
         }
     }

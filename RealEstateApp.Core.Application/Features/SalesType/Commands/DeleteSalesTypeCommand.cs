@@ -19,7 +19,7 @@ namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Delete
 
         public async Task<bool> Handle(DeleteSalesTypeCommand request, CancellationToken cancellationToken)
         {
-            var salesType = await _repository.GetByIdAsync(request.Id);
+            var salesType = await _repository.GetById(request.Id);
             if (salesType == null) return false;
 
             await _repository.DeleteAsync(salesType);

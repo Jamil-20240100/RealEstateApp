@@ -23,7 +23,7 @@ namespace RealEstateApp.Core.Application.Features.SalesTypes.Queries.List
 
         public async Task<IList<SalesTypeDTO>> Handle(ListSalesTypesQuery request, CancellationToken cancellationToken)
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _repository.GetAll();
             return _mapper.Map<IList<SalesTypeDTO>>(list);
         }
     }
