@@ -5,118 +5,146 @@
     ViewData["Title"] = ViewBag.EditMode ? "Editar Propiedad" : "Nueva Propiedad";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
-
-<form asp-action="@(ViewBag.EditMode ? "Edit" : "Create")" method="post" enctype="multipart/form-data">
-
-    <input type="hidden" asp-for="Id" />
-
-    <div class="mb-3">
-        <label asp-for="PropertyTypeId" class="form-label">Tipo de Propiedad</label>
-        <select asp-for="PropertyTypeId" asp-items="@(new SelectList(Model.PropertyTypes, "Id", "Name"))" class="form-select">
-            <option value="">-- Seleccione un tipo de propiedad --</option>
-        </select>
-        <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="SalesTypeId" class="form-label">Tipo de Venta</label>
-        <select asp-for="SalesTypeId" asp-items="@(new SelectList(Model.SalesTypes, "Id", "Name"))" class="form-select">
-            <option value="">-- Seleccione un tipo de venta --</option>
-        </select>
-        <span asp-validation-for="SalesTypeId" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Price" class="form-label">Precio (RD$)</label>
-        <input asp-for="Price" class="form-control" step="0.01" min="0" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label">Descripción</label>
-        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="SizeInMeters" class="form-label">Tamaño en metros</label>
-        <input asp-for="SizeInMeters" class="form-control" step="0.01" min="0" />
-        <span asp-validation-for="SizeInMeters" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NumberOfRooms" class="form-label">Número de habitaciones</label>
-        <input asp-for="NumberOfRooms" type="number" class="form-control" min="1" />
-        <span asp-validation-for="NumberOfRooms" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NumberOfBathrooms" class="form-label">Número de baños</label>
-        <input asp-for="NumberOfBathrooms" type="number" class="form-control" min="1" />
-        <span asp-validation-for="NumberOfBathrooms" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Mejoras</label>
-        <div class="form-check">
-            @foreach (var feature in Model.AvailableFeatures)
-            {
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox"
-                           name="SelectedFeatures"
-                           value="@feature.Id"
-                    @(Model.SelectedFeatures.Contains(feature.Id) ? "checked" : "") />
-                    <label class="form-check-label">@feature.Name</label>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-house-door me-2"></i> @ViewData["Title"]</h5>
                 </div>
-            }
-        </div>
-        <span asp-validation-for="SelectedFeatures" class="text-danger"></span>
-    </div>
+                <div class="card-body">
+                    <form asp-action="@(ViewBag.EditMode ? "Edit" : "Create")" method="post" enctype="multipart/form-data">
+                        @if (ViewBag.EditMode)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                        }
 
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["Error"]</div>
+                        }
 
-    <div class="mb-3">
-        <label class="form-label">Imágenes existentes</label>
-        <div>
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                <div class="d-flex flex-wrap gap-2">
-                    @foreach (var imageUrl in Model.Images)
-                    {
-                        <img src="@Url.Content("/" + imageUrl)" alt="Imagen propiedad" style="max-width: 150px; max-height: 150px; border-radius: 5px;" />
-                    }
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="PropertyTypeId" class="form-label">Tipo de Propiedad</label>
+                                    <select asp-for="PropertyTypeId" asp-items="@(new SelectList(Model.PropertyTypes, "Id", "Name"))" class="form-select">
+                                        <option value="">-- Seleccione un tipo --</option>
+                                    </select>
+                                    <span asp-validation-for="PropertyTypeId" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="SalesTypeId" class="form-label">Tipo de Venta</label>
+                                    <select asp-for="SalesTypeId" asp-items="@(new SelectList(Model.SalesTypes, "Id", "Name"))" class="form-select">
+                                        <option value="">-- Seleccione un tipo --</option>
+                                    </select>
+                                    <span asp-validation-for="SalesTypeId" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Price" class="form-label">Precio (RD$)</label>
+                                    <input asp-for="Price" class="form-control" step="0.01" min="0" placeholder="Ej: 2500000" />
+                                    <span asp-validation-for="Price" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="SizeInMeters" class="form-label">Tamaño en m²</label>
+                                    <input asp-for="SizeInMeters" class="form-control" step="0.01" min="0" placeholder="Ej: 150.5" />
+                                    <span asp-validation-for="SizeInMeters" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="NumberOfRooms" class="form-label">Habitaciones</label>
+                                    <input asp-for="NumberOfRooms" type="number" class="form-control" min="1" placeholder="Ej: 3" />
+                                    <span asp-validation-for="NumberOfRooms" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="NumberOfBathrooms" class="form-label">Baños</label>
+                                    <input asp-for="NumberOfBathrooms" type="number" class="form-control" min="1" placeholder="Ej: 2" />
+                                    <span asp-validation-for="NumberOfBathrooms" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="form-label">Descripción</label>
+                                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe los detalles de la propiedad..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Mejoras</label>
+                                    <div class="row row-cols-md-2 row-cols-lg-3 g-2">
+                                        @foreach (var feature in Model.AvailableFeatures)
+                                        {
+                                            <div class="col">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           name="SelectedFeatures"
+                                                           value="@feature.Id"
+                                                    @(Model.SelectedFeatures.Contains(feature.Id) ? "checked" : "") />
+                                                    <label class="form-check-label">@feature.Name</label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <span asp-validation-for="SelectedFeatures" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label asp-for="ImagesFile" class="form-label">Imágenes (máx. 4)</label>
+                                    <input asp-for="ImagesFile" type="file" class="form-control" multiple accept="image/*" />
+                                    <span asp-validation-for="ImagesFile" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            @if (ViewBag.EditMode && Model.Images != null && Model.Images.Any())
+                            {
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Imágenes existentes</label>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach (var imageUrl in Model.Images)
+                                            {
+                                                <div class="position-relative">
+                                                    <img src="@Url.Content("/" + imageUrl)" alt="Imagen propiedad" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;" />
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    @foreach (var imageUrl in Model.Images)
+                                    {
+                                        <input type="hidden" name="Images" value="@imageUrl" />
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary d-flex align-items-center">
+                                <i class="bi bi-arrow-left me-2"></i> Volver
+                            </a>
+                            <button type="submit" class="btn btn-primary d-flex align-items-center">
+                                <i class="bi bi-save me-2"></i> @(ViewBag.EditMode ? "Guardar cambios" : "Crear")
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            }
-            else
-            {
-                <p>No hay imágenes cargadas.</p>
-            }
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                foreach (var imageUrl in Model.Images)
-                {
-                    <input type="hidden" name="Images" value="@imageUrl" />
-                }
-            }
-
+            </div>
         </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="ImagesFile" class="form-label">Imágenes (máximo 4)</label>
-        <input asp-for="ImagesFile" type="file" class="form-control" multiple accept="image/*" />
-        <span asp-validation-for="ImagesFile" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">@(ViewBag.EditMode ? "Editar" : "Crear")</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

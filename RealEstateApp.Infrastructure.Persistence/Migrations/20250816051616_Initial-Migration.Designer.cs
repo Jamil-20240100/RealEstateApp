@@ -12,15 +12,15 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 namespace RealEstateApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    [Migration("20250812194221_InitialCrate")]
-    partial class InitialCrate
+    [Migration("20250816051616_Initial-Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

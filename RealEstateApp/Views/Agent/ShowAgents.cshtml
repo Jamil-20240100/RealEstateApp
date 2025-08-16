@@ -1,112 +1,62 @@
 ﻿@model List<AgentViewModel>
 
 @{
-    ViewData["Title"] = "Agents";
+    ViewData["Title"] = "Agentes";
     Layout = "_LayoutAnonymous";
 }
 
-<style>
-    .hero-image {
-        position: relative;
-        height: 300px;
-        background-image: url('URL_DE_TU_IMAGEN_DE_CABECERA.jpg');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        display: flex;
-        align-items: center;
-        padding-left: 20px;
-    }
+<header class="position-relative hero-image overflow-hidden text-center text-white" style="height: 300px;">
+    <img src="https://plus.unsplash.com/premium_photo-1661329955912-ebc4279f3b21?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YnVzaW5lc3MlMjBoYW5kc2hha2V8ZW58MHx8MHx8fDA%3D" alt="Fondo de Agentes" class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
+    <div class="position-absolute w-100 h-100 top-0 start-0 bg-black opacity-50"></div>
+    <div class="d-flex align-items-center justify-content-center h-100 position-relative z-1">
+        <h1 class="display-4 fw-bold text-shadow">Nuestros Agentes</h1>
+    </div>
+</header>
 
-    .hero-image h1 {
-        margin: 0;
-        font-size: 2.5em;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
+<div class="container my-5">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" id="agent-name" class="form-control border-start-0" placeholder="Buscar por nombre de agente..." />
+            </div>
+        </div>
+    </div>
 
-    .search-container {
-        padding: 20px;
-        background-color: #f8f9fa;
-    }
-
-    .search-input {
-        border: 1px solid #ccc;
-        border-radius: 20px;
-        padding: 8px 15px;
-        width: 300px;
-    }
-
-    .search-icon {
-        margin-left: -30px;
-        cursor: pointer;
-    }
-
-    .agents-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .agent-card {
-        text-align: center;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s;
-    }
-
-    .agent-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .agent-image {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 15px;
-        border: 2px solid #ddd;
-    }
-
-    .agent-name {
-        font-size: 1.2em;
-        font-weight: bold;
-    }
-</style>
-
-<div class="hero-image">
-    <h1>Agents List</h1>
-</div>
-
-<div class="search-container">
-    <label for="agent-name">Agent's name</label>
-    <div style="display: flex; align-items: center;">
-        <input type="text" id="agent-name" class="search-input" placeholder="Agent...">
-        <span class="search-icon">🔍</span>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="agents-container">
+        @foreach (var agent in Model)
+        {
+            <div class="col agent-card" data-name="@(agent.Name.ToLower())">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="ratio ratio-1x1 position-relative">
+                        <img src="@Url.Content("/" + agent.Image)" class="card-img-top object-fit-cover rounded-circle position-absolute top-50 start-50 translate-middle" alt="@agent.Name" style="width:150px; height:150px; border: 4px solid #f8f9fa;">
+                    </div>
+                    <div class="card-body d-flex flex-column text-center pt-5">
+                        <h5 class="card-title fw-bold mt-2">@agent.Name</h5>
+                        <p class="card-text text-muted mb-0"><small>@agent.Email</small></p>
+                        <p class="card-text"><small>Propiedades activas: <strong class="text-primary">@(agent.Properties?.Count() ?? 0)</strong></small></p>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>
 
-<div class="agents-grid" id="agents-container">
-    @foreach (var agent in Model)
-    {
-        <div class="agent-card" data-name="@agent.Name.ToLower()">
-            <img src="@Url.Content("/" + agent.Image)" alt="@agent.Name" class="agent-image">
-            <div class="agent-name">@agent.Name</div>
-        </div>
-    }
-</div>
-
 <script>
-    const searchInput = document.getElementById("agent-name");
-    const agentCards = document.querySelectorAll(".agent-card");
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById("agent-name");
+        const agentCards = document.querySelectorAll(".agent-card");
 
-    searchInput.addEventListener("input", function () {
-        const filter = this.value.toLowerCase();
-
-        agentCards.forEach(card => {
-            const name = card.dataset.name;
-            card.style.display = name.includes(filter) ? "block" : "none";
+        searchInput.addEventListener("keyup", function () {
+            const filter = this.value.toLowerCase();
+            agentCards.forEach(card => {
+                const name = card.dataset.name;
+                if (name.includes(filter)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
         });
     });
 </script>

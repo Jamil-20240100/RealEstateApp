@@ -58,19 +58,16 @@ namespace RealEstateApp.Infrastructure.Persistence
 
             var context = sp.GetRequiredService<RealEstateContext>();
 
-            // 1) Asegurar DB/migraciones
-            //    (Si prefieres EnsureCreated para escenarios de demo: usa context.Database.EnsureCreatedAsync())
+           
             await context.Database.MigrateAsync();
 
-            // 2) Transacción para garantizar consistencia
+           
             using var tx = await context.Database.BeginTransactionAsync();
 
             try
             {
-                // 3) Semilla de tipos de propiedad y tipos de venta (idempotente)
                 await DefaultPropertyTypeAndSalesTypeSeeder.SeedPropertyTypesAndSaleTypesAsync(context);
 
-                // 4) Verificación (evita NullReference y confirma que realmente hay datos)
                 var saleTypesCount = await context.SalesTypes.CountAsync();
                 if (saleTypesCount == 0)
                     throw new InvalidOperationException("Los SaleTypes no se insertaron correctamente.");
@@ -79,7 +76,6 @@ namespace RealEstateApp.Infrastructure.Persistence
                 if (propertyTypesCount == 0)
                     throw new InvalidOperationException("Los PropertyTypes no se insertaron correctamente.");
 
-                // 5) Semilla de propiedades (usa los tipos existentes)
                 var userManager = sp.GetRequiredService<UserManager<AppUser>>();
                 var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
