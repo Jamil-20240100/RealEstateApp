@@ -1,13 +1,14 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RealEstateAPI.Controllers;
 using RealEstateApp.Core.Application.DTOs.Agent;
 using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus;
+using RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentProperty;
 using RealEstateApp.Core.Application.Features.Agents.Queries.GetById;
 using RealEstateApp.Core.Application.Features.Agents.Queries.List;
-using RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentProperty;
-using Asp.Versioning;
-using Microsoft.AspNetCore.Authorization;
-using RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateAPI.Controllers.v1
@@ -79,18 +80,11 @@ namespace RealEstateAPI.Controllers.v1
         )]
         public async Task<IActionResult> ChangeUserStatus(string userId, [FromBody] bool newStatus)
         {
-            try
+            await _mediator.Send(new ChangeStatusAgentCommand
             {
-                var result = await _mediator.Send(new ChangeStatusAgentCommand
-                {
-                    UserId = userId,
-                    NewStatus = newStatus
-                });
-            }
-            catch (Exception)
-            {
-                return BadRequest("Failed to update user status");
-            }
+                UserId = userId,
+                NewStatus = newStatus
+            });
 
             return NoContent();
         }
