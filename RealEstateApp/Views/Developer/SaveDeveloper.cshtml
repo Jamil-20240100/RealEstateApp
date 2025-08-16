@@ -12,74 +12,105 @@
     </div>
 </header>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body">
-        <div asp-validation-summary="All" class="alert alert-danger"></div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title h4 mb-0">
+                        <i class="bi bi-person-fill-gear me-2"></i> @(Model.Id != null ? "Editar Desarrollador" : "Crear Desarrollador")
+                    </h2>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewData["ErrorMessage"]
+                        </div>
+                    }
 
-        <form asp-action="@(Model.Id == null ? "Create" : "Edit")" method="post">
-            <input type="hidden" asp-for="Id" />
+                    <form method="post" asp-action="@(Model.Id != null ? "Edit" : "Create")">
+                        <input type="hidden" asp-for="Id" />
 
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input asp-for="Name" class="form-control" />
-                        <label asp-for="Name"></label>
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input asp-for="LastName" class="form-control" />
-                        <label asp-for="LastName"></label>
-                        <span asp-validation-for="LastName" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input asp-for="UserIdentification" class="form-control" />
-                        <label asp-for="UserIdentification">Cédula</label>
-                        <span asp-validation-for="UserIdentification" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input asp-for="Email" class="form-control" />
-                        <label asp-for="Email"></label>
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input asp-for="UserName" class="form-control" />
-                        <label asp-for="UserName">Usuario</label>
-                        <span asp-validation-for="UserName" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input asp-for="Password" type="password" class="form-control" />
-                        <label asp-for="Password"></label>
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-                        <label asp-for="ConfirmPassword"></label>
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Name" class="form-control" placeholder="Nombre" />
+                                    <label asp-for="Name">Nombre</label>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="LastName" class="form-control" placeholder="Apellido" />
+                                    <label asp-for="LastName">Apellido</label>
+                                    <span asp-validation-for="LastName" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="UserIdentification" class="form-control" placeholder="Cédula" />
+                                    <label asp-for="UserIdentification">Cédula</label>
+                                    <span asp-validation-for="UserIdentification" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Email" class="form-control" placeholder="Correo" />
+                                    <label asp-for="Email">Correo</label>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input asp-for="UserName" class="form-control" placeholder="Usuario" />
+                                    <label asp-for="UserName">Usuario</label>
+                                    <span asp-validation-for="UserName" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            @if (Model.Id != null)
+                            {
+                                <div class="col-12">
+                                    <p class="text-muted small">
+                                        <em><i class="bi bi-info-circle me-1"></i> Llena los siguientes campos solo si deseas cambiar la contraseña.</em>
+                                    </p>
+                                </div>
+                            }
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Password" class="form-control" placeholder="Contraseña" />
+                                    <label asp-for="Password">Contraseña</label>
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirmar Contraseña" />
+                                    <label asp-for="ConfirmPassword">Confirmar Contraseña</label>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i> Volver al listado
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-2"></i> @(Model.Id != null ? "Guardar cambios" : "Crear")
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="mt-4 d-flex justify-content-between">
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left-circle"></i> Volver
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save"></i> Guardar
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

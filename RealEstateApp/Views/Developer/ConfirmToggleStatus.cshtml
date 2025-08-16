@@ -12,25 +12,33 @@
     </div>
 </header>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body text-center">
-        <h4>
-            ¿Estás seguro que deseas
-            <span class="fw-bold text-@(Model.IsActive ? "danger" : "success")">
-                @(Model.IsActive ? "inactivar" : "activar")
-            </span>
-            al usuario <strong>@Model.UserName</strong>?
-        </h4>
 
-        <form asp-action="ToggleStatus" method="post" class="mt-4">
-            <input type="hidden" name="id" value="@Model.Id" />
-
-            <a asp-action="Index" class="btn btn-secondary me-2">
-                <i class="bi bi-x-circle"></i> No
-            </a>
-            <button type="submit" class="btn @(Model.IsActive ? "btn-danger" : "btn-success")">
-                <i class="bi @(Model.IsActive ? "bi-person-x" : "bi-person-check")"></i> Sí
-            </button>
-        </form>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-@(Model.IsActive ? "danger" : "success")">
+                <div class="card-header bg-@(Model.IsActive ? "danger" : "success") text-white">
+                    <h2 class="card-title h5 mb-0">
+                        <i class="bi bi-person-x-fill me-2"></i> Confirmar cambio de estado
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">
+                        ¿Está seguro que desea **@(Model.IsActive ? "inactivar" : "activar")** al desarrollador **`@Model.UserName`**?
+                    </p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i> Cancelar
+                    </a>
+                    <form asp-action="ToggleStatus" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-@(Model.IsActive ? "danger" : "success")">
+                            <i class="bi bi-check-circle-fill me-2"></i> Aceptar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
