@@ -39,7 +39,7 @@ namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentPropert
                 .Where(p => p.AgentId == query.Id)
                 .ToListAsync(cancellationToken);
 
-            if (propertyEntities == null) throw new ApiException("Properties not found with this id", (int)HttpStatusCode.NotFound);
+            if (!propertyEntities.Any()) throw new ApiException("Properties not found with this id", (int)HttpStatusCode.NotFound);
 
             var properties = _mapper.Map<List<PropertyForApiDTO>>(propertyEntities);
 

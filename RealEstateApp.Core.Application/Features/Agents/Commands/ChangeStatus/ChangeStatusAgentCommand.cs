@@ -1,6 +1,9 @@
 ﻿using MediatR;
+using RealEstateApp.Core.Application.DTOs.User;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus
 {
@@ -35,7 +38,13 @@ namespace RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus
 
         public async Task<Unit> Handle(ChangeStatusAgentCommand request, CancellationToken cancellationToken)
         {
-            await _accountService.ChangeStatusAsync(request.UserId, request.NewStatus);
+            var result = await _accountService.ChangeStatusAsync(request.UserId, request.NewStatus);
+
+            if (result == null) // suponiendo que tu servicio devuelve un bool o algo similar
+            {
+                throw new ApiException("Failed to update agent status", (int)HttpStatusCode.InternalServerError);
+            }
+
             return Unit.Value;
         }
     }

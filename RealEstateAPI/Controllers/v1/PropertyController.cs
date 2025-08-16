@@ -34,7 +34,7 @@ namespace RealEstateAPI.Controllers.v1
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyForApiDTO))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerOperation(
             Summary = "Get property by ID",
             Description = "Retrieves the details of a property using its integer ID"
@@ -42,16 +42,12 @@ namespace RealEstateAPI.Controllers.v1
         public async Task<IActionResult> GetById(int id)
         {
             var property = await Mediator.Send(new GetByIdPropertyQuery { Id = id });
-
-            if (property == null)
-                return NoContent();
-
             return Ok(property);
         }
 
         [HttpGet("by-code/{code}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyForApiDTO))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerOperation(
             Summary = "Get property by code",
             Description = "Retrieves the details of a property using its unique code"
@@ -59,10 +55,6 @@ namespace RealEstateAPI.Controllers.v1
         public async Task<IActionResult> GetByCode(string code)
         {
             var property = await Mediator.Send(new GetByCodePropertyQuery { Code = code });
-
-            if (property == null)
-                return NoContent();
-
             return Ok(property);
         }
     }
