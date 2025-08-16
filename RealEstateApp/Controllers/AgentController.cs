@@ -55,6 +55,15 @@ namespace RealEstateApp.Controllers
 
         public async Task<IActionResult> ShowAgents()
         {
+            // Verifica si el usuario está autenticado
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewData["Layout"] = "_LayoutClient"; // Layout para cliente logueado
+            }
+            else
+            {
+                ViewData["Layout"] = "_LayoutAnonymous"; // Layout para usuario no logueado
+            }
             var agents = await _accountServiceForWebApp.GetAllUserByRole(Roles.Agent.ToString());
             var mappedAgents = _mapper.Map<List<AgentViewModel>>(agents).OrderBy(a => a.Name).ToList();
             return View(mappedAgents);

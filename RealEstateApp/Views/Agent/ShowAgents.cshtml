@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Agentes";
-    Layout = "_LayoutAnonymous";
+    Layout = ViewData["Layout"] as string ?? "_Layout";
 }
 
 <header class="position-relative hero-image overflow-hidden text-center text-white" style="height: 300px;">
