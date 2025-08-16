@@ -1,4 +1,5 @@
 ﻿using RealEstateApp.Core.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace RealEstateApp.Core.Domain.Interfaces
 {
@@ -16,6 +17,7 @@ namespace RealEstateApp.Core.Domain.Interfaces
         /// Trae la propiedad con imágenes, tipo, venta, mejoras, ofertas y mensajes
         /// </summary>
         Task<Property?> GetByIdWithDetailsAsync(int id);
+        Task<Property?> FirstOrDefaultByAsync(Expression<Func<Property, bool>> predicate, List<string> includeProperties);
 
     }
 }

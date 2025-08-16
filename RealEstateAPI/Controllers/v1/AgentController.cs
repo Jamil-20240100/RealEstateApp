@@ -1,13 +1,13 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.DTOs.Agent;
 using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus;
+using RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentProperty;
 using RealEstateApp.Core.Application.Features.Agents.Queries.GetById;
 using RealEstateApp.Core.Application.Features.Agents.Queries.List;
-using RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentProperty;
-using Asp.Versioning;
-using Microsoft.AspNetCore.Authorization;
-using RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateAPI.Controllers.v1
@@ -26,6 +26,7 @@ namespace RealEstateAPI.Controllers.v1
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<AgentForApiDTO>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [SwaggerOperation(
             Summary = "List all agents",
             Description = "Retrieves a list of all agents registered in the system"
@@ -33,6 +34,10 @@ namespace RealEstateAPI.Controllers.v1
         public async Task<IActionResult> List()
         {
             var result = await _mediator.Send(new ListAgentQuery());
+
+            if (result == null || !result.Any())
+                return NoContent();
+
             return Ok(result);
         }
 
@@ -73,24 +78,19 @@ namespace RealEstateAPI.Controllers.v1
         [HttpPut("{userId}/change-status")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerOperation(
             Summary = "Change agent status",
             Description = "Updates the active status (enabled/disabled) of an agent"
         )]
-        public async Task<IActionResult> ChangeUserStatus(string userId, [FromBody] bool newStatus)
+        public async Task<IActionResult> ChangeUserStatus(string userId, [FromBody] ChangeStatusAgentCommand command)
         {
-            try
+            if (userId != command.UserId)
             {
-                var result = await _mediator.Send(new ChangeStatusAgentCommand
-                {
-                    UserId = userId,
-                    NewStatus = newStatus
-                });
+                return BadRequest("The ID in the URL does not match the request body.");
             }
-            catch (Exception)
-            {
-                return BadRequest("Failed to update user status");
-            }
+
+            await _mediator.Send(command);
 
             return NoContent();
         }

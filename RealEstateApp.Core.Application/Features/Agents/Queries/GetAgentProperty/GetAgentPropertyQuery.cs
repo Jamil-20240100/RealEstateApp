@@ -2,8 +2,10 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentProperty
 {
@@ -37,8 +39,7 @@ namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentPropert
                 .Where(p => p.AgentId == query.Id)
                 .ToListAsync(cancellationToken);
 
-            if (propertyEntities == null || propertyEntities.Count == 0)
-                throw new ArgumentException("Properties not found with this id");
+            if (!propertyEntities.Any()) throw new ApiException("Properties not found with this id", (int)HttpStatusCode.NotFound);
 
             var properties = _mapper.Map<List<PropertyForApiDTO>>(propertyEntities);
 

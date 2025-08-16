@@ -5,65 +5,92 @@
     Layout = "_LayoutAdmin";
 }
 
-<div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-semibold">Listado de Administradores</h1>
-    <a asp-action="Create" class="btn btn-success">Crear Administrador</a>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold text-primary">Listado de Administradores</h1>
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-plus-circle me-2"></i> Crear Administrador
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            No se encontraron administradores.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="text-muted">Nombre Completo</th>
+                                <th scope="col" class="text-muted">Usuario</th>
+                                <th scope="col" class="text-muted">Cédula</th>
+                                <th scope="col" class="text-muted">Correo</th>
+                                <th scope="col" class="text-center text-muted">Estado</th>
+                                <th scope="col" class="text-end text-muted">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var admin in Model)
+                            {
+                                <tr>
+                                    <td>@admin.Name @admin.LastName</td>
+                                    <td>@admin.UserName</td>
+                                    <td>@admin.UserIdentification</td>
+                                    <td>@admin.Email</td>
+                                    <td class="text-center">
+                                        @if (admin.IsActive)
+                                        {
+                                            <span class="badge bg-success">Activo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactivo</span>
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        @if (admin.Id != ViewBag.LoggedInAdminId)
+                                        {
+                                            <div class="btn-group" role="group">
+                                                <form asp-action="ToggleStatus" method="post" asp-route-id="@admin.Id" class="me-2 d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-outline-@(admin.IsActive ? "danger" : "success")" data-bs-toggle="tooltip" data-bs-placement="top" title="@(admin.IsActive ? "Inactivar" : "Activar")">
+                                                        <i class="bi bi-@(admin.IsActive ? "person-x" : "person-check")"></i>
+                                                    </button>
+                                                </form>
+                                                <a asp-action="Edit" asp-route-id="@admin.Id" class="btn btn-sm btn-outline-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a asp-action="DeleteConfirmation" asp-route-id="@admin.Id" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No disponible</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
-<table class="table-auto w-full border-collapse border border-gray-300">
-    <thead>
-        <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2">Nombre</th>
-            <th class="border border-gray-300 px-4 py-2">Apellido</th>
-            <th class="border border-gray-300 px-4 py-2">Usuario</th>
-            <th class="border border-gray-300 px-4 py-2">Cédula</th>
-            <th class="border border-gray-300 px-4 py-2">Correo</th>
-            <th class="border border-gray-300 px-4 py-2">Estado</th>
-            <th class="border border-gray-300 px-4 py-2">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var admin in Model)
-        {
-            <tr>
-                <td class="border px-4 py-2">@admin.Name</td>
-                <td class="border px-4 py-2">@admin.LastName</td>
-                <td class="border px-4 py-2">@admin.UserName</td>
-                <td class="border px-4 py-2">@admin.UserIdentification</td>
-                <td class="border px-4 py-2">@admin.Email</td>
-                <td class="border px-4 py-2">
-                    @if (admin.IsActive)
-                    {
-                        <span class="text-green-600 font-bold">Activo</span>
-                    }
-                    else
-                    {
-                        <span class="text-red-600 font-bold">Inactivo</span>
-                    }
-                </td>
-                <td class="border px-4 py-2 flex gap-2">
-                    @if (admin.Id != ViewBag.LoggedInAdminId)
-                    {
-                        <form asp-action="ToggleStatus" method="post" asp-route-id="@admin.Id">
-                            <button type="submit" class="btn btn-outline-primary">
-                                @(admin.IsActive ? "Inactivar" : "Activar")
-                            </button>
-                        </form>
-
-                        <a asp-action="Edit" asp-route-id="@admin.Id" class="btn btn-outline-secondary">
-                            Editar
-                        </a>
-
-                        <a asp-action="DeleteConfirmation" asp-route-id="@admin.Id" class="btn btn-outline-danger">
-                            Eliminar
-                        </a>
-                    }
-                    else
-                    {
-                        <span class="text-gray-500 italic">No disponible</span>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@section Scripts {
+    <script>
+        // Inicializar tooltips de Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}

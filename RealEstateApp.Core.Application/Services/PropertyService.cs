@@ -146,10 +146,6 @@ namespace RealEstateApp.Core.Application.Services
 
             var query = baseEntities.AsQueryable();
 
-            // (De momento no refinas nada: sin code, sales type, size, features…)
-            // Más adelante solo agregas condiciones aquí cuando actives el filtro.
-
-            // Si quisieras soportar "Solo favoritos" cuando añadas login:
             if (filters.OnlyFavorites && !string.IsNullOrEmpty(userId))
             {
                 var favIds = (await _favoriteRepository.GetAllByUserIdAsync(userId))

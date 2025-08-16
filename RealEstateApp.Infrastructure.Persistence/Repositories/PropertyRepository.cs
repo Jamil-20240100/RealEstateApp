@@ -4,6 +4,7 @@ using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
 using RealEstateApp.Infrastructure.Persistence.Contexts;
 using RealEstateApp.Infrastructure.Persistence.Repositories;
+using System.Linq.Expressions;
 
 public class PropertyRepository : GenericRepository<Property>, IPropertyRepository
 {
@@ -67,4 +68,18 @@ public class PropertyRepository : GenericRepository<Property>, IPropertyReposito
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
+    public async Task<Property?> FirstOrDefaultByAsync(Expression<Func<Property, bool>> predicate, List<string> includeProperties)
+    {
+        // Inicializa la consulta con la tabla de propiedades.
+        var query = _context.Properties.AsQueryable();
+
+        // Itera sobre la lista de propiedades a incluir y las agrega a la consulta.
+        foreach (var includeProperty in includeProperties)
+        {
+            query = query.Include(includeProperty);
+        }
+
+        // Aplica el predicado de filtro y devuelve el primer resultado o null.
+        return await query.FirstOrDefaultAsync(predicate);
+    }
 }
