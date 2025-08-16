@@ -142,6 +142,7 @@
                     <h5 class="card-title mb-0"><i class="bi bi-chat-dots me-2"></i> Chat con Clientes</h5>
                 </div>
                 <div class="card-body p-0 d-flex">
+                    <!-- Lista de Clientes -->
                     <div class="d-flex flex-column border-end bg-light" style="width: 35%;">
                         @if (Model.ClientsWhoMessaged?.Any() == true)
                         {
@@ -167,41 +168,50 @@
                         }
                     </div>
 
+                    <!-- Chat -->
                     <div class="d-flex flex-column p-3 flex-grow-1" style="height: 500px;">
-                        @if (!string.IsNullOrEmpty(Model.SelectedClientId))
+                        <!-- Mensajes -->
+                        @if (Model.Messages?.Any() == true)
                         {
-                            <div class="border rounded p-3 mb-3 flex-grow-1 overflow-auto bg-light d-flex flex-column-reverse">
-                                @if (Model.Messages?.Any() == true)
-                                {
-                                    @foreach (var msg in Model.Messages.OrderBy(m => m.SentAt))
-                                    {
-                                        var fromClient = msg.SenderId == Model.SelectedClientId;
-                                        <div class="d-flex mb-2 @(fromClient ? "justify-content-start" : "justify-content-end")">
-                                            <span class="badge px-3 py-2 rounded-3 @(fromClient ? "bg-primary" : "bg-success")">
-                                                @msg.Content
-                                            </span>
-                                        </div>
-                                    }
-                                }
-                                else
-                                {
-                                    <div class="d-flex flex-grow-1 justify-content-center align-items-center">
-                                        <p class="text-muted text-center mb-0">Comienza una conversación con este cliente.</p>
-                                    </div>
-                                }
+                            @foreach (var msg in Model.Messages.OrderBy(m => m.SentAt))
+                            {
+                                var fromClient = msg.SenderId == Model.SelectedClientId;
+                                <div class="d-flex flex-column mb-2 @(fromClient ? "align-items-start" : "align-items-end")">
+                                    <span class="badge px-3 py-2 rounded-3 @(fromClient ? "bg-primary" : "bg-success")">
+                                        @msg.Content
+                                    </span>
+                                    <small class="text-muted fs-18">@msg.SentAt.ToString("g")</small>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+                                <p class="text-muted text-center mb-0">Comienza una conversación con este cliente.</p>
                             </div>
+                        }
+
+                        <!-- Formulario de Chat -->
+                        @if (Model.SelectedClientId == null)
+                        {
+                            <!-- Si no hay cliente seleccionado, mostrar mensaje y deshabilitar formulario -->
+                            <div class="alert alert-warning mb-4">
+                                <strong>Selecciona un cliente</strong> para empezar a chatear.
+                            </div>
+                            <form class="input-group" disabled>
+                                <input type="text" class="form-control" placeholder="Escribe un mensaje..." disabled />
+                                <button type="submit" class="btn btn-primary" disabled><i class="bi bi-send-fill"></i></button>
+                            </form>
+                        }
+                        else
+                        {
+                            <!-- Si hay cliente seleccionado, mostrar el formulario -->
                             <form asp-action="SendMessage" asp-controller="Property" method="post" class="input-group">
                                 <input type="hidden" name="PropertyId" value="@Model.Id" />
                                 <input type="hidden" name="ReceiverId" value="@Model.SelectedClientId" />
                                 <input type="text" name="Content" class="form-control" placeholder="Escribe un mensaje..." required />
                                 <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
                             </form>
-                        }
-                        else
-                        {
-                            <div class="d-flex flex-grow-1 justify-content-center align-items-center">
-                                <p class="text-muted text-center mb-0">Selecciona un cliente de la lista para ver el chat.</p>
-                            </div>
                         }
                     </div>
                 </div>

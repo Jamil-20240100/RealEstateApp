@@ -9,6 +9,7 @@ namespace RealEstateApp.Core.Application.Mapping
         public DtoToViewModelProfile()
         {
             CreateMap<OfferDTO, OfferViewModel>();
+
         }
     }
 }

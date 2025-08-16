@@ -1,41 +1,65 @@
 ﻿@model List<RealEstateApp.Core.Application.ViewModels.User.UserViewModel>
+
 @{
     Layout = "_LayoutAdmin";
-    ViewData["Title"] = "Mantenimiento de desarrolladores";
+    ViewData["Title"] = "Mantenimiento de Desarrolladores";
 }
 
-<h2>Desarrolladores</h2>
-<a asp-action="Create" class="btn btn-primary mb-3">Crear desarrollador</a>
+<header class="bg-primary text-white py-4 mb-4 shadow-sm">
+    <div class="container text-center">
+        <h1 class="h3 fw-bold mb-0">Mantenimiento de Desarrolladores</h1>
+        <p class="text-white-50 mb-0">Administra cuentas de desarrolladores</p>
+    </div>
+</header>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Usuario</th>
-            <th>Cédula</th>
-            <th>Correo</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var dev in Model)
-        {
-            <tr>
-                <td>@dev.Name</td>
-                <td>@dev.LastName</td>
-                <td>@dev.UserName</td>
-                <td>@dev.UserIdentification</td>
-                <td>@dev.Email</td>
-                <td>@(dev.IsActive ? "Activo" : "Inactivo")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@dev.Id" class="btn btn-sm btn-warning">Editar</a>
-                    <a asp-action="ConfirmToggleStatus" asp-route-id="@dev.Id" class="btn btn-sm @(dev.IsActive ? "btn-danger" : "btn-success")">
-                        @(dev.IsActive ? "Inactivar" : "Activar")
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="d-flex justify-content-between mb-3">
+    <h4 class="fw-bold">Listado</h4>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Crear desarrollador
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Usuario</th>
+                    <th>Cédula</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dev in Model)
+                {
+                    <tr>
+                        <td>@dev.Name</td>
+                        <td>@dev.LastName</td>
+                        <td>@dev.UserName</td>
+                        <td>@dev.UserIdentification</td>
+                        <td>@dev.Email</td>
+                        <td>
+                            <span class="badge @(dev.IsActive ? "bg-success" : "bg-danger")">
+                                @(dev.IsActive ? "Activo" : "Inactivo")
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@dev.Id" class="btn btn-sm btn-warning me-2">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <a asp-action="ConfirmToggleStatus" asp-route-id="@dev.Id"
+                               class="btn btn-sm @(dev.IsActive ? "btn-danger" : "btn-success")">
+                                <i class="bi @(dev.IsActive ? "bi-person-x" : "bi-person-check")"></i>
+                                @(dev.IsActive ? "Inactivar" : "Activar")
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

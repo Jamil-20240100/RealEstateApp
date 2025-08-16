@@ -5,15 +5,32 @@
     ViewData["Title"] = "Confirmar cambio de estado";
 }
 
-<h3>
-    ¿Estás seguro que deseas @(Model.IsActive ? "inactivar" : "activar") al usuario
-    <strong>@Model.UserName</strong>?
-</h3>
+<header class="bg-warning text-dark py-4 mb-4 shadow-sm">
+    <div class="container text-center">
+        <h1 class="h3 fw-bold mb-0">Confirmación de Estado</h1>
+        <p class="text-dark-50 mb-0">Verifica si deseas continuar</p>
+    </div>
+</header>
 
-<form asp-action="ToggleStatus" method="post">
-    <input type="hidden" name="id" value="@Model.Id" />
-    <a asp-action="Index" class="btn btn-secondary">No</a>
-    <button type="submit" class="btn @(Model.IsActive ? "btn-danger" : "btn-success")">
-        Sí
-    </button>
-</form>
+<div class="card shadow-sm border-0">
+    <div class="card-body text-center">
+        <h4>
+            ¿Estás seguro que deseas
+            <span class="fw-bold text-@(Model.IsActive ? "danger" : "success")">
+                @(Model.IsActive ? "inactivar" : "activar")
+            </span>
+            al usuario <strong>@Model.UserName</strong>?
+        </h4>
+
+        <form asp-action="ToggleStatus" method="post" class="mt-4">
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <a asp-action="Index" class="btn btn-secondary me-2">
+                <i class="bi bi-x-circle"></i> No
+            </a>
+            <button type="submit" class="btn @(Model.IsActive ? "btn-danger" : "btn-success")">
+                <i class="bi @(Model.IsActive ? "bi-person-x" : "bi-person-check")"></i> Sí
+            </button>
+        </form>
+    </div>
+</div>
