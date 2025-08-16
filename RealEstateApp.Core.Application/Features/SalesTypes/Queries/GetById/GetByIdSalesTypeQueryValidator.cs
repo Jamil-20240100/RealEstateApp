@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RealEstateApp.Core.Application.Features.SalesTypes.Queries.GetById;
 
 namespace RealEstateApp.Core.Application.Features.SalesType.Queries.GetById
 {

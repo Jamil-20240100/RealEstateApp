@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Moq;
 using RealEstateApp.Core.Application.Features.Features.Commands;
+using RealEstateApp.Core.Application.Features.Features.Commands.Create;
 using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
 using Xunit;

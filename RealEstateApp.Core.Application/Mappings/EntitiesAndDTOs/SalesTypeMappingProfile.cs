@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using RealEstateApp.Core.Application.DTOs.SalesType;
-using RealEstateApp.Core.Application.Features.SalesType.Commands.Create;
-using RealEstateApp.Core.Application.Features.SalesType.Commands.Update;
+using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Create;
+using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Update;
 using RealEstateApp.Core.Domain.Entities;
 
 namespace RealEstateApp.Core.Application.Mappings.EntitiesAndDTOs

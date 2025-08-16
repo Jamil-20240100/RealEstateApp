@@ -1,12 +1,15 @@
 ﻿using FluentValidation;
-using RealEstateApp.Core.Application.Features.SalesType.Commands.Create;
+using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Update;
 
-namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Create
+namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Update
 {
-    public class CreateSalesTypeCommandValidator : AbstractValidator<CreateSalesTypeCommand>
+    public class UpdateSalesTypeCommandValidator : AbstractValidator<UpdateSalesTypeCommand>
     {
-        public CreateSalesTypeCommandValidator()
+        public UpdateSalesTypeCommandValidator()
         {
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("El Id debe ser mayor que 0.");
+
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("El nombre es requerido.")
                 .MaximumLength(100).WithMessage("El nombre no puede exceder los 100 caracteres.");

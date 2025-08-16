@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.DTOs.SalesType;
-using RealEstateApp.Core.Application.Features.SalesType.Commands.Create;
-using RealEstateApp.Core.Application.Features.SalesType.Commands.Update;
+using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Create;
+using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Update;
 using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Delete;
 using RealEstateApp.Core.Application.Features.SalesTypes.Queries.GetById;
-using RealEstateApp.Core.Application.Features.SalesTypes.Queries.List;
+using RealEstateApp.Core.Application.Features.SalesType.Queries.List;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateAPI.Controllers.v1

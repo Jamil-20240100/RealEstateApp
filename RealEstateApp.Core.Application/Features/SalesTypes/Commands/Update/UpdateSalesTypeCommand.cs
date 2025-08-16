@@ -2,7 +2,7 @@
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RealEstateApp.Core.Application.Features.SalesType.Commands.Update
+namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Update
 {
     /// <summary>
     /// Comando para actualizar un tipo de venta existente.

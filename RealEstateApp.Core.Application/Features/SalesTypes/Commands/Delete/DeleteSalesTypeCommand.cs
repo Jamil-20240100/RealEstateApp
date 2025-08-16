@@ -2,7 +2,7 @@
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RealEstateApp.Core.Application.Features.SalesType.Commands.Delete
+namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Delete
 {
     /// <summary>
     /// Comando para eliminar un tipo de venta.

@@ -4,7 +4,7 @@ using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RealEstateApp.Core.Application.Features.SalesType.Commands.Create
+namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Create
 {
     /// <summary>
     /// Comando para crear un nuevo tipo de venta.
@@ -37,7 +37,7 @@ namespace RealEstateApp.Core.Application.Features.SalesType.Commands.Create
 
         public async Task<int> Handle(CreateSalesTypeCommand request, CancellationToken cancellationToken)
         {
-            var entity = _mapper.Map<SalesType>(request);
+            var entity = _mapper.Map<RealEstateApp.Core.Domain.Entities.SalesType>(request);
             await _repository.AddAsync(entity);
             return entity.Id;
         }

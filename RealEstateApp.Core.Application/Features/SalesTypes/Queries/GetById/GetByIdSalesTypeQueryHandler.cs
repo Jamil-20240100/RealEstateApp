@@ -6,7 +6,7 @@ using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
-namespace RealEstateApp.Core.Application.Features.SalesType.Queries.GetById
+namespace RealEstateApp.Core.Application.Features.SalesTypes.Queries.GetById
 {
     public class GetByIdSalesTypeQuery : IRequest<SalesTypeDTO>
     {
