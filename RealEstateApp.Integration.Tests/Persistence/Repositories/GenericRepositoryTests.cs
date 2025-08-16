@@ -31,16 +31,16 @@ namespace RealEstateApp.Integration.Tests.Persistence.Repositories
                 NumberOfBathrooms = 2,
                 Features = new List<Feature>
                 {
-                    new Feature { Id = 1, Name = "Pool", Description = "Swimming pool" }
+                    new Feature { Id = 0, Name = "Pool", Description = "Swimming pool" }
                 },
                 Images = new List<PropertyImage>
                 {
-                    new PropertyImage { Id = 1, ImageUrl = "image1.jpg" }
+                    new PropertyImage { Id = 0, ImageUrl = "image1.jpg" }
                 },
                 PropertyTypeId = 1,
-                PropertyType = new PropertyType { Id = 1, Name = "House", Description = "House type" },
+                PropertyType = new PropertyType { Id = 0, Name = "House", Description = "House type" },
                 SalesTypeId = 1,
-                SalesType = new SalesType { Id = 1, Name = "Sale", Description = "For sale" },
+                SalesType = new SalesType { Id = 0, Name = "Sale", Description = "For sale" },
                 Code = $"PROP-{Guid.NewGuid():N}",
                 State = Core.Domain.Common.Enums.PropertyState.Disponible
             };
