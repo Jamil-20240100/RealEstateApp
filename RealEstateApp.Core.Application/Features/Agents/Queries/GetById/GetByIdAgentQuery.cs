@@ -3,10 +3,12 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.Agent;
 using RealEstateApp.Core.Application.DTOs.Property;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetById
 {
@@ -39,6 +41,8 @@ namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetById
         public async Task<AgentForApiDTO> Handle(GetByIdAgentQuery query, CancellationToken cancellationToken)
         {
             var agent = _mapper.Map<AgentForApiDTO>(await _accountServiceForWebApi.GetUserById(query.Id));
+
+            if (agent == null) throw new ApiException("Agent not found with this id", (int)HttpStatusCode.NotFound);
 
             var properties = await _propertyRepository
                 .GetAllQuery().Where(p => p.AgentId == agent.Id)
