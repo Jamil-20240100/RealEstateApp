@@ -62,16 +62,15 @@ namespace RealEstateApp.Core.Application.Mappings.DTOsAndViewModels
                 .ForMember(dest => dest.Images, opt => opt.Ignore());
 
             CreateMap<PropertyDTO, PropertyDetailsViewModel>()
-            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(i => i.ImageUrl).ToList()))
-            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
-            .ForMember(dest => dest.PropertyType, opt => opt.MapFrom(src => src.PropertyType))
-            .ForMember(dest => dest.SalesType, opt => opt.MapFrom(src => src.SalesType))
-            // Mapear colecciones de ofertas, mensajes y clientes con ofertas
-            .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))  // Asumiendo que PropertyDTO tiene Offers
-            .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages)) // Asumiendo que PropertyDTO tiene Messages
-            .ForMember(dest => dest.ClientsWithOffers, opt => opt.MapFrom(src => src.ClientsWithOffers)) // Similar con clientes que hicieron ofertas
-            .ForMember(dest => dest.ClientsWhoMessaged, opt => opt.Ignore()) // Si tienes esa propiedad, mapéala también aquí o ignórala si no existe
-            ;
+    .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features ?? new List<FeatureDTO>()))
+    .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(i => i.ImageUrl) ?? new List<string>()))
+    .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers ?? new List<OfferDTO>()))
+    .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages ?? new List<MessageDTO>()))
+    .ForMember(dest => dest.ClientsWithOffers, opt => opt.MapFrom(src => src.ClientsWithOffers ?? new List<ClientDTO>()))
+    .ForMember(dest => dest.ClientsWhoMessaged, opt => opt.Ignore())
+    .ForMember(dest => dest.AgentId, opt => opt.MapFrom(src => src.AgentId))
+    .ForMember(dest => dest.SelectedClientId, opt => opt.Ignore());
+
 
             // Aquí asumes que existen mapeos para las clases anidadas, por ejemplo:
             CreateMap<PropertyTypeDTO, PropertyTypeViewModel>();

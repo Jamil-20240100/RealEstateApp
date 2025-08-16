@@ -7,18 +7,18 @@ namespace RealEstateApp.Core.Application.DTOs.Property
 {
     public class PropertyForApiDTO
     {
-        public required int Id { get; set; }
-        public required PropertyTypeDTO PropertyType { get; set; }
-        public required SalesTypeDTO SalesType { get; set; }
-        public required decimal Price { get; set; }
-        public required string Description { get; set; }
-        public required decimal SizeInMeters { get; set; }
-        public required int NumberOfRooms { get; set; }
-        public required int NumberOfBathrooms { get; set; }
-        public required List<FeatureDTO> Features { get; set; }
-        public required string AgentId { get; set; }
-        public required string AgentName { get; set; }
-        public required string Code { get; set; }
+        public  int Id { get; set; }
+        public  PropertyTypeDTO PropertyType { get; set; }
+        public  SalesTypeDTO SalesType { get; set; }
+        public  decimal Price { get; set; }
+        public  string Description { get; set; }
+        public  decimal SizeInMeters { get; set; }
+        public  int NumberOfRooms { get; set; }
+        public  int NumberOfBathrooms { get; set; }
+        public  List<FeatureDTO> Features { get; set; }
+        public  string AgentId { get; set; }
+        public  string AgentName { get; set; }
+        public  string Code { get; set; }
         public PropertyState State { get; set; }
     }
 }
