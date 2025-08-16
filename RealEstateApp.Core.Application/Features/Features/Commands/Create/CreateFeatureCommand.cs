@@ -4,7 +4,7 @@ using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RealEstateApp.Core.Application.Features.Features.Commands
+namespace RealEstateApp.Core.Application.Features.Features.Commands.Create
 {
     /// <summary>
     /// Comando para crear una nueva mejora.

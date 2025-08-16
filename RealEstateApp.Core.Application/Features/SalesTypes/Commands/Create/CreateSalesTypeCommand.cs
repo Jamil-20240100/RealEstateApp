@@ -37,7 +37,7 @@ namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Create
 
         public async Task<int> Handle(CreateSalesTypeCommand request, CancellationToken cancellationToken)
         {
-            var entity = _mapper.Map<SalesType>(request);
+            var entity = _mapper.Map<RealEstateApp.Core.Domain.Entities.SalesType>(request);
             await _repository.AddAsync(entity);
             return entity.Id;
         }

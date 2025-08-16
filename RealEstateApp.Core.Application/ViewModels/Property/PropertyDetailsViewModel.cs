@@ -32,8 +32,8 @@ namespace RealEstateApp.Core.Application.ViewModels.Property
             public List<ClientsWhoMadeOfferViewModel> ClientsWhoMessaged { get; set; } = new();
 
             public string? AgentId { get; set; }
+            public string? AgentName { get; set; }
             public string? SelectedClientId { get; set; }
-        public IAsyncEnumerable<char>? AgentName { get; set; }
     }
     
 }

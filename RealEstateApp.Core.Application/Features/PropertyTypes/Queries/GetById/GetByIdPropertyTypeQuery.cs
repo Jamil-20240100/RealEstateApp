@@ -1,24 +1,20 @@
 ﻿using AutoMapper;
 using MediatR;
 using RealEstateApp.Core.Application.DTOs.PropertyType;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.PropertyTypes.Queries.GetById
 {
-    /// <summary>
-    /// Query para obtener un tipo de propiedad por Id.
-    /// </summary>
-    public class GetByIdPropertyTypeQuery : IRequest<PropertyTypeDTO?>
+    public class GetByIdPropertyTypeQuery : IRequest<PropertyTypeDTO>
     {
-        /// <summary>
-        /// Id del tipo de propiedad.
-        /// </summary>
         [SwaggerSchema(Description = "Id del tipo de propiedad a consultar", Nullable = false)]
         public int Id { get; set; }
     }
 
-    public class GetByIdPropertyTypeQueryHandler : IRequestHandler<GetByIdPropertyTypeQuery, PropertyTypeDTO?>
+    public class GetByIdPropertyTypeQueryHandler : IRequestHandler<GetByIdPropertyTypeQuery, PropertyTypeDTO>
     {
         private readonly IPropertyTypeRepository _repository;
         private readonly IMapper _mapper;
@@ -29,10 +25,12 @@ namespace RealEstateApp.Core.Application.Features.PropertyTypes.Queries.GetById
             _mapper = mapper;
         }
 
-        public async Task<PropertyTypeDTO?> Handle(GetByIdPropertyTypeQuery request, CancellationToken cancellationToken)
+        public async Task<PropertyTypeDTO> Handle(GetByIdPropertyTypeQuery request, CancellationToken cancellationToken)
         {
             var entity = await _repository.GetByIdAsync(request.Id);
-            if (entity == null) return null;
+            if (entity == null)
+                throw new ApiException("PropertyType not found with this id", (int)HttpStatusCode.NotFound);
+
             return _mapper.Map<PropertyTypeDTO>(entity);
         }
     }

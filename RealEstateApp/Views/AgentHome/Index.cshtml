@@ -2,84 +2,108 @@
 
 @{
     Layout = "_LayoutAgent";
-    ViewData["Title"] = "Home del Agente";
+    ViewData["Title"] = "Panel del Agente";
 }
 
-<h2 class="mb-4">Mis Propiedades</h2>
-
-<div class="row mb-4">
-    <div class="col-md-3">
-        <label for="filterCodigo" class="form-label">Filtrar por Código</label>
-        <input type="text" id="filterCodigo" class="form-control" placeholder="Ej: P-123">
+<header class="bg-primary text-white py-4 mb-4 shadow-sm">
+    <div class="container text-center">
+        <h1 class="h3 fw-bold mb-0">Home</h1>
     </div>
-    <div class="col-md-3">
-        <label for="filterTipoPropiedad" class="form-label">Tipo de Propiedad</label>
-        <select id="filterTipoPropiedad" class="form-select">
-            <option value="">Todos</option>
-            @foreach (var type in Model.Select(p => p.PropertyType).DistinctBy(t => t.Id))
-            {
-                <option value="@type.Name">@type.Name</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-3">
-        <label for="filterTipoVenta" class="form-label">Tipo de Venta</label>
-        <select id="filterTipoVenta" class="form-select">
-            <option value="">Todos</option>
-            @foreach (var salesType in Model.Select(p => p.SalesType).DistinctBy(st => st.Id))
-            {
-                <option value="@salesType.Name">@salesType.Name</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-3">
-        <label for="filterEstado" class="form-label">Estado</label>
-        <select id="filterEstado" class="form-select">
-            <option value="">Todos</option>
-            <option value="Disponible">Disponible</option>
-            <option value="Vendida">Vendida</option>
-        </select>
-    </div>
-</div>
+</header>
 
-<div id="property-list" class="row">
-    @foreach (var property in Model)
-    {
-        <div class="col-md-4 mb-4 property-card"
-             data-code="@property.Code"
-             data-property-type="@property.PropertyType?.Name"
-             data-sales-type="@property.SalesType?.Name"
-             data-is-sold="@property.IsSold.ToString().ToLower()">
-            <div class="card h-100">
-                @if (property.Images != null && property.Images.Any() && !string.IsNullOrWhiteSpace(property.Images.First()))
-                {
-                    <img src="@Url.Content("/" + property.Images.First())" class="card-img-top" alt="Imagen de la propiedad">
-                }
-                else
-                {
-                    <img src="https://via.placeholder.com/300x200?text=Sin+imagen" class="card-img-top" alt="Sin imagen disponible">
-                }
-
-                <div class="card-body">
-                    <h5 class="card-title">
-                        Código: @property.Code
-                        @if (property.IsSold)
-                        {
-                            <span class="badge bg-danger ms-2">VENDIDA</span>
-                        }
-                    </h5>
-                    <p class="card-text"><strong>Tipo de Propiedad:</strong> @property.PropertyType?.Name</p>
-                    <p class="card-text"><strong>Tipo de Venta:</strong> @property.SalesType?.Name</p>
-                    <p class="card-text"><strong>Precio:</strong> @property.Price.ToString("C")</p>
-                </div>
-
-                <div class="card-footer">
-                    <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-info btn-sm w-100">Detalles</a>
-                </div>
+<div class="container mb-4">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input type="text" id="filterCodigo" class="form-control" placeholder="Ej: P-123">
+                <label for="filterCodigo">Filtrar por Código</label>
             </div>
         </div>
-    }
+        <div class="col-md-3">
+            <div class="form-floating">
+                <select id="filterTipoPropiedad" class="form-select">
+                    <option value="">Todos</option>
+                    @foreach (var type in Model.Select(p => p.PropertyType).DistinctBy(t => t.Id))
+                    {
+                        <option value="@type.Name">@type.Name</option>
+                    }
+                </select>
+                <label for="filterTipoPropiedad">Tipo de Propiedad</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <select id="filterTipoVenta" class="form-select">
+                    <option value="">Todos</option>
+                    @foreach (var salesType in Model.Select(p => p.SalesType).DistinctBy(st => st.Id))
+                    {
+                        <option value="@salesType.Name">@salesType.Name</option>
+                    }
+                </select>
+                <label for="filterTipoVenta">Tipo de Venta</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <select id="filterEstado" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="Disponible">Disponible</option>
+                    <option value="Vendida">Vendida</option>
+                </select>
+                <label for="filterEstado">Estado</label>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="container">
+    <div id="property-list" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        @foreach (var property in Model)
+        {
+            <div class="col property-card"
+                 data-code="@property.Code"
+                 data-property-type="@property.PropertyType?.Name"
+                 data-sales-type="@property.SalesType?.Name"
+                 data-is-sold="@property.IsSold.ToString().ToLower()">
+                <div class="card h-100 shadow-sm border-0">
+                    @if (property.Images != null && property.Images.Any() && !string.IsNullOrWhiteSpace(property.Images.First()))
+                    {
+                        <img src="@Url.Content("/" + property.Images.First())" class="card-img-top object-fit-cover" style="height: 250px;" alt="Imagen de la propiedad">
+                    }
+                    else
+                    {
+                        <img src="https://via.placeholder.com/600x400?text=Sin+imagen" class="card-img-top object-fit-cover" style="height: 250px;" alt="Sin imagen disponible">
+                    }
+                    <div class="card-body d-flex flex-column pb-0">
+                        <h5 class="card-title text-truncate fw-bold mb-1">Código: @property.Code</h5>
+                        <p class="card-text text-success fs-4 fw-bold mb-2">@property.Price.ToString("C0")</p>
+                        <div class="d-flex justify-content-between text-muted mb-3">
+                            <small><i class="bi bi-house-fill me-1"></i> @property.PropertyType?.Name</small>
+                        </div>
+                        <ul class="list-unstyled d-flex justify-content-around text-center mb-3">
+                            <li>
+                                <i class="bi bi-door-open-fill me-1 text-primary"></i> <span class="fw-bold">@property.NumberOfRooms</span><br /><small>Hab.</small>
+                            </li>
+                            <li>
+                                <i class="bi bi-rulers me-1 text-primary"></i> <span class="fw-bold">@property.SizeInMeters</span><br /><small>m²</small>
+                            </li>
+                            <li>
+                                <i class="bi bi-droplet-half me-1 text-primary"></i> <span class="fw-bold">@property.NumberOfBathrooms</span><br /><small>Baños</small>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-between bg-white border-top-0 pt-0 pb-3">
+                        <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-eye-fill"></i> Detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -114,11 +138,7 @@
                         matchEstado = true;
                     }
 
-                    if (matchCodigo && matchTipoPropiedad && matchTipoVenta && matchEstado) {
-                        card.style.display = '';
-                    } else {
-                        card.style.display = 'none';
-                    }
+                    card.style.display = (matchCodigo && matchTipoPropiedad && matchTipoVenta && matchEstado) ? '' : 'none';
                 });
             }
 

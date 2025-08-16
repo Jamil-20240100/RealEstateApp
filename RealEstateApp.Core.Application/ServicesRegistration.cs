@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using RealEstateApp.Core.Application.Interfaces;
+using RealEstateApp.Core.Application.Mappings.DTOsAndViewModels;
+using RealEstateApp.Core.Application.Mappings.EntitiesAndDTOs;
 using RealEstateApp.Core.Application.Services;
 using System.Reflection;
 

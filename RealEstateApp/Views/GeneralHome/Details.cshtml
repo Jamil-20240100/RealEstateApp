@@ -5,73 +5,81 @@
     Layout = "_LayoutAnonymous";
 }
 
-<h2 class="mb-4">Detalle de la Propiedad</h2>
-
-<!-- Slider de imágenes -->
-@if (Model.Images != null && Model.Images.Any())
-{
-    <div id="propertyImagesCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @for (int i = 0; i < Model.Images.Count; i++)
-            {
-                <div class="carousel-item @(i == 0 ? "active" : "")">
-                    <img src="@Url.Content(Model.Images[i].StartsWith("~") ? Model.Images[i] : "~/" + Model.Images[i])"
-                         class="d-block w-100"
-                         style="height:400px; object-fit:cover;"
-                         alt="Imagen propiedad" />
-                </div>
-            }
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#propertyImagesCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#propertyImagesCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button>
+<header class="bg-primary text-white py-4 mb-4 shadow-sm">
+    <div class="container text-center">
+        <h1 class="h3 fw-bold mb-0">Detalle de la Propiedad</h1>
+        <p class="text-white-50 mb-0">Información completa de la propiedad seleccionada</p>
     </div>
-}
-else
-{
-    <p class="text-muted">Esta propiedad no tiene imágenes registradas.</p>
-}
+</header>
 
-<hr />
-
-<div class="row mb-4">
-    <div class="col-md-8">
-        <p><strong>Código:</strong> @Model.Code</p>
-        <p><strong>Tipo:</strong> @Model.PropertyType?.Name</p>
-        <p><strong>Tipo de Venta:</strong> @Model.SalesType?.Name</p>
-        <p><strong>Precio:</strong> @Model.Price.ToString("C")</p>
-        <p><strong>Habitaciones:</strong> @Model.NumberOfRooms</p>
-        <p><strong>Baños:</strong> @Model.NumberOfBathrooms</p>
-        <p><strong>Tamaño:</strong> @Model.SizeInMeters m²</p>
-        <p><strong>Descripción:</strong> @Model.Description</p>
-
-        <h4 class="mt-4">Características</h4>
-        @if (Model.Features != null && Model.Features.Any())
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <!-- Slider de imágenes -->
+        @if (Model.Images != null && Model.Images.Any())
         {
-            <ul>
-                @foreach (var f in Model.Features)
-                {
-                    <li>@f.Name</li>
-                }
-            </ul>
+            <div id="propertyImagesCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
+                    @for (int i = 0; i < Model.Images.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@Url.Content(Model.Images[i].StartsWith("~") ? Model.Images[i] : "~/" + Model.Images[i])"
+                                 class="d-block w-100"
+                                 style="height:400px; object-fit:cover; border-radius:8px;"
+                                 alt="Imagen propiedad" />
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#propertyImagesCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#propertyImagesCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
         }
         else
         {
-            <p class="text-muted">Esta propiedad no tiene características registradas.</p>
+            <div class="alert alert-info">Esta propiedad no tiene imágenes registradas.</div>
         }
-    </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm p-3">
-            <h5 class="mb-3">Información</h5>
-            <p class="mb-1"><strong>Tipo:</strong> @Model.PropertyType?.Name</p>
-            <p class="mb-1"><strong>Operación:</strong> @Model.SalesType?.Name</p>
-            <p class="mb-1"><strong>Código:</strong> @Model.Code</p>
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h4 class="fw-bold mb-3">@Model.PropertyType?.Name - @Model.SalesType?.Name</h4>
+                <p><strong>Código:</strong> @Model.Code</p>
+                <p><strong>Precio:</strong> @Model.Price.ToString("C")</p>
+                <p><strong>Habitaciones:</strong> @Model.NumberOfRooms</p>
+                <p><strong>Baños:</strong> @Model.NumberOfBathrooms</p>
+                <p><strong>Tamaño:</strong> @Model.SizeInMeters m²</p>
+                <p><strong>Descripción:</strong> @Model.Description</p>
+
+                <h5 class="mt-4">Características</h5>
+                @if (Model.Features != null && Model.Features.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var f in Model.Features)
+                        {
+                            <li class="list-group-item">@f.Name</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Esta propiedad no tiene características registradas.</p>
+                }
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 p-3">
+                    <h5 class="fw-bold mb-3">Información Rápida</h5>
+                    <p><strong>Tipo:</strong> @Model.PropertyType?.Name</p>
+                    <p><strong>Operación:</strong> @Model.SalesType?.Name</p>
+                    <p><strong>Código:</strong> @Model.Code</p>
+                </div>
+            </div>
         </div>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle"></i> Volver al listado
+        </a>
     </div>
 </div>
-
-<a asp-action="Index" class="btn btn-secondary">Volver al listado</a>

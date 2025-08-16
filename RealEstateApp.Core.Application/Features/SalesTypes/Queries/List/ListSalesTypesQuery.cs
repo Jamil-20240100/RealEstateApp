@@ -2,13 +2,12 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.SalesType;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Domain.Interfaces;
+using System.Net;
 
-namespace RealEstateApp.Core.Application.Features.SalesTypes.Queries.List
+namespace RealEstateApp.Core.Application.Features.SalesType.Queries.List
 {
-    /// <summary>
-    /// Query para listar todos los tipos de ventas.
-    /// </summary>
     public class ListSalesTypesQuery : IRequest<IList<SalesTypeDTO>> { }
 
     public class ListSalesTypesQueryHandler : IRequestHandler<ListSalesTypesQuery, IList<SalesTypeDTO>>
@@ -25,6 +24,9 @@ namespace RealEstateApp.Core.Application.Features.SalesTypes.Queries.List
         public async Task<IList<SalesTypeDTO>> Handle(ListSalesTypesQuery request, CancellationToken cancellationToken)
         {
             var list = await _repository.GetAllQuery().ToListAsync(cancellationToken);
+            if (list == null || !list.Any())
+                throw new ApiException("No sales types found", (int)HttpStatusCode.NotFound);
+
             return _mapper.Map<List<SalesTypeDTO>>(list);
         }
     }

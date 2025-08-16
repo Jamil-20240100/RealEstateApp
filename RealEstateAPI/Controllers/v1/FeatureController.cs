@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.DTOs.Feature;
-using RealEstateApp.Core.Application.Features.Features.Commands;
+using RealEstateApp.Core.Application.Features.Features.Commands.Create;
 using RealEstateApp.Core.Application.Features.Features.Commands.Delete;
 using RealEstateApp.Core.Application.Features.Features.Commands.Update;
 using RealEstateApp.Core.Application.Features.Features.Queries.GetById;
@@ -26,18 +26,11 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Crea una nueva mejora (feature) y devuelve el ID generado")]
         public async Task<IActionResult> Create([FromBody] CreateFeatureCommand command)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var id = await Mediator.Send(command);
-                return CreatedAtAction(nameof(GetById), new { id }, id);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var id = await Mediator.Send(command);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [Authorize(Roles = "Admin")]
@@ -51,21 +44,14 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Actualiza una mejora según el ID especificado")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateFeatureCommand command)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                if (id != command.Id)
-                    return BadRequest("El ID de la URL no coincide con el ID del cuerpo.");
+            if (id != command.Id)
+                return BadRequest("El ID de la URL no coincide con el ID del cuerpo.");
 
-                var result = await Mediator.Send(command);
-                return result ? Ok(command) : NotFound();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var result = await Mediator.Send(command);
+            return result ? Ok(command) : NotFound();
         }
 
         [Authorize(Roles = "Admin, Developer")]
@@ -78,18 +64,11 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Obtiene un listado con todas las mejoras registradas")]
         public async Task<IActionResult> List()
         {
-            try
-            {
-                var features = await Mediator.Send(new ListFeaturesQuery());
-                if (features == null || features.Count == 0)
-                    return NoContent();
+            var features = await Mediator.Send(new ListFeaturesQuery());
+            if (features == null || features.Count == 0)
+                return NoContent();
 
-                return Ok(features);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(features);
         }
 
         [Authorize(Roles = "Admin, Developer")]
@@ -102,18 +81,11 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Obtiene los detalles de una mejora específica usando su ID")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var feature = await Mediator.Send(new GetByIdFeatureQuery { Id = id });
-                if (feature == null)
-                    return NoContent();
+            var feature = await Mediator.Send(new GetByIdFeatureQuery { Id = id });
+            if (feature == null)
+                return NoContent();
 
-                return Ok(feature);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(feature);
         }
 
         [Authorize(Roles = "Admin")]
@@ -126,15 +98,8 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Elimina una mejora específica usando su ID")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await Mediator.Send(new DeleteFeatureCommand { Id = id });
-                return result ? NoContent() : NotFound();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var result = await Mediator.Send(new DeleteFeatureCommand { Id = id });
+            return result ? NoContent() : NotFound();
         }
     }
 }

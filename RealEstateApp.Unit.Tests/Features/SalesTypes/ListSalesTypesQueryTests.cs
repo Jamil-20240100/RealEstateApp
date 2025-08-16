@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using RealEstateApp.Core.Application.DTOs.SalesType;
-using RealEstateApp.Core.Application.Features.SalesTypes.Queries.List;
+using RealEstateApp.Core.Application.Features.SalesType.Queries.List;
 using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
 using RealEstateApp.Infrastructure.Persistence.Contexts;

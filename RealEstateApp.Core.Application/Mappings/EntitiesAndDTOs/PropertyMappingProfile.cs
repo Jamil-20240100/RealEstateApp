@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.DTOs.Client;
 using RealEstateApp.Core.Application.DTOs.Feature;
+using RealEstateApp.Core.Application.DTOs.Message;
+using RealEstateApp.Core.Application.DTOs.Offer;
 using RealEstateApp.Core.Application.DTOs.Property;
 using RealEstateApp.Core.Application.DTOs.PropertyType;
 using RealEstateApp.Core.Application.DTOs.SalesType;
-using RealEstateApp.Core.Application.DTOs.Message;
-using RealEstateApp.Core.Application.DTOs.Offer;
-using RealEstateApp.Core.Application.DTOs.Client;
-using RealEstateApp.Core.Domain.Entities;
-using RealEstateApp.Core.Application.ViewModels.Property;
 using RealEstateApp.Core.Application.ViewModels.Client;
 using RealEstateApp.Core.Application.ViewModels.Feature;
+using RealEstateApp.Core.Application.ViewModels.Property;
+using RealEstateApp.Core.Domain.Common.Enums;
+using RealEstateApp.Core.Domain.Entities;
 
 namespace RealEstateApp.Core.Application.Mappings.EntitiesAndDTOs
 {
@@ -18,13 +19,15 @@ namespace RealEstateApp.Core.Application.Mappings.EntitiesAndDTOs
         public PropertyMappingProfile()
         {
             CreateMap<Property, PropertyDTO>()
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
-                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State))
-                .ForMember(dest => dest.BuyerClientId, opt => opt.MapFrom(src => src.BuyerClientId))
-
+                .ForMember(dest => dest.IsFavorite, opt => opt.Ignore()) // O mapea según tu lógica
+                .ForMember(dest => dest.IsSold, opt => opt.MapFrom(src => src.State == PropertyState.Vendida))
+                .ForMember(dest => dest.PropertyType, opt => opt.MapFrom(src => src.PropertyType))
+                .ForMember(dest => dest.SalesType, opt => opt.MapFrom(src => src.SalesType))
+                .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
                 .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
                 .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))
-                .ForMember(dest => dest.ClientsWithOffers, opt => opt.MapFrom(src => src.Offers.Select(o => o.ClientId).Distinct()));
+                .ForMember(dest => dest.ClientsWithOffers, opt => opt.Ignore()); // O mapea según tu lógica
+
 
             CreateMap<PropertyDTO, Property>()
                 .ForMember(dest => dest.PropertyType, opt => opt.Ignore())
@@ -69,21 +72,15 @@ namespace RealEstateApp.Core.Application.Mappings.EntitiesAndDTOs
                 .ForMember(dest => dest.Messages, opt => opt.Ignore())
                 .ForMember(dest => dest.Features, opt => opt.Ignore());
 
-            CreateMap<PropertyDTO, PropertyDetailsViewModel>()
-           .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
-           .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(i => i.ImageUrl)))
-           .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))
-           .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
-           .ForMember(dest => dest.ClientsWithOffers, opt => opt.MapFrom(src => src.ClientsWithOffers))
-           .ForMember(dest => dest.ClientsWhoMessaged, opt => opt.Ignore())
-           .ForMember(dest => dest.AgentId, opt => opt.MapFrom(src => src.AgentId))
-           .ForMember(dest => dest.SelectedClientId, opt => opt.Ignore());
 
-            CreateMap<FeatureDTO, FeatureViewModel>();
-            CreateMap<OfferDTO, OfferViewModel>();
-            CreateMap<MessageDTO, MessageViewModel>();
-            CreateMap<ClientDTO, ClientsWhoMadeOfferViewModel>();
+            CreateMap<PropertyType, PropertyTypeDTO>()
+                .ForMember(dest => dest.NumberOfProperties, opt => opt.Ignore()); // Si no existe en el DTO
 
+            CreateMap<SalesType, SalesTypeDTO>()
+                .ForMember(dest => dest.NumberOfProperties, opt => opt.Ignore()); // Si no existe en el DTO
+            CreateMap<Feature, FeatureDTO>();
+            CreateMap<Offer, OfferDTO>();
+            CreateMap<Message, MessageDTO>();
         }
     }
 }
