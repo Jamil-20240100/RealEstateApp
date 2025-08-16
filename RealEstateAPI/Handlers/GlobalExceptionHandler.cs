@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using RealEstateApp.Core.Application.Exceptions;
-using System.ComponentModel.DataAnnotations;
+﻿using RealEstateApp.Core.Application.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 
-namespace RealEstateAPI.Handlers
+namespace InvestmentApi.Handlers
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {
@@ -15,7 +14,7 @@ namespace RealEstateAPI.Handlers
             switch (exception)
             {
                 case ApiException apiException:
-
+                    //custom exception handling
                     switch (apiException.StatusCode)
                     {
                         case (int)HttpStatusCode.BadRequest:
@@ -38,8 +37,13 @@ namespace RealEstateAPI.Handlers
                     exceptionTitle = "Not found";
                     httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
-                case ArgumentException or ValidationException:
+                case ArgumentException:
                     exceptionTitle = "Bad Request";
+                    httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+                case RealEstateApp.Core.Application.Exceptions.ValidationException:
+                    exceptionTitle = "Bad Request";
+                    details = ((RealEstateApp.Core.Application.Exceptions.ValidationException)exception).Errors.Aggregate((a, b) => a + ", " + b);
                     httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     break;
                 default:

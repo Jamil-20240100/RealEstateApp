@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealEstateAPI.Controllers;
 using RealEstateApp.Core.Application.DTOs.Agent;
 using RealEstateApp.Core.Application.DTOs.Property;
 using RealEstateApp.Core.Application.Features.Agents.Commands.ChangeStatus;
@@ -27,6 +26,7 @@ namespace RealEstateAPI.Controllers.v1
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<AgentForApiDTO>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [SwaggerOperation(
             Summary = "List all agents",
             Description = "Retrieves a list of all agents registered in the system"
@@ -34,6 +34,10 @@ namespace RealEstateAPI.Controllers.v1
         public async Task<IActionResult> List()
         {
             var result = await _mediator.Send(new ListAgentQuery());
+
+            if (result == null || !result.Any())
+                return NoContent();
+
             return Ok(result);
         }
 
@@ -74,17 +78,19 @@ namespace RealEstateAPI.Controllers.v1
         [HttpPut("{userId}/change-status")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerOperation(
             Summary = "Change agent status",
             Description = "Updates the active status (enabled/disabled) of an agent"
         )]
-        public async Task<IActionResult> ChangeUserStatus(string userId, [FromBody] bool newStatus)
+        public async Task<IActionResult> ChangeUserStatus(string userId, [FromBody] ChangeStatusAgentCommand command)
         {
-            await _mediator.Send(new ChangeStatusAgentCommand
+            if (userId != command.UserId)
             {
-                UserId = userId,
-                NewStatus = newStatus
-            });
+                return BadRequest("The ID in the URL does not match the request body.");
+            }
+
+            await _mediator.Send(command);
 
             return NoContent();
         }
