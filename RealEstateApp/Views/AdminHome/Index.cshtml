@@ -21,53 +21,83 @@
     int totalDevelopers = Model.Developers.Count;
 }
 
-<h2 class="mb-4">Dashboard de Administración</h2>
+<div class="container-fluid py-4">
+    <h2 class="h3 fw-bold text-primary mb-4">Dashboard de Administración</h2>
 
-<div class="row g-4">
-    <div class="col-md-6 col-lg-3">
-        <div class="card text-white bg-info h-100">
-            <div class="card-body">
-                <h5 class="card-title">Propiedades</h5>
-                <p class="card-text fs-4">Total: @totalProperties</p>
-                <hr class="my-2 text-white-50" />
-                <p class="card-text mb-0">Disponibles: @availableProperties</p>
-                <p class="card-text mb-0">Vendidas: @soldProperties</p>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-start border-info border-5 rounded-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-info fw-bold mb-1">Propiedades</h5>
+                            <p class="card-text fs-2 fw-bold text-dark mb-0">@totalProperties</p>
+                        </div>
+                        <i class="bi bi-house-door-fill text-info display-5 opacity-75"></i>
+                    </div>
+                    <hr class="my-3 text-muted" />
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>Disponibles: <strong class="text-success">@availableProperties</strong></span>
+                        <span>Vendidas: <strong class="text-secondary">@soldProperties</strong></span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-6 col-lg-3">
-        <div class="card text-white bg-primary h-100">
-            <div class="card-body">
-                <h5 class="card-title">Agentes</h5>
-                <p class="card-text fs-4">Total: @totalAgents</p>
-                <hr class="my-2 text-white-50" />
-                <p class="card-text mb-0">Activos: @activeAgents</p>
-                <p class="card-text mb-0">Inactivos: @inactiveAgents</p>
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-start border-primary border-5 rounded-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-primary fw-bold mb-1">Agentes</h5>
+                            <p class="card-text fs-2 fw-bold text-dark mb-0">@totalAgents</p>
+                        </div>
+                        <i class="bi bi-person-badge-fill text-primary display-5 opacity-75"></i>
+                    </div>
+                    <hr class="my-3 text-muted" />
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>Activos: <strong class="text-success">@activeAgents</strong></span>
+                        <span>Inactivos: <strong class="text-danger">@inactiveAgents</strong></span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-6 col-lg-3">
-        <div class="card text-white bg-success h-100">
-            <div class="card-body">
-                <h5 class="card-title">Clientes</h5>
-                <p class="card-text fs-4">Total: @totalClients</p>
-                <hr class="my-2 text-white-50" />
-                <p class="card-text mb-0">Activos: @activeClients</p>
-                <p class="card-text mb-0">Inactivos: @inactiveClients</p>
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-start border-success border-5 rounded-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-success fw-bold mb-1">Clientes</h5>
+                            <p class="card-text fs-2 fw-bold text-dark mb-0">@totalClients</p>
+                        </div>
+                        <i class="bi bi-people-fill text-success display-5 opacity-75"></i>
+                    </div>
+                    <hr class="my-3 text-muted" />
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>Activos: <strong class="text-success">@activeClients</strong></span>
+                        <span>Inactivos: <strong class="text-danger">@inactiveClients</strong></span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-6 col-lg-3">
-        <div class="card text-white bg-secondary h-100">
-            <div class="card-body">
-                <h5 class="card-title">Desarrolladores</h5>
-                <p class="card-text fs-4">Total: @totalDevelopers</p>
-                <hr class="my-2 text-white-50" />
-                <p class="card-text mb-0">Activos: @activeDevelopers</p>
-                <p class="card-text mb-0">Inactivos: @inactiveDevelopers</p>
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-start border-secondary border-5 rounded-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-secondary fw-bold mb-1">Desarrolladores</h5>
+                            <p class="card-text fs-2 fw-bold text-dark mb-0">@totalDevelopers</p>
+                        </div>
+                        <i class="bi bi-building text-secondary display-5 opacity-75"></i>
+                    </div>
+                    <hr class="my-3 text-muted" />
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>Activos: <strong class="text-success">@activeDevelopers</strong></span>
+                        <span>Inactivos: <strong class="text-danger">@inactiveDevelopers</strong></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

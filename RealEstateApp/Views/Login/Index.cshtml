@@ -1,33 +1,41 @@
 ﻿@model LoginViewModel
+
 @{
     ViewData["Title"] = "Login Page";
     Layout = "_LayoutAnonymous";
 }
 
-<div class="d-flex justify-content-center">
-
-    <div class="col-12 col-md-4">
-        <div class="card">
-            <div class="card-header bg-success text-light"><h5 class="text-center">Login user</h5></div>
-            <div class="card-body">
-                @Html.ValidationSummary(false,"",new {@class = "text-danger"})
-                <form asp-controller="Login" asp-action="Index" method="POST">
-                    <div class="mb-3">
-                        <label asp-for="UserName" class="form-label">UserName:</label>
-                        <input class="form-control" asp-for="UserName" />                   
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Password:</label>
-                        <input class="form-control" asp-for="Password" />                    
-                    </div>
-                    
-                    <div>
-                        <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-door-open"></i> Login</button>
-                        <a asp-controller="Login" asp-action="ForgotPassword" class="btn btn-outline-warning float-end me-2"><i class="bi bi-person-fill-exclamation"></i> Forgot password</a>
-                    </div>
-                </form>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i> Iniciar sesión</h5>
+                </div>
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new {@class = "alert alert-danger"})
+                    <form asp-controller="Login" asp-action="Index" method="POST">
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">Usuario:</label>
+                            <input class="form-control" asp-for="UserName" placeholder="Ingresa tu nombre de usuario" />
+                            <span asp-validation-for="UserName" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Contraseña:</label>
+                            <input class="form-control" asp-for="Password" type="password" placeholder="Ingresa tu contraseña" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-controller="Login" asp-action="ForgotPassword" class="btn btn-outline-warning d-flex align-items-center">
+                                <i class="bi bi-question-circle me-2"></i> Olvidé mi contraseña
+                            </a>
+                            <button type="submit" class="btn btn-primary d-flex align-items-center">
+                                <i class="bi bi-door-open me-2"></i> Entrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    
 </div>

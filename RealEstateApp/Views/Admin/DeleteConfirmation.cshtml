@@ -4,24 +4,35 @@
     ViewData["Title"] = "Eliminar Administrador";
 }
 
-<div class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">
-        ¿Está seguro que desea eliminar a este administrador?
-    </h2>
-    <hr class="my-4" />
-    <p class="text-red-600">
-        Esta acción no se puede deshacer y el usuario **@Model.UserName** será eliminado permanentemente.
-    </p>
-
-    <div class="mt-6 flex justify-between">
-        <a asp-action="Index" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
-            Cancelar
-        </a>
-        <form asp-action="DeleteConfirmed" method="post">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
-                Aceptar
-            </button>
-        </form>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title h5 mb-0">
+                        <i class="bi bi-exclamation-octagon-fill me-2"></i> Confirmar eliminación
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">
+                        ¿Está seguro que desea **eliminar permanentemente** al usuario **`@Model.UserName`**?
+                    </p>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Esta acción no se puede deshacer.
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i> Cancelar
+                    </a>
+                    <form asp-action="DeleteConfirmed" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash-fill me-2"></i> Aceptar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
