@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.DTOs.SalesType;
-using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Create;
+using RealEstateApp.Core.Application.Features.SalesType.Commands.Create;
+using RealEstateApp.Core.Application.Features.SalesType.Commands.Update;
 using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Delete;
-using RealEstateApp.Core.Application.Features.SalesTypes.Commands.Update;
 using RealEstateApp.Core.Application.Features.SalesTypes.Queries.GetById;
 using RealEstateApp.Core.Application.Features.SalesTypes.Queries.List;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,18 +26,11 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Crea un nuevo tipo de venta y devuelve el ID generado")]
         public async Task<IActionResult> Create([FromBody] CreateSalesTypeCommand command)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var id = await Mediator.Send(command);
-                return CreatedAtAction(nameof(GetById), new { id }, id);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var id = await Mediator.Send(command);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [Authorize(Roles = "Admin")]
@@ -51,21 +44,14 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Actualiza un tipo de venta existente según su ID")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateSalesTypeCommand command)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                if (id != command.Id)
-                    return BadRequest("El ID de la URL no coincide con el ID del cuerpo.");
+            if (id != command.Id)
+                return BadRequest("El ID de la URL no coincide con el ID del cuerpo.");
 
-                var result = await Mediator.Send(command);
-                return result ? Ok(command) : NotFound();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var result = await Mediator.Send(command);
+            return result ? Ok(command) : NotFound();
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -78,18 +64,11 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Obtiene un listado con todos los tipos de venta registrados")]
         public async Task<IActionResult> List()
         {
-            try
-            {
-                var list = await Mediator.Send(new ListSalesTypesQuery());
-                if (list == null || list.Count == 0)
-                    return NoContent();
+            var list = await Mediator.Send(new ListSalesTypesQuery());
+            if (list == null || list.Count == 0)
+                return NoContent();
 
-                return Ok(list);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(list);
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -102,15 +81,8 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Obtiene los detalles de un tipo de venta usando su ID")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var entity = await Mediator.Send(new GetByIdSalesTypeQuery { Id = id });
-                return entity == null ? NoContent() : Ok(entity);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var entity = await Mediator.Send(new GetByIdSalesTypeQuery { Id = id });
+            return entity == null ? NoContent() : Ok(entity);
         }
 
         [Authorize(Roles = "Admin")]
@@ -123,15 +95,8 @@ namespace RealEstateAPI.Controllers.v1
             Description = "Elimina un tipo de venta específico usando su ID")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await Mediator.Send(new DeleteSalesTypeCommand { Id = id });
-                return result ? NoContent() : NotFound();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var result = await Mediator.Send(new DeleteSalesTypeCommand { Id = id });
+            return result ? NoContent() : NotFound();
         }
     }
 }

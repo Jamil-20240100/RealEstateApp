@@ -4,7 +4,7 @@ using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Core.Domain.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RealEstateApp.Core.Application.Features.SalesTypes.Commands.Create
+namespace RealEstateApp.Core.Application.Features.SalesType.Commands.Create
 {
     /// <summary>
     /// Comando para crear un nuevo tipo de venta.

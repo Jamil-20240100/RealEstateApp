@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.Feature;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Domain.Interfaces;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.Features.Queries.List
 {
@@ -24,8 +25,10 @@ namespace RealEstateApp.Core.Application.Features.Features.Queries.List
 
         public async Task<IList<FeatureDTO>> Handle(ListFeaturesQuery request, CancellationToken cancellationToken)
         {
-            // Asegúrate de que la consulta esté configurada correctamente para ser asíncrona
             var features = await _repository.GetAllFeaturesAsync(cancellationToken);
+            if (features == null || !features.Any())
+                throw new ApiException("No features found", (int)HttpStatusCode.NotFound);
+
             return _mapper.Map<List<FeatureDTO>>(features);
         }
     }

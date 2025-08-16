@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using RealEstateApp.Core.Application.DTOs.Feature;
-using RealEstateApp.Core.Application.Features.Features.Commands;
+using RealEstateApp.Core.Application.Features.Features.Commands.Create;
 using RealEstateApp.Core.Application.Features.Features.Commands.Update;
 using RealEstateApp.Core.Domain.Entities;
 
