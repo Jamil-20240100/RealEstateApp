@@ -2,10 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.Agent;
-using RealEstateApp.Core.Application.DTOs.Feature;
-using RealEstateApp.Core.Application.DTOs.Property;
-using RealEstateApp.Core.Application.DTOs.PropertyType;
-using RealEstateApp.Core.Application.DTOs.SalesType;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Domain.Common.Enums;
 using RealEstateApp.Core.Domain.Interfaces;

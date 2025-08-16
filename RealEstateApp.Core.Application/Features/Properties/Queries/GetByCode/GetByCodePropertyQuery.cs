@@ -34,7 +34,7 @@ namespace RealEstateApp.Core.Application.Features.Properties.Queries.GetByCode
         public async Task<PropertyForApiDTO> Handle(GetByCodePropertyQuery query, CancellationToken cancellationToken)
         {
             var listEntitiesQuery = _propertyRepository.GetAllQueryWithInclude(["PropertyType", "SalesType", "Features"]);
-            Domain.Entities.Property? entity = await listEntitiesQuery.FirstOrDefaultAsync(fd => fd.Code == query.Code, cancellationToken: cancellationToken);
+            Domain.Entities.Property? entity = listEntitiesQuery.FirstOrDefault(fd => fd.Code == query.Code);
 
             if (entity == null)
                 throw new ArgumentException("Property not found with this code");

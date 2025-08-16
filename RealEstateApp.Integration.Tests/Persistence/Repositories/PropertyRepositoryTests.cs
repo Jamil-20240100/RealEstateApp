@@ -19,10 +19,10 @@ namespace RealEstateApp.Integration.Tests.Persistence.Repositories
         }
 
         private static PropertyType GetPropertyType() =>
-            new PropertyType { Id = 1, Name = "House", Description = "House type" };
+            new PropertyType { Id = 1, Name = "House", Description = "House type", Properties = [] };
 
         private static SalesType GetSalesType() =>
-            new SalesType { Id = 1, Name = "Sale", Description = "For sale" };
+            new SalesType { Id = 1, Name = "Sale", Description = "For sale", Properties = [] };
 
         private Property CreateProperty(int id, string code, decimal price, int rooms, int bathrooms, PropertyState state = PropertyState.Disponible)
         {
@@ -129,8 +129,8 @@ namespace RealEstateApp.Integration.Tests.Persistence.Repositories
             using var context = new RealEstateContext(_dbOptions);
 
             // Crear los tipos y agregarlos primero
-            var propertyType = new PropertyType { Id = 1, Name = "House", Description = "House type" };
-            var salesType = new SalesType { Id = 1, Name = "Sale", Description = "For sale" };
+            var propertyType = new PropertyType { Id = 1, Name = "House", Description = "House type", Properties = [] };
+            var salesType = new SalesType { Id = 1, Name = "Sale", Description = "For sale", Properties = [] };
             await context.PropertyTypes.AddAsync(propertyType);
             await context.SalesTypes.AddAsync(salesType);
             await context.SaveChangesAsync();
