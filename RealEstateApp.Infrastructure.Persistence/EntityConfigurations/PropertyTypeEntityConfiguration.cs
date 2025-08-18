@@ -22,7 +22,8 @@ namespace RealEstateApp.Infrastructure.Persistence.EntityConfigurations
 
             builder.HasMany(pt => pt.Properties)
                    .WithOne(p => p.PropertyType)
-                   .HasForeignKey("PropertyTypeId");
+                   .HasForeignKey("PropertyTypeId")
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
