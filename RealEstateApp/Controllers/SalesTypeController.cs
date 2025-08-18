@@ -138,7 +138,7 @@ namespace RealEstateApp.Controllers
             if (dto == null)
                 return RedirectToRoute(new { controller = "SalesType", action = "Index" });
 
-            return View(new DeleteSalesTypeViewModel { Id = dto.Id });
+            return View(new DeleteSalesTypeViewModel { Id = dto.Id, Name = dto.Name });
         }
 
         [HttpPost]
