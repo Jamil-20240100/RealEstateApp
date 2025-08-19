@@ -93,14 +93,10 @@ public class AgentHomeController : Controller
         try
         {
             await _offerService.RespondToOfferAsync(offerId, isAccepted);
-            // Puedes redirigir a la lista de propiedades o a la página de detalles de la propiedad.
-            // Por ejemplo, si tienes el ID de la propiedad, úsalo para redirigir a detalles.
-            // Si no, redirige a un lugar general:
             return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
-            // Opcional: manejar error y mostrar mensaje o redirigir con error
             return BadRequest(ex.Message);
         }
     }
