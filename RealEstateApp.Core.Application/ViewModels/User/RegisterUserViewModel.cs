@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RealEstateApp.Core.Domain.Common.Enums;
 using System.ComponentModel.DataAnnotations;
 
@@ -40,6 +41,7 @@ namespace RealEstateApp.Core.Application.ViewModels.User
         public IFormFile? ProfileImageFile { get; set; }
 
         public required bool IsActive { get; set; }
+        public IEnumerable<SelectListItem> RolesList { get; set; } = new List<SelectListItem>();
         public required Roles Role { get; set; }
         public string? UserIdentification { get; set; }
     }
