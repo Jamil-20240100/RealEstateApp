@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.DTOs.Email;
 using RealEstateApp.Core.Application.DTOs.PropertyType;
+using RealEstateApp.Core.Application.DTOs.SalesType;
 using RealEstateApp.Core.Application.Interfaces;
 using RealEstateApp.Core.Application.Services;
 using RealEstateApp.Core.Application.ViewModels.PropertyType;
@@ -136,7 +137,9 @@ namespace RealEstateApp.Controllers
                 return View(vm);
             }
 
-            await _propertyTypeService.UpdateAsync(checkDTO, checkDTO.Id);
+            var dto = _mapper.Map<PropertyTypeDTO>(vm);
+
+            await _propertyTypeService.UpdateAsync(dto, vm.Id);
 
             return RedirectToRoute(new { controller = "PropertyType", action = "Index" });
         }
