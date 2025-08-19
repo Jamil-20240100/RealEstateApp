@@ -504,30 +504,56 @@ namespace RealEstateApp.Infrastructure.Identity.Services
 
         public virtual async Task<UserResponseDto> ConfirmAccountAsync(string userId, string token)
         {
-            UserResponseDto response = new() { HasError = false, Errors = [] };
+            UserResponseDto response = new()
+            {
+                HasError = false,
+                Errors = [],
+                Message = string.Empty
+            };
 
+            // Buscar el usuario por Id
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                response.Message = "There is no acccount registered with this user";
+                response.Message = "No account is registered with this user";
                 response.HasError = true;
                 return response;
             }
 
-            token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded)
+            try
             {
+                // Decodificar token
+                token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+
+                // Confirmar email
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+
+                if (!result.Succeeded)
+                {
+                    response.Message = $"An error occurred while confirming the email for {user.Email}";
+                    response.HasError = true;
+                    response.Errors.AddRange(result.Errors.Select(e => e.Description));
+                    return response;
+                }
+
+                // Marcar usuario como activo
+                if (!user.IsActive)
+                {
+                    user.IsActive = true;
+                    await _userManager.UpdateAsync(user);
+                }
+
                 response.Message = $"Account confirmed for {user.Email}. You can now use the app";
                 response.HasError = false;
-                return response;
             }
-            else
+            catch (Exception ex)
             {
-                response.Message = $"An error occurred while confirming this email {user.Email}";
+                response.Message = $"An unexpected error occurred: {ex.Message}";
                 response.HasError = true;
-                return response;
+                response.Errors.Add(ex.Message);
             }
+
+            return response;
         }
 
         public virtual async Task<UserResponseDto> ChangeStatusAsync(string userId, bool status)

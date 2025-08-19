@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.DTOs.User;
 using RealEstateApp.Core.Application.Interfaces;
@@ -125,7 +126,9 @@ namespace RealEstateApp.Controllers
 
         public async Task<IActionResult> Register()
         {
-            ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+            var roles = await _roleManager.Roles
+                .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
+                .ToListAsync();
 
             return View(new RegisterUserViewModel()
             {
@@ -138,6 +141,7 @@ namespace RealEstateApp.Controllers
                 IsActive = true,
                 PhoneNumber = "",
                 Role = Roles.Client,
+                RolesList = roles
             });
         }
 
@@ -146,6 +150,10 @@ namespace RealEstateApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                vm.RolesList = await _roleManager.Roles
+                    .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
+                    .ToListAsync();
+
                 return View(vm);
             }
 
@@ -158,6 +166,11 @@ namespace RealEstateApp.Controllers
             {
                 ViewBag.HasError = true;
                 ViewBag.Errors = returnUser.Errors;
+
+                vm.RolesList = await _roleManager.Roles
+                    .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
+                    .ToListAsync();
+
                 return View(vm);
             }
 
@@ -170,7 +183,6 @@ namespace RealEstateApp.Controllers
 
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }
-
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             UserResponseDto response = await _accountServiceForWebApp.ConfirmAccountAsync(userId, token);
