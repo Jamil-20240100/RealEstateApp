@@ -66,10 +66,12 @@ namespace RealEstateApp.Controllers
                 return RedirectToRoute(new { controller = "Login", action = "Index" });
 
             var properties = await _propertyService.GetAllWithInclude();
-            var mappedProperties = _mapper.Map<List<PropertyViewModel>>(properties);
+
+            var agentProperties = properties.Where(p => p.AgentId == user.Id).ToList();
+
+            var mappedProperties = _mapper.Map<List<PropertyViewModel>>(agentProperties);
             return View(mappedProperties);
         }
-
         public async Task<IActionResult> Create()
         {
             var user = await ValidateUserAsync();
@@ -224,7 +226,6 @@ namespace RealEstateApp.Controllers
             vm.AvailableFeatures = _mapper.Map<List<FeatureViewModel>>(features);
         }
 
-        [HttpGet]
         public async Task<IActionResult> Details(int id, string? selectedClientId = null)
         {
             string agentId = _userManager.GetUserId(User);

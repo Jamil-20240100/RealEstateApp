@@ -115,16 +115,16 @@ namespace RealEstateApp.Controllers
                 return RedirectToRoute(new { controller = "Login", action = "Index" });
 
             if (!ModelState.IsValid)
-                return View(vm);
-
-            var dto = await _salesTypeService.GetById(vm.Id);
-            if (dto == null)
             {
-                ViewData["ErrorMessage"] = "Tipo de venta no encontrado.";
-                return View(vm);
+                ViewBag.EditMode = true;
+                ViewBag.ActionName = "Edit";
+                return View("Save", vm);
             }
 
-            await _salesTypeService.UpdateAsync(dto, dto.Id);
+            var dto = _mapper.Map<SalesTypeDTO>(vm);
+
+            await _salesTypeService.UpdateAsync(dto, vm.Id);
+
             return RedirectToRoute(new { controller = "SalesType", action = "Index" });
         }
 
